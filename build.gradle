@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'edu.wpi.first.path_ui'
@@ -10,4 +11,7 @@ repositories {
 }
 
 dependencies {
+
 }
+mainClassName = "edu.wpi.first.pathui.PathUI"
+
