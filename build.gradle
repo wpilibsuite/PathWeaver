@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+group 'edu.wpi.first.path_ui'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
