@@ -1,0 +1,81 @@
+package edu.wpi.first.pathui;
+
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.CubicCurve;
+import javafx.util.Pair;
+
+public class MainController {
+  @FXML private ImageView backgroundImage;
+  @FXML private StackPane stack;
+  @FXML private Pane drawPane;
+
+
+  Waypoint start;
+  Waypoint end;
+
+  @FXML private void initialize (){
+    stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+    //backgroundImage.setImage(new Image("edu/wpi/first/pathui/000241.jpg"));
+
+    drawPane.setOnDragOver(event -> {
+      Waypoint.currentWaypoint.setX(event.getX());
+      Waypoint.currentWaypoint.setY(event.getY());
+      event.consume();
+    });
+
+
+    start = new Waypoint(100,100,true);
+    start.setTheta(0);
+    end = new Waypoint(500,500,true);
+    end.setTheta(3.14/2);
+    drawPane.getChildren().add(start.getDot());
+    drawPane.getChildren().add(end.getDot());
+    start.setNextWaypoint(end);
+    end.setPreviousWaypoint(start);
+
+
+    Waypoint middle = addNewWaypoint(start,end);
+    Waypoint second = addNewWaypoint(start, middle);
+    Waypoint fourth = addNewWaypoint(middle,end);
+    createCurve(start,second);
+    createCurve(second,middle);
+    createCurve(middle,fourth);
+    createCurve(fourth,end);
+  }
+  void createCurve(Waypoint start,Waypoint end){
+    Spline curve = new Spline(start,end);
+    drawPane.getChildren().add(curve.getCubic());
+  }
+
+
+  Waypoint addNewWaypoint(Waypoint previous, Waypoint next){
+    if(previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous){
+      throw new RuntimeException("New Waypoint not between connected points");
+    }
+    Waypoint newPoint = new Waypoint( (previous.getX()+next.getX())/2,(previous.getY()+next.getY())/2,false);
+    newPoint.setPreviousWaypoint(previous);
+    newPoint.setNextWaypoint(next);
+    next.setPreviousWaypoint(newPoint);
+    previous.setNextWaypoint(newPoint);
+    drawPane.getChildren().add(newPoint.getDot());
+    drawPane.getChildren().add(newPoint.getTangentLine());
+    return newPoint;
+  }
+
+
+
+
+
+
+
+}
