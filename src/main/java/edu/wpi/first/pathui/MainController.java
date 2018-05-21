@@ -47,8 +47,6 @@ public class MainController {
     end.setTangent(new Point2D(0, 200));
     createCurve(start, end);
 
-
-    addNewWaypoint(start, end); // for devel
   }
 
   private void setupDrag() {

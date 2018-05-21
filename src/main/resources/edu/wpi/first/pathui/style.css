@@ -14,6 +14,8 @@ CubicCurve {
     -fx-stroke-width: 4px;
     -fx-stroke-line-cap: round;
     -fx-fill: transparent;
+    -fx-cursor: hand;
+
 }
 
 Line {
