@@ -1,0 +1,3 @@
+[submodule "KinematicPlanning"]
+	path = KinematicPlanning
+	url = git@github.com:JacisNonsense/KinematicPlanning.git
