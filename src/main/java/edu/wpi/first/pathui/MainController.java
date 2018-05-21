@@ -18,10 +18,8 @@ public class MainController {
   @FXML private Pane drawPane;
 
 
-  private Waypoint start;
-  private Waypoint end;
-
   @FXML
+  @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
     //backgroundImage.setImage(new Image("edu/wpi/first/pathui/000241.jpg"));
@@ -46,9 +44,9 @@ public class MainController {
     });
 
 
-    start = new Waypoint(100, 100, false);
+    Waypoint start = new Waypoint(100, 100, false);
     start.setTheta(0);
-    end = new Waypoint(500, 500, false);
+    Waypoint end = new Waypoint(500, 500, false);
     end.setTheta(3.14 / 2);
     drawPane.getChildren().add(start.getTangentLine());
     drawPane.getChildren().add(end.getTangentLine());
@@ -72,16 +70,16 @@ public class MainController {
     }
   }
 
-  void createCurve(Waypoint start, Waypoint end) {
+  private void createCurve(Waypoint start, Waypoint end) {
     Spline curve = new Spline(start, end);
     drawPane.getChildren().add(curve.getCubic());
     curve.getCubic().toBack();
   }
 
 
-  Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
+  private Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
     if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
-      throw new RuntimeException("New Waypoint not between connected points");
+      throw new IllegalArgumentException("New Waypoint not between connected points");
     }
     Waypoint newPoint = new Waypoint((previous.getX() + next.getX()) / 2, (previous.getY() + next.getY()) / 2, false);
     newPoint.setPreviousWaypoint(previous);

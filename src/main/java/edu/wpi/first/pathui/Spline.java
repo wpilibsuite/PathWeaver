@@ -5,7 +5,7 @@ import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
 public class Spline {
-  private CubicCurve cubic;
+  private final CubicCurve cubic;
   private Waypoint start;
   private Waypoint end;
 
@@ -36,15 +36,11 @@ public class Spline {
   }
 
   private Pair<Point2D, Point2D> computeControlPoints() {
-    double xdiff = start.getX() - end.getX();
-    double ydiff = start.getY() - end.getY();
-    double distance = Math.sqrt(xdiff * xdiff + ydiff * ydiff);
     Point2D control1 = new Point2D(start.getX() + (start.getTangent().getX()) / 3,
         start.getY() + (start.getTangent().getY()) / 3);
     Point2D control2 = new Point2D(end.getX() - 2 * (end.getTangent().getX()) / 3,
         end.getY() - 2 * (end.getTangent().getY()) / 3);
-    Pair<Point2D, Point2D> controlPoints = new Pair<Point2D, Point2D>(control1, control2);
-    return controlPoints;
+    return new Pair<>(control1, control2);
   }
 
   public CubicCurve getCubic() {

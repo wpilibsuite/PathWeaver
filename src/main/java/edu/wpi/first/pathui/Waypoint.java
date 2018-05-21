@@ -17,22 +17,21 @@ import javafx.scene.shape.Line;
 public class Waypoint {
   private Waypoint previousWaypoint = null;
   private Waypoint nextWaypoint = null;
-  private DoubleProperty x = new SimpleDoubleProperty();
-  private DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty x = new SimpleDoubleProperty();
+  private final DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty theta = new SimpleDoubleProperty();
   private boolean lockTheta;
   private Spline previousSpline = null;
   private Spline nextSpline = null;
-  private ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
+  private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
-  private DoubleProperty theta = new SimpleDoubleProperty();
 
 
   public static Waypoint currentWaypoint = null;
 
 
-  private Line tangentLine;
-
-  private Circle dot;
+  private final Line tangentLine;
+  private final Circle dot;
 
   /**
    * Creates Waypoint object containing javafx circle.
@@ -47,11 +46,6 @@ public class Waypoint {
     dot = new Circle(10);
     dot.centerXProperty().bind(x);
     dot.centerYProperty().bind(y);
-    dot.setOnDragDetected(event -> {
-      currentWaypoint = this;
-      Dragboard board = dot.startDragAndDrop(TransferMode.MOVE);
-      board.setContent(Map.of(DataFormat.PLAIN_TEXT, "point"));
-    });
     x.addListener(__ -> update());
     y.addListener(__ -> update());
 
@@ -62,6 +56,15 @@ public class Waypoint {
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
+    setupDnd();
+  }
+
+  private void setupDnd() {
+    dot.setOnDragDetected(event -> {
+      currentWaypoint = this;
+      Dragboard board = dot.startDragAndDrop(TransferMode.MOVE);
+      board.setContent(Map.of(DataFormat.PLAIN_TEXT, "point"));
+    });
     tangentLine.setOnDragDetected(event -> {
       currentWaypoint = this;
       tangentLine.startDragAndDrop(TransferMode.MOVE)
@@ -79,7 +82,10 @@ public class Waypoint {
     lockTheta = true;
   }
 
-  void update() {
+  /**
+   * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
+   */
+  public void update() {
     updateTheta();
     if (previousWaypoint != null) {
       previousWaypoint.updateTheta();
@@ -95,13 +101,12 @@ public class Waypoint {
         nextWaypoint.getNextSpline().updateControlPoints();
       }
     }
-
-
   }
 
   /**
    * Forces Waypoint to recompute optimal theta value. Does nothing if lockTheta is true.
    */
+  @SuppressWarnings("PMD.NcssCount")
   public void updateTheta() {
     if (lockTheta) {
       return;
@@ -123,14 +128,14 @@ public class Waypoint {
     Point2D p3Scaled = p3Shifted.multiply(1 / p3.distance(p1)); // scale
 
     //refactor later
-    Point2D q = new Point2D(0, 0);
+    // Point2D q = new Point2D(0, 0); // for reference
     Point2D r = new Point2D(p2Scaled.getX() * p3Scaled.getX() + p2Scaled.getY() * p3Scaled.getY(),
 
         -p2Scaled.getX() * p3Scaled.getY() + p2Scaled.getY() * p3Scaled.getX());
-    Point2D s = new Point2D(1, 0);
+    // Point2D s = new Point2D(1, 0); // for reference
 
     double beta = 1 - 2 * r.getX();
-    double gamma = Math.pow((4 * (r.getX() - Math.pow(r.distance(p1Scaled), 2)) - 3), 3) / 27;
+    double gamma = Math.pow(4 * (r.getX() - Math.pow(r.distance(p1Scaled), 2)) - 3, 3) / 27;
     double lambda = Math.pow(-gamma, 1 / 6);
 
     double phi1 = Math.atan2(Math.sqrt(-gamma - Math.pow(beta, 2)), beta) / 3;
@@ -154,7 +159,7 @@ public class Waypoint {
       t = t3;
     }
 
-    Point2D a1 = (p2.subtract(p1).subtract(p3Shifted.multiply(t))).multiply(1 / (t * t - t));
+    Point2D a1 = p2.subtract(p1).subtract(p3Shifted.multiply(t)).multiply(1 / (t * t - t));
     Point2D a2 = p3Shifted.subtract(a1);
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
