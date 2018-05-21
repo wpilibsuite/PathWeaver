@@ -179,11 +179,13 @@ public class Waypoint {
       nextSpline = newSpline;
       nextSpline.getCubic().startXProperty().bind(x);
       nextSpline.getCubic().startYProperty().bind(y);
+      newSpline.setStart(this);
     }
     if (!amFirst) {
       previousSpline = newSpline;
       previousSpline.getCubic().endXProperty().bind(x);
       previousSpline.getCubic().endYProperty().bind(y);
+      newSpline.setEnd(this);
     }
   }
 

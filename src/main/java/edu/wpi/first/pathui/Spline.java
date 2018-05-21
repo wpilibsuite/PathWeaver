@@ -1,6 +1,11 @@
 package edu.wpi.first.pathui;
 
+import java.util.Map;
+
 import javafx.geometry.Point2D;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
@@ -21,6 +26,12 @@ public class Spline {
     start.addSpline(this, true);
     end.addSpline(this, false);
     updateControlPoints();
+
+
+    cubic.setOnDragDetected(event -> {
+      Dragboard board = cubic.startDragAndDrop(TransferMode.MOVE);
+      board.setContent(Map.of(DataFormat.PLAIN_TEXT, "Spline"));
+    });
   }
 
   /**

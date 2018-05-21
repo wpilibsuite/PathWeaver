@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -23,9 +24,38 @@ public class MainController {
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
     //backgroundImage.setImage(new Image("edu/wpi/first/pathui/000241.jpg"));
+
+    setupDrag();
+
+    createInitialWaypoints();
+
+
+  }
+
+  private void createInitialWaypoints(){
+    Waypoint start = new Waypoint(100, 100, false);
+    start.setTheta(0);
+    Waypoint end = new Waypoint(500, 500, false);
+    end.setTheta(3.14 / 2);
+    drawPane.getChildren().add(start.getTangentLine());
+    drawPane.getChildren().add(end.getTangentLine());
+    drawPane.getChildren().add(start.getDot());
+    drawPane.getChildren().add(end.getDot());
+    start.setNextWaypoint(end);
+    end.setPreviousWaypoint(start);
+    start.setTangent(new Point2D(200, 0));
+    end.setTangent(new Point2D(0, 200));
+    createCurve(start, end);
+
+
+    addNewWaypoint(start,end); // for devel
+  }
+
+  private void setupDrag(){
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
+            
       if (dragboard.getString().equals("point")) {
         wp.setX(event.getX());
         wp.setY(event.getY());
@@ -42,32 +72,6 @@ public class MainController {
       }
       event.consume();
     });
-
-
-    Waypoint start = new Waypoint(100, 100, false);
-    start.setTheta(0);
-    Waypoint end = new Waypoint(500, 500, false);
-    end.setTheta(3.14 / 2);
-    drawPane.getChildren().add(start.getTangentLine());
-    drawPane.getChildren().add(end.getTangentLine());
-    drawPane.getChildren().add(start.getDot());
-    drawPane.getChildren().add(end.getDot());
-    start.setNextWaypoint(end);
-    end.setPreviousWaypoint(start);
-
-
-    Waypoint middle = addNewWaypoint(start, end);
-    Waypoint second = addNewWaypoint(start, middle);
-    Waypoint fourth = addNewWaypoint(middle, end);
-    start.setTangent(new Point2D(200, 0));
-    end.setTangent(new Point2D(0, 200));
-    createCurve(start, second);
-    createCurve(second, middle);
-    createCurve(middle, fourth);
-    createCurve(fourth, end);
-    for (Waypoint waypoint = start; waypoint != null; waypoint = waypoint.getNextWaypoint()) {
-      waypoint.update();
-    }
   }
 
   private void createCurve(Waypoint start, Waypoint end) {
@@ -75,7 +79,6 @@ public class MainController {
     drawPane.getChildren().add(curve.getCubic());
     curve.getCubic().toBack();
   }
-
 
   private Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
     if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
@@ -88,6 +91,12 @@ public class MainController {
     previous.setNextWaypoint(newPoint);
     drawPane.getChildren().add(newPoint.getTangentLine());
     drawPane.getChildren().add(newPoint.getDot());
+
+    newPoint.addSpline(previous.getNextSpline(),false); //tell spline going from previous -> next to go from previous -> new
+    createCurve(newPoint,next); //new spline from new -> next
+
+    newPoint.update();
+
     return newPoint;
   }
 
