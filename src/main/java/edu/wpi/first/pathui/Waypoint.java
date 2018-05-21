@@ -31,7 +31,7 @@ public class Waypoint {
 
   private final Line tangentLine;
   private final Circle dot;
-  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> {
+  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
     if (event.getClickCount() == 2 && lockTheta) {
       lockTheta = false;
       update();
@@ -182,11 +182,13 @@ public class Waypoint {
       nextSpline = newSpline;
       nextSpline.getCubic().startXProperty().bind(x);
       nextSpline.getCubic().startYProperty().bind(y);
+      newSpline.setStart(this);
     }
     if (!amFirst) {
       previousSpline = newSpline;
       previousSpline.getCubic().endXProperty().bind(x);
       previousSpline.getCubic().endYProperty().bind(y);
+      newSpline.setEnd(this);
     }
   }
 
