@@ -31,7 +31,7 @@ public class Waypoint {
 
   private final Line tangentLine;
   private final Circle dot;
-  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> {
+  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
     if (event.getClickCount() == 2 && lockTheta) {
       lockTheta = false;
       update();

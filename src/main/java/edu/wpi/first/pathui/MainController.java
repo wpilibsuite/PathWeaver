@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -32,7 +32,7 @@ public class MainController {
 
   }
 
-  private void createInitialWaypoints(){
+  private void createInitialWaypoints() {
     Waypoint start = new Waypoint(100, 100, false);
     start.setTheta(0);
     Waypoint end = new Waypoint(500, 500, false);
@@ -48,30 +48,55 @@ public class MainController {
     createCurve(start, end);
 
 
-    addNewWaypoint(start,end); // for devel
+    addNewWaypoint(start, end); // for devel
   }
 
-  private void setupDrag(){
+  private void setupDrag() {
+    drawPane.setOnDragDone(event -> {
+      Waypoint.currentWaypoint = null;
+      Spline.currentSpline = null;
+    });
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
       if (dragboard.hasContent(DataFormats.WAYPOINT)) {
-        wp.setX(event.getX());
-        wp.setY(event.getY());
+        handleWaypointDrag(event, wp);
       } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
-        Point2D pt = new Point2D(event.getX(), event.getY());
-        wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
-        wp.lockTangent();
-        if (wp.getPreviousSpline() != null) {
-          wp.getPreviousSpline().updateControlPoints();
-        }
-        if (wp.getNextSpline() != null) {
-          wp.getNextSpline().updateControlPoints();
-        }
+        handleVectorDrag(event, wp);
+      } else if (dragboard.hasContent(DataFormats.SPLINE)) {
+        handleSplineDrag(event, wp);
       }
-      event.consume();
     });
   }
+
+  private void handleWaypointDrag(DragEvent event, Waypoint wp) {
+    wp.setX(event.getX());
+    wp.setY(event.getY());
+  }
+
+  private void handleVectorDrag(DragEvent event, Waypoint wp) {
+    Point2D pt = new Point2D(event.getX(), event.getY());
+    wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
+    wp.lockTangent();
+    if (wp.getPreviousSpline() != null) {
+      wp.getPreviousSpline().updateControlPoints();
+    }
+    if (wp.getNextSpline() != null) {
+      wp.getNextSpline().updateControlPoints();
+    }
+  }
+
+  private void handleSplineDrag(DragEvent event, Waypoint wp) {
+    if (Waypoint.currentWaypoint == null) {
+      Spline current = Spline.currentSpline;
+      Waypoint newPoint = addNewWaypoint(current.getStart(), current.getEnd());
+      Spline.currentSpline = null;
+      Waypoint.currentWaypoint = newPoint;
+    } else {
+      handleWaypointDrag(event, wp);
+    }
+  }
+
 
   private void createCurve(Waypoint start, Waypoint end) {
     Spline curve = new Spline(start, end);
@@ -91,8 +116,9 @@ public class MainController {
     drawPane.getChildren().add(newPoint.getTangentLine());
     drawPane.getChildren().add(newPoint.getDot());
 
-    newPoint.addSpline(previous.getNextSpline(),false); //tell spline going from previous -> next to go from previous -> new
-    createCurve(newPoint,next); //new spline from new -> next
+    //tell spline going from previous -> next to go from previous -> new
+    newPoint.addSpline(previous.getNextSpline(), false);
+    createCurve(newPoint, next); //new spline from new -> next
 
     newPoint.update();
 
