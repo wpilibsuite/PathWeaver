@@ -3,6 +3,7 @@ package edu.wpi.first.pathui;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -23,7 +24,7 @@ public class MainController {
   @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-    //backgroundImage.setImage(new Image("edu/wpi/first/pathui/000241.jpg"));
+    backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
 
     setupDrag();
 
