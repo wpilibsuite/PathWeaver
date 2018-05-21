@@ -9,8 +9,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
@@ -70,14 +68,14 @@ public class Waypoint {
   private void setupDnd() {
     dot.setOnDragDetected(event -> {
       currentWaypoint = this;
-      Dragboard board = dot.startDragAndDrop(TransferMode.MOVE);
-      board.setContent(Map.of(DataFormat.PLAIN_TEXT, "point"));
+      dot.startDragAndDrop(TransferMode.MOVE)
+          .setContent(Map.of(DataFormats.WAYPOINT, "point"));
     });
     dot.setOnMouseClicked(resetOnDoubleClick);
     tangentLine.setOnDragDetected(event -> {
       currentWaypoint = this;
       tangentLine.startDragAndDrop(TransferMode.MOVE)
-          .setContent(Map.of(DataFormat.PLAIN_TEXT, "vector"));
+          .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
     });
     tangentLine.setOnMouseClicked(resetOnDoubleClick);
   }

@@ -26,10 +26,10 @@ public class MainController {
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
-      if (dragboard.getString().equals("point")) {
+      if (dragboard.hasContent(DataFormats.WAYPOINT)) {
         wp.setX(event.getX());
         wp.setY(event.getY());
-      } else if (dragboard.getString().equals("vector")) {
+      } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
         Point2D pt = new Point2D(event.getX(), event.getY());
         wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
         wp.lockTangent();
