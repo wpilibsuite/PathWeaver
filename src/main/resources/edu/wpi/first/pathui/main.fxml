@@ -3,11 +3,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-
 <StackPane fx:id="stack" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.MainController">
 
-   <children>
-      <ImageView fx:id="backgroundImage" fitHeight="${stack.height}" fitWidth="${stack.width}" pickOnBounds="true" preserveRatio="true" />
-      <Pane fx:id="drawPane" prefHeight="${stack.height}" prefWidth="${stack.width}" />
-   </children>
+    <children>
+        <ImageView fx:id="backgroundImage" fitHeight="${stack.height}" fitWidth="${stack.width}" pickOnBounds="true" preserveRatio="true"/>
+        <Pane fx:id="drawPane" prefHeight="${stack.height}" prefWidth="${stack.width}"/>
+    </children>
 </StackPane>
