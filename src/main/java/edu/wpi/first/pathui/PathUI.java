@@ -13,6 +13,7 @@ public class PathUI extends Application {
   public void start(Stage primaryStage) throws IOException {
     Pane root = FXMLLoader.load(getClass().getResource("main.fxml"));
     Scene scene = new Scene(root);
+    scene.getStylesheets().add("/edu/wpi/first/pathui/style.css");
     primaryStage.setScene(scene);
     primaryStage.show();
   }

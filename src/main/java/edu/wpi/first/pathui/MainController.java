@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -28,16 +29,28 @@ public class MainController {
     //backgroundImage.setImage(new Image("edu/wpi/first/pathui/000241.jpg"));
 
     drawPane.setOnDragOver(event -> {
-      Waypoint.currentWaypoint.setX(event.getX());
-      Waypoint.currentWaypoint.setY(event.getY());
+      Dragboard dragboard = event.getDragboard();
+      Waypoint wp = Waypoint.currentWaypoint;
+      if (dragboard.getString().equals("point")) {
+        wp.setX(event.getX());
+        wp.setY(event.getY());
+      } else if (dragboard.getString().equals("vector")) {
+        Point2D pt = new Point2D(event.getX(), event.getY());
+        wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
+        wp.lockTangent();
+        wp.getPreviousSpline().updateControlPoints();
+        wp.getNextSpline().updateControlPoints();
+      }
       event.consume();
     });
 
 
-    start = new Waypoint(100,100,true);
+    start = new Waypoint(100,100,false);
     start.setTheta(0);
-    end = new Waypoint(500,500,true);
+    end = new Waypoint(500,500,false);
     end.setTheta(3.14/2);
+    drawPane.getChildren().add(start.getTangentLine());
+    drawPane.getChildren().add(end.getTangentLine());
     drawPane.getChildren().add(start.getDot());
     drawPane.getChildren().add(end.getDot());
     start.setNextWaypoint(end);
@@ -47,6 +60,8 @@ public class MainController {
     Waypoint middle = addNewWaypoint(start,end);
     Waypoint second = addNewWaypoint(start, middle);
     Waypoint fourth = addNewWaypoint(middle,end);
+    start.setTangent(new Point2D(200, 0));
+    end.setTangent(new Point2D(0, 200));
     createCurve(start,second);
     createCurve(second,middle);
     createCurve(middle,fourth);
@@ -55,6 +70,7 @@ public class MainController {
   void createCurve(Waypoint start,Waypoint end){
     Spline curve = new Spline(start,end);
     drawPane.getChildren().add(curve.getCubic());
+    curve.getCubic().toBack();
   }
 
 

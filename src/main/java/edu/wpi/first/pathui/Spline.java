@@ -18,11 +18,6 @@ public class Spline {
     start.addSpline(this,true);
     end.addSpline(this,false);
 
-    cubic.setStroke(Color.FORESTGREEN);
-    cubic.setStrokeWidth(4);
-    cubic.setStrokeLineCap(StrokeLineCap.ROUND);
-    cubic.setFill(Color.TRANSPARENT);
-
     updateControlPoints();
   }
   public void updateControlPoints(){

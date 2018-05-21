@@ -53,11 +53,22 @@ public class Waypoint {
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(new Point2D(500,0));
+    tangent.set(new Point2D(0, 0));
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(()->this.getTangent().getX() + this.getX(),tangent,x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(()->this.getTangent().getY() + this.getY(),tangent,y));
+
+    tangentLine.setOnDragDetected(event -> {
+      currentWaypoint = this;
+      tangentLine.startDragAndDrop(TransferMode.MOVE)
+          .setContent(Map.of(DataFormat.PLAIN_TEXT, "vector"));
+    });
   }
-  private void update(){
+
+  public void lockTangent() {
+    lockTheta = true;
+  }
+
+  void update(){
     updateTheta();
     if(previousWaypoint != null){
       previousWaypoint.updateTheta();
@@ -97,7 +108,8 @@ public class Waypoint {
 
     Point2D p1_shift = new Point2D(0,0);
     Point2D p2_shift = p2.subtract(p1).multiply(1/p3.distance(p1));
-    Point2D p3_shift = p3.subtract(p1).multiply(1/p3.distance(p1));
+    Point2D p3_shifted = p3.subtract(p1);
+    Point2D p3_shift = p3_shifted.multiply(1/p3.distance(p1)); // scale
 
     //refactor later
     Point2D q = new Point2D(0,0);
@@ -131,12 +143,11 @@ public class Waypoint {
       t = t3;
     }
 
-    Point2D a1 = (p2.subtract(p1).subtract(p3.subtract(p1).multiply(t))).multiply(1/(t*t -t));
-    Point2D a2 = p3.subtract(p1).subtract(a1);
+    Point2D a1 = (p2.subtract(p1).subtract(p3_shifted.multiply(t))).multiply(1/(t*t -t));
+    Point2D a2 = p3_shifted.subtract(a1);
 
-    tangent.set(a1.multiply(2*t).add(a2));
-    System.out.println(getTangent());
-
+    Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1./3);
+    this.tangent.set(tangent);
 
     double newTheta = Math.atan2(getTangent().getY(),getTangent().getX());
     setTheta(newTheta);
