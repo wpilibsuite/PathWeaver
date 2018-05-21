@@ -1,5 +1,6 @@
 package edu.wpi.first.pathui;
 
+import java.util.EventListener;
 import java.util.Map;
 
 import javafx.beans.binding.Bindings;
@@ -61,6 +62,12 @@ public class Waypoint {
       currentWaypoint = this;
       tangentLine.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormat.PLAIN_TEXT, "vector"));
+    });
+    tangentLine.setOnMouseClicked(event -> {
+      if (event.getClickCount() == 2 && lockTheta) {
+        lockTheta = false;
+        update();
+      }
     });
   }
 
@@ -233,7 +240,6 @@ public class Waypoint {
   }
 
   public void setPreviousWaypoint(Waypoint previousWaypoint) {
-    System.out.println("previous is " + previousWaypoint.toString());
     this.previousWaypoint = previousWaypoint;
   }
 

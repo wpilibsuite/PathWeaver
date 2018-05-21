@@ -6,6 +6,7 @@ Circle {
     -fx-fill: orange;
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
+    -fx-cursor: hand;
 }
 
 CubicCurve {
@@ -18,4 +19,5 @@ CubicCurve {
 Line {
     -fx-stroke: cyan;
     -fx-stroke-width: 6px;
+    -fx-cursor: hand;
 }

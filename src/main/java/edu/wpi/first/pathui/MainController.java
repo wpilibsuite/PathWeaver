@@ -3,7 +3,6 @@ package edu.wpi.first.pathui;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.layout.Background;
@@ -12,8 +11,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CubicCurve;
-import javafx.util.Pair;
 
 public class MainController {
   @FXML private ImageView backgroundImage;
@@ -38,8 +35,12 @@ public class MainController {
         Point2D pt = new Point2D(event.getX(), event.getY());
         wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
         wp.lockTangent();
-        wp.getPreviousSpline().updateControlPoints();
-        wp.getNextSpline().updateControlPoints();
+        if (wp.getPreviousSpline() != null) {
+          wp.getPreviousSpline().updateControlPoints();
+        }
+        if (wp.getNextSpline() != null) {
+          wp.getNextSpline().updateControlPoints();
+        }
       }
       event.consume();
     });
@@ -66,6 +67,9 @@ public class MainController {
     createCurve(second,middle);
     createCurve(middle,fourth);
     createCurve(fourth,end);
+    for (Waypoint waypoint = start; waypoint != null; waypoint = waypoint.getNextWaypoint()) {
+      waypoint.update();
+    }
   }
   void createCurve(Waypoint start,Waypoint end){
     Spline curve = new Spline(start,end);
@@ -83,8 +87,8 @@ public class MainController {
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);
     previous.setNextWaypoint(newPoint);
-    drawPane.getChildren().add(newPoint.getDot());
     drawPane.getChildren().add(newPoint.getTangentLine());
+    drawPane.getChildren().add(newPoint.getDot());
     return newPoint;
   }
 
