@@ -11,12 +11,28 @@
         <exclude name="AccessorMethodGeneration"/>
         <exclude name="UseVarargs"/>
     </rule>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
+        <properties>
+            <property name="ignoredAnnotations" value="javafx.fxml.FXML"/>
+        </properties>
+    </rule>
     <rule ref="category/java/codestyle.xml">
         <exclude name="AtLeastOneConstructor"/>
+        <exclude name="LocalVariableCouldBeFinal"/>
         <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="ShortVariable"/>
         <exclude name="TooManyStaticImports"/>
     </rule>
     <rule ref="category/java/design.xml">
+        <exclude name="DataClass"/>
+        <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
+    </rule>
+    <rule ref="category/java/design.xml/NcssCount">
+        <properties>
+            <property name="methodReportLevel" value="20"/>
+            <property name="classReportLevel" value="250"/>
+        </properties>
     </rule>
 </ruleset>
