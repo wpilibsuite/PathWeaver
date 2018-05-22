@@ -32,6 +32,12 @@ public class MainController {
     setupDrag();
 
     createInitialWaypoints();
+    drawPane.setOnMousePressed(e -> {
+      if (selectedWaypoint != null) {
+        selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypoint = null;
+      }
+    });
   }
 
   private void createInitialWaypoints() {
@@ -68,7 +74,10 @@ public class MainController {
   }
 
   private void setupWaypoint(Waypoint waypoint) {
-    waypoint.getDot().setOnMousePressed(e -> selectWaypoint(waypoint));
+    waypoint.getDot().setOnMousePressed(e -> {
+      selectWaypoint(waypoint);
+      e.consume();
+    });
   }
 
   private void setupDrag() {
