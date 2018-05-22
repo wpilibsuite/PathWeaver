@@ -2,6 +2,10 @@
 .gradle
 build/
 out/
+
+# Important that this is above the inclusion of the gradle-wrapper.jar
+*.jar
+
 !gradle-wrapper.jar
 
 # Ignore Gradle GUI config
@@ -71,5 +75,3 @@ local.properties
 
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
-
-*.jar
