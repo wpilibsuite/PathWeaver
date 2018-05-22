@@ -9,13 +9,16 @@ Circle {
     -fx-cursor: hand;
 }
 
+Circle:selected {
+    -fx-fill: rgb(255, 241, 173);
+}
+
 CubicCurve {
     -fx-stroke: derive(orange, -25%);
     -fx-stroke-width: 4px;
     -fx-stroke-line-cap: round;
     -fx-fill: transparent;
     -fx-cursor: hand;
-
 }
 
 Line {
