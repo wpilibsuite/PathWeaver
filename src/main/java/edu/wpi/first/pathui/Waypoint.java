@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +39,22 @@ public class Waypoint {
     }
   };
 
+  private static final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>() { // NOPMD
+
+    private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
+
+    @Override
+    public void set(Waypoint newValue) {
+      if (getValue() != null) {
+        getValue().getDot().pseudoClassStateChanged(selected, false);
+      }
+      if (newValue != null) {
+        newValue.getDot().pseudoClassStateChanged(selected, true);
+      }
+      super.set(newValue);
+    }
+  };
+
   /**
    * Creates Waypoint object containing javafx circle.
    *
@@ -49,20 +66,37 @@ public class Waypoint {
     lockTheta = fixedAngle;
     setX(xPosition);
     setY(yPosition);
-    dot = new Circle(10);
-    dot.centerXProperty().bind(x);
-    dot.centerYProperty().bind(y);
     x.addListener(__ -> update());
     y.addListener(__ -> update());
+    dot = new Circle(10);
+    setupDot();
 
     tangentLine = new Line();
+    setupTangentLine();
+
+    setupDnd();
+  }
+
+  private void setupDot() {
+    dot.centerXProperty().bind(x);
+    dot.centerYProperty().bind(y);
+    dot.setOnMousePressed(__ -> {
+      if (selectedWaypoint.get() == this) {
+        selectedWaypoint.set(null);
+        dot.getParent().requestFocus();
+      } else {
+        selectedWaypoint.set(this);
+        dot.requestFocus();
+      }
+    });
+  }
+
+  private void setupTangentLine() {
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
     tangent.set(new Point2D(0, 0));
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
-
-    setupDnd();
   }
 
   private void setupDnd() {

@@ -6,6 +6,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -119,8 +120,34 @@ public class MainController {
     createCurve(newPoint, next); //new spline from new -> next
 
     newPoint.update();
+    makeDeletable(newPoint);
 
     return newPoint;
+  }
+
+  /**
+   * Deletes the point and its connected splines when DELETE or BACKSPACE is pressed, then connects the neighbors.
+   *
+   * @param newPoint the point to make deletable
+   */
+  private void makeDeletable(Waypoint newPoint) {
+    newPoint.getDot().setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+        Waypoint previousWaypoint = newPoint.getPreviousWaypoint();
+        Waypoint nextWaypoint = newPoint.getNextWaypoint();
+        if (previousWaypoint != null && nextWaypoint != null) {
+          drawPane.getChildren().remove(newPoint.getDot());
+          drawPane.getChildren().remove(newPoint.getTangentLine());
+          drawPane.getChildren().remove(newPoint.getPreviousSpline().getCubic());
+          drawPane.getChildren().remove(newPoint.getNextSpline().getCubic());
+          previousWaypoint.setNextWaypoint(nextWaypoint);
+          nextWaypoint.setPreviousWaypoint(previousWaypoint);
+          createCurve(previousWaypoint, nextWaypoint);
+          previousWaypoint.update();
+          nextWaypoint.update();
+        }
+      }
+    });
   }
 
 
