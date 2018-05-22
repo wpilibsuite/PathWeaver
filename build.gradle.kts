@@ -35,3 +35,8 @@ pmd {
 application {
     mainClassName = "edu.wpi.first.pathui.PathUI"
 }
+
+task<Wrapper>("wrapper") {
+    gradleVersion = "4.7"
+    distributionType = Wrapper.DistributionType.ALL
+}
