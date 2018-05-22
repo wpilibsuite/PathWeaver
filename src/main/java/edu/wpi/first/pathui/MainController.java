@@ -1,5 +1,6 @@
 package edu.wpi.first.pathui;
 
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -20,7 +21,7 @@ public class MainController {
   @FXML private ImageView backgroundImage;
   @FXML private StackPane stack;
   @FXML private Pane drawPane;
-
+  private Image image;
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
@@ -28,7 +29,26 @@ public class MainController {
   @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-    backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
+    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    backgroundImage.setImage(image);
+    double aspectRatio = image.getWidth() / image.getHeight();
+
+    drawPane.maxWidthProperty().bind(Bindings.createDoubleBinding(()->
+        Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
+        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+
+    drawPane.maxHeightProperty().bind(Bindings.createDoubleBinding(()->
+      Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
+        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+
+    drawPane.minWidthProperty().bind(Bindings.createDoubleBinding(()->
+            Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
+        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+
+    drawPane.minHeightProperty().bind(Bindings.createDoubleBinding(()->
+            Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
+        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+
 
     setupDrag();
 
