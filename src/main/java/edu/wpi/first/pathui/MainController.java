@@ -1,5 +1,6 @@
 package edu.wpi.first.pathui;
 
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -19,6 +20,8 @@ public class MainController {
   @FXML private StackPane stack;
   @FXML private Pane drawPane;
 
+  private Waypoint selectedWaypoint = null;
+  private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
   @FXML
   @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
@@ -29,8 +32,6 @@ public class MainController {
     setupDrag();
 
     createInitialWaypoints();
-
-
   }
 
   private void createInitialWaypoints() {
@@ -47,7 +48,27 @@ public class MainController {
     start.setTangent(new Point2D(200, 0));
     end.setTangent(new Point2D(0, 200));
     createCurve(start, end);
+    setupWaypoint(start);
+    setupWaypoint(end);
+  }
 
+  private void selectWaypoint(Waypoint waypoint) {
+    if (selectedWaypoint == waypoint) {
+      selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+      drawPane.requestFocus();
+      selectedWaypoint = null;
+    } else {
+      if (selectedWaypoint != null) {
+        selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+      }
+      selectedWaypoint = waypoint;
+      waypoint.getDot().pseudoClassStateChanged(selected, true);
+      waypoint.getDot().requestFocus();
+    }
+  }
+
+  private void setupWaypoint(Waypoint waypoint) {
+    waypoint.getDot().setOnMousePressed(e -> selectWaypoint(waypoint));
   }
 
   private void setupDrag() {
@@ -121,6 +142,8 @@ public class MainController {
 
     newPoint.update();
     makeDeletable(newPoint);
+    setupWaypoint(newPoint);
+    selectWaypoint(newPoint);
 
     return newPoint;
   }
