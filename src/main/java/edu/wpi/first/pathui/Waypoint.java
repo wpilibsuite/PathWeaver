@@ -33,7 +33,6 @@ public class Waypoint {
   private static DoubleProperty sceneHeight = new SimpleDoubleProperty();
 
 
-
   private final Line tangentLine;
   private final Circle dot;
   private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
@@ -55,8 +54,8 @@ public class Waypoint {
     trueX.set(xPosition);
     trueY.set(yPosition);
 
-    xPixel.bind(Bindings.createDoubleBinding(() -> trueX.get() * getSceneWidth(),sceneWidth,trueX));
-    yPixel.bind(Bindings.createDoubleBinding(() -> trueY.get() * getSceneHeight(),sceneHeight,trueY));
+    xPixel.bind(Bindings.createDoubleBinding(() -> trueX.get() * getSceneWidth(), sceneWidth, trueX));
+    yPixel.bind(Bindings.createDoubleBinding(() -> trueY.get() * getSceneHeight(), sceneHeight, trueY));
 
     dot = new Circle(10);
     dot.centerXProperty().bind(xPixel);
@@ -68,8 +67,10 @@ public class Waypoint {
     tangentLine.startXProperty().bind(xPixel);
     tangentLine.startYProperty().bind(yPixel);
     tangent.set(new Point2D(0, 0));
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() * getSceneWidth() + getxPixel(), tangent, xPixel,sceneWidth));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() * getSceneHeight() + getyPixel(), tangent, yPixel,sceneHeight));
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() ->
+        getTangent().getX() * getSceneWidth() + getxPixel(), tangent, xPixel, sceneWidth));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() ->
+        getTangent().getY() * getSceneHeight() + getyPixel(), tangent, yPixel, sceneHeight));
 
     setupDnd();
   }
@@ -175,7 +176,7 @@ public class Waypoint {
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
 
-    Point2D trueTangent = new Point2D(tangent.getX() /getSceneWidth(),tangent.getY() / getSceneHeight());
+    Point2D trueTangent = new Point2D(tangent.getX() / getSceneWidth(), tangent.getY() / getSceneHeight());
     this.tangent.set(trueTangent);
 
     double newTheta = Math.atan2(getTangent().getY(), getTangent().getX());

@@ -21,7 +21,6 @@ public class MainController {
   @FXML private ImageView backgroundImage;
   @FXML private StackPane stack;
   @FXML private Pane drawPane;
-  private Image image;
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
@@ -29,22 +28,23 @@ public class MainController {
   @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+
+    Image image = new Image("edu/wpi/first/pathui/2018-field.jpg");
     backgroundImage.setImage(image);
     final double aspectRatio = image.getWidth() / image.getHeight();
 
-    drawPane.maxWidthProperty().bind(Bindings.createDoubleBinding(()->
-        Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
-        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-    drawPane.maxHeightProperty().bind(Bindings.createDoubleBinding(()->
-      Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
-        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-    drawPane.minWidthProperty().bind(Bindings.createDoubleBinding(()->
+    drawPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() ->
             Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
-        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-    drawPane.minHeightProperty().bind(Bindings.createDoubleBinding(()->
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.maxHeightProperty().bind(Bindings.createDoubleBinding(() ->
             Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
-        backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
 
 
     setupDrag();
@@ -118,8 +118,8 @@ public class MainController {
   }
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    wp.setTrueX(event.getX()/Waypoint.getSceneWidth()); //use dimensions inside Waypoint for consistency
-    wp.setTrueY(event.getY()/Waypoint.getSceneHeight());
+    wp.setTrueX(event.getX() / Waypoint.getSceneWidth()); //use dimensions inside Waypoint for consistency
+    wp.setTrueY(event.getY() / Waypoint.getSceneHeight());
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
@@ -127,7 +127,7 @@ public class MainController {
     Point2D vector = pt.subtract(wp.getxPixel(), wp.getyPixel());
 
     Point2D unitLessVector = new Point2D(vector.getX() / Waypoint.getSceneWidth(),
-    vector.getY() / Waypoint.getSceneHeight());
+        vector.getY() / Waypoint.getSceneHeight());
 
     wp.setTangent(unitLessVector);
     wp.lockTangent();
@@ -158,18 +158,11 @@ public class MainController {
   }
 
   private Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
-    System.out.println("stack " + stack.getWidth() + " " + stack.getHeight());
-    System.out.println("imageview " + backgroundImage.getFitWidth() + " " + backgroundImage.getFitHeight());
-    System.out.println("image itself " + backgroundImage.getBoundsInParent().getWidth() + " " + backgroundImage.getBoundsInParent().getHeight());
-    System.out.println("drawpane pref " + drawPane.getPrefWidth() + " " + drawPane.getPrefHeight());
-
-    System.out.println("drawpane " + drawPane.getWidth() + " " + drawPane.getHeight());
-    System.out.println();
-
     if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
-    Waypoint newPoint = new Waypoint((previous.getxPixel() + next.getxPixel()) / 2, (previous.getyPixel() + next.getyPixel()) / 2, false);
+    Waypoint newPoint = new Waypoint((previous.getxPixel() + next.getxPixel()) / 2,
+        (previous.getyPixel() + next.getyPixel()) / 2, false);
     newPoint.setPreviousWaypoint(previous);
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);
