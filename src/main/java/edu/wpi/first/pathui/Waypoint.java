@@ -17,9 +17,11 @@ import javafx.scene.shape.Line;
 public class Waypoint {
   private Waypoint previousWaypoint = null;
   private Waypoint nextWaypoint = null;
-  private final DoubleProperty x = new SimpleDoubleProperty();
-  private final DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty xPixel = new SimpleDoubleProperty();
+  private final DoubleProperty yPixel = new SimpleDoubleProperty();
   private final DoubleProperty theta = new SimpleDoubleProperty();
+  private final DoubleProperty trueX = new SimpleDoubleProperty();
+  private final DoubleProperty trueY = new SimpleDoubleProperty();
   private boolean lockTheta;
   private Spline previousSpline = null;
   private Spline nextSpline = null;
@@ -27,6 +29,9 @@ public class Waypoint {
 
 
   public static Waypoint currentWaypoint = null;
+  private static DoubleProperty sceneWidth = new SimpleDoubleProperty();
+  private static DoubleProperty sceneHeight = new SimpleDoubleProperty();
+
 
 
   private final Line tangentLine;
@@ -47,20 +52,24 @@ public class Waypoint {
    */
   public Waypoint(double xPosition, double yPosition, boolean fixedAngle) {
     lockTheta = fixedAngle;
-    setX(xPosition);
-    setY(yPosition);
+    trueX.set(xPosition);
+    trueY.set(yPosition);
+
+    xPixel.bind(Bindings.createDoubleBinding(() -> trueX.get() * getSceneWidth(),sceneWidth,trueX));
+    yPixel.bind(Bindings.createDoubleBinding(() -> trueY.get() * getSceneHeight(),sceneHeight,trueY));
+
     dot = new Circle(10);
-    dot.centerXProperty().bind(x);
-    dot.centerYProperty().bind(y);
-    x.addListener(__ -> update());
-    y.addListener(__ -> update());
+    dot.centerXProperty().bind(xPixel);
+    dot.centerYProperty().bind(yPixel);
+    xPixel.addListener(__ -> update());
+    yPixel.addListener(__ -> update());
 
     tangentLine = new Line();
-    tangentLine.startXProperty().bind(x);
-    tangentLine.startYProperty().bind(y);
+    tangentLine.startXProperty().bind(xPixel);
+    tangentLine.startYProperty().bind(yPixel);
     tangent.set(new Point2D(0, 0));
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() * getSceneWidth() + getxPixel(), tangent, xPixel,sceneWidth));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() * getSceneHeight() + getyPixel(), tangent, yPixel,sceneHeight));
 
     setupDnd();
   }
@@ -119,10 +128,10 @@ public class Waypoint {
     if (nextWaypoint == null) {
       return;
     }
-
-    Point2D p1 = new Point2D(previousWaypoint.getX(), previousWaypoint.getY());
-    Point2D p2 = new Point2D(this.getX(), this.getY());
-    Point2D p3 = new Point2D(nextWaypoint.getX(), nextWaypoint.getY());
+    //works better in consistent units or it assumes the shape is a square 0-1 by 0-1
+    Point2D p1 = new Point2D(previousWaypoint.getxPixel(), previousWaypoint.getyPixel());
+    Point2D p2 = new Point2D(getxPixel(), getyPixel());
+    Point2D p3 = new Point2D(nextWaypoint.getxPixel(), nextWaypoint.getyPixel());
 
     Point2D p1Scaled = new Point2D(0, 0);
     Point2D p2Scaled = p2.subtract(p1).multiply(1 / p3.distance(p1));
@@ -165,7 +174,9 @@ public class Waypoint {
     Point2D a2 = p3Shifted.subtract(a1);
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
-    this.tangent.set(tangent);
+
+    Point2D trueTangent = new Point2D(tangent.getX() /getSceneWidth(),tangent.getY() / getSceneHeight());
+    this.tangent.set(trueTangent);
 
     double newTheta = Math.atan2(getTangent().getY(), getTangent().getX());
     setTheta(newTheta);
@@ -180,16 +191,64 @@ public class Waypoint {
   public void addSpline(Spline newSpline, boolean amFirst) {
     if (amFirst) {
       nextSpline = newSpline;
-      nextSpline.getCubic().startXProperty().bind(x);
-      nextSpline.getCubic().startYProperty().bind(y);
+      nextSpline.getCubic().startXProperty().bind(xPixel);
+      nextSpline.getCubic().startYProperty().bind(yPixel);
       newSpline.setStart(this);
     }
     if (!amFirst) {
       previousSpline = newSpline;
-      previousSpline.getCubic().endXProperty().bind(x);
-      previousSpline.getCubic().endYProperty().bind(y);
+      previousSpline.getCubic().endXProperty().bind(xPixel);
+      previousSpline.getCubic().endYProperty().bind(yPixel);
       newSpline.setEnd(this);
     }
+  }
+
+  public DoubleProperty trueXProperty() {
+    return trueX;
+  }
+
+  public DoubleProperty trueYProperty() {
+    return trueY;
+  }
+
+  public double getTrueX() {
+    return trueX.get();
+  }
+
+  public void setTrueX(double trueX) {
+    this.trueX.set(trueX);
+  }
+
+  public double getTrueY() {
+    return trueY.get();
+  }
+
+  public void setTrueY(double trueY) {
+    this.trueY.set(trueY);
+  }
+
+  public static double getSceneWidth() {
+    return sceneWidth.get();
+  }
+
+  public static DoubleProperty sceneWidthProperty() {
+    return sceneWidth;
+  }
+
+  public static void setSceneWidth(double sceneWidth) {
+    Waypoint.sceneWidth.set(sceneWidth);
+  }
+
+  public static double getSceneHeight() {
+    return sceneHeight.get();
+  }
+
+  public static DoubleProperty sceneHeightProperty() {
+    return sceneHeight;
+  }
+
+  public static void setSceneHeight(double sceneHeight) {
+    Waypoint.sceneHeight.set(sceneHeight);
   }
 
   public Line getTangentLine() {
@@ -232,28 +291,28 @@ public class Waypoint {
     return dot;
   }
 
-  public double getX() {
-    return x.get();
+  public double getxPixel() {
+    return xPixel.get();
   }
 
-  public DoubleProperty xProperty() {
-    return x;
+  public DoubleProperty xPixelProperty() {
+    return xPixel;
   }
 
-  public void setX(double x) {
-    this.x.set(x);
+  public void setxPixel(double xPixel) {
+    this.xPixel.set(xPixel);
   }
 
-  public double getY() {
-    return y.get();
+  public double getyPixel() {
+    return yPixel.get();
   }
 
-  public DoubleProperty yProperty() {
-    return y;
+  public DoubleProperty yPixelProperty() {
+    return yPixel;
   }
 
-  public void setY(double y) {
-    this.y.set(y);
+  public void setyPixel(double yPixel) {
+    this.yPixel.set(yPixel);
   }
 
   public Waypoint getPreviousWaypoint() {

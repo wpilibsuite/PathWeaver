@@ -42,17 +42,18 @@ public class Spline {
    */
   public void updateControlPoints() {
     Pair<Point2D, Point2D> points = computeControlPoints();
-    cubic.setControlX1(points.getKey().getX());
-    cubic.setControlY1(points.getKey().getY());
-    cubic.setControlX2(points.getValue().getX());
-    cubic.setControlY2(points.getValue().getY());
+    // TODO Probably shouldnt call waypoint for this and waypoint should probably just have a get converted function
+    cubic.setControlX1(points.getKey().getX() * Waypoint.getSceneWidth());
+    cubic.setControlY1(points.getKey().getY() * Waypoint.getSceneHeight());
+    cubic.setControlX2(points.getValue().getX() * Waypoint.getSceneWidth());
+    cubic.setControlY2(points.getValue().getY() * Waypoint.getSceneHeight());
   }
 
   private Pair<Point2D, Point2D> computeControlPoints() {
-    Point2D control1 = new Point2D(start.getX() + (start.getTangent().getX()) / 3,
-        start.getY() + (start.getTangent().getY()) / 3);
-    Point2D control2 = new Point2D(end.getX() - 2 * (end.getTangent().getX()) / 3,
-        end.getY() - 2 * (end.getTangent().getY()) / 3);
+    Point2D control1 = new Point2D(start.getTrueX() + (start.getTangent().getX()) / 3,
+        start.getTrueY() + (start.getTangent().getY()) / 3);
+    Point2D control2 = new Point2D(end.getTrueX() - 2 * (end.getTangent().getX()) / 3,
+        end.getTrueY() - 2 * (end.getTangent().getY()) / 3);
     return new Pair<>(control1, control2);
   }
 
