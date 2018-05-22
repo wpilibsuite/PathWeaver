@@ -17,7 +17,6 @@ dependencies {
 }
 
 checkstyle {
-    configFile = File(rootDir, "checkstyle.xml")
     toolVersion = "8.10"
     if (project.hasProperty("ignoreCheckstyle")) {
         isIgnoreFailures = true
