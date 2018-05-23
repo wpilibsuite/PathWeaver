@@ -1,5 +1,6 @@
 package edu.wpi.first.pathui;
 
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -22,16 +23,35 @@ public class MainController {
   @FXML private ImageView backgroundImage;
   @FXML private StackPane stack;
   @FXML private Pane drawPane;
-
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
   @FXML
   private void initialize() {
     stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-    backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
+
+    Image image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    backgroundImage.setImage(image);
+    final double aspectRatio = image.getWidth() / image.getHeight();
+
+    drawPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.maxHeightProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+    drawPane.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
+        backgroundImage.fitWidthProperty(), backgroundImage.fitHeightProperty()));
+
 
     setupDrag();
+
+    Waypoint.sceneHeightProperty().bind(drawPane.heightProperty());
+    Waypoint.sceneWidthProperty().bind(drawPane.widthProperty());
 
     createInitialWaypoints();
     drawPane.setOnMousePressed(e -> {
@@ -43,18 +63,16 @@ public class MainController {
   }
 
   private void createInitialWaypoints() {
-    Waypoint start = new Waypoint(100, 100, false);
-    start.setTheta(0);
-    Waypoint end = new Waypoint(500, 500, false);
-    end.setTheta(3.14 / 2);
+    Waypoint start = new Waypoint(0.1, 0.1, false);
+    Waypoint end = new Waypoint(0.9, 0.9, false);
     drawPane.getChildren().add(start.getTangentLine());
     drawPane.getChildren().add(end.getTangentLine());
     drawPane.getChildren().add(start.getDot());
     drawPane.getChildren().add(end.getDot());
     start.setNextWaypoint(end);
     end.setPreviousWaypoint(start);
-    start.setTangent(new Point2D(200, 0));
-    end.setTangent(new Point2D(0, 200));
+    start.setTangent(new Point2D(0.3, 0));
+    end.setTangent(new Point2D(0, 0.3));
     createCurve(start, end);
     setupWaypoint(start);
     setupWaypoint(end);
@@ -115,13 +133,18 @@ public class MainController {
   }
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    wp.setX(event.getX());
-    wp.setY(event.getY());
+    wp.setTrueX(event.getX() / Waypoint.getSceneWidth()); //use dimensions inside Waypoint for consistency
+    wp.setTrueY(event.getY() / Waypoint.getSceneHeight());
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
     Point2D pt = new Point2D(event.getX(), event.getY());
-    wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
+    Point2D vector = pt.subtract(wp.getxPixel(), wp.getyPixel());
+
+    Point2D unitLessVector = new Point2D(vector.getX() / Waypoint.getSceneWidth(),
+        vector.getY() / Waypoint.getSceneHeight());
+
+    wp.setTangent(unitLessVector);
     wp.lockTangent();
     if (wp.getPreviousSpline() != null) {
       wp.getPreviousSpline().updateControlPoints();
@@ -153,7 +176,8 @@ public class MainController {
     if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
-    Waypoint newPoint = new Waypoint((previous.getX() + next.getX()) / 2, (previous.getY() + next.getY()) / 2, false);
+    Waypoint newPoint = new Waypoint((previous.getxPixel() + next.getxPixel()) / 2,
+        (previous.getyPixel() + next.getyPixel()) / 2, false);
     newPoint.setPreviousWaypoint(previous);
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);

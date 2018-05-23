@@ -7,6 +7,6 @@
 
     <children>
         <ImageView fx:id="backgroundImage" fitHeight="${stack.height}" fitWidth="${stack.width}" pickOnBounds="true" preserveRatio="true"/>
-        <Pane fx:id="drawPane" prefHeight="${stack.height}" prefWidth="${stack.width}"/>
+        <Pane fx:id="drawPane"/>
     </children>
 </StackPane>
