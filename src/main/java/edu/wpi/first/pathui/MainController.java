@@ -1,9 +1,11 @@
 package edu.wpi.first.pathui;
 
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -18,28 +20,38 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 
 public class MainController {
   @FXML private ImageView backgroundImage;
-  @FXML private StackPane stack;
   @FXML private Pane drawPane;
-  @FXML private ScrollPane scroll;
+  @FXML private Group group;
   @FXML private Pane topPane;
 
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-
+  private Image image;
   @FXML
   private void initialize() {
 
+    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    //scroll.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+    backgroundImage.setImage(image);
+    Scale scale = new Scale();
+    scale.xProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(topPane.getWidth()/image.getWidth(),topPane.getHeight()/image.getHeight()),
+        topPane.widthProperty(),topPane.heightProperty()));
+    scale.yProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(topPane.getWidth()/image.getWidth(),topPane.getHeight()/image.getHeight()),
+        topPane.widthProperty(),topPane.heightProperty()));
 
-    scroll.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-    backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
+    group.getTransforms().add(scale);
+
+
 
     //scroll.setScaleY(0.5);
     //scroll.setScaleX(0.5);
-    scroll.setFitToWidth(true);
-    scroll.setFitToHeight(true);
+;
     setupDrag();
 
     createInitialWaypoints();
@@ -180,13 +192,9 @@ public class MainController {
     selectWaypoint(newPoint);
 
     System.out.println("top " + topPane.getWidth() + " " + topPane.getHeight());
-    System.out.println("scroll " + scroll.getWidth() + " " + scroll.getHeight());
-    System.out.println("scroll view " + scroll.getPrefViewportWidth() + " " + scroll.getPrefViewportHeight());
-    System.out.println("scroll view bounds" + scroll.getViewportBounds() );
+    System.out.println("translate" + group.getTranslateX() + " " + group.getTranslateY());
     System.out.println("image " + backgroundImage.getFitWidth() + " " + backgroundImage.getFitWidth());
 
-    System.out.println("stack " + stack.getWidth() + " " + stack.getHeight());
-    System.out.println("stack pref " + stack.getPrefWidth() + " " + stack.getPrefHeight());
 
     return newPoint;
   }
