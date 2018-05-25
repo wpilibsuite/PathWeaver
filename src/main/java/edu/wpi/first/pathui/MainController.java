@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -22,15 +23,23 @@ public class MainController {
   @FXML private ImageView backgroundImage;
   @FXML private StackPane stack;
   @FXML private Pane drawPane;
+  @FXML private ScrollPane scroll;
+  @FXML private Pane topPane;
 
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
   @FXML
   private void initialize() {
-    stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+
+    scroll.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
 
+    //scroll.setScaleY(0.5);
+    //scroll.setScaleX(0.5);
+    scroll.setFitToWidth(true);
+    scroll.setFitToHeight(true);
     setupDrag();
 
     createInitialWaypoints();
@@ -43,9 +52,9 @@ public class MainController {
   }
 
   private void createInitialWaypoints() {
-    Waypoint start = new Waypoint(100, 100, false);
+    Waypoint start = new Waypoint(0, 0, false);
     start.setTheta(0);
-    Waypoint end = new Waypoint(500, 500, false);
+    Waypoint end = new Waypoint(250, 250, false);
     end.setTheta(3.14 / 2);
     drawPane.getChildren().add(start.getTangentLine());
     drawPane.getChildren().add(end.getTangentLine());
@@ -169,6 +178,15 @@ public class MainController {
     makeDeletable(newPoint);
     setupWaypoint(newPoint);
     selectWaypoint(newPoint);
+
+    System.out.println("top " + topPane.getWidth() + " " + topPane.getHeight());
+    System.out.println("scroll " + scroll.getWidth() + " " + scroll.getHeight());
+    System.out.println("scroll view " + scroll.getPrefViewportWidth() + " " + scroll.getPrefViewportHeight());
+    System.out.println("scroll view bounds" + scroll.getViewportBounds() );
+    System.out.println("image " + backgroundImage.getFitWidth() + " " + backgroundImage.getFitWidth());
+
+    System.out.println("stack " + stack.getWidth() + " " + stack.getHeight());
+    System.out.println("stack pref " + stack.getPrefWidth() + " " + stack.getPrefHeight());
 
     return newPoint;
   }
