@@ -1,35 +1,57 @@
 package edu.wpi.first.pathui;
 
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 
 public class MainController {
   @FXML private ImageView backgroundImage;
-  @FXML private StackPane stack;
   @FXML private Pane drawPane;
+  @FXML private Group group;
+  @FXML private Pane topPane;
 
   private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-
+  private Image image;
   @FXML
-  @SuppressWarnings("PMD.NcssCount") // will be refactored later; the complex code is for the demo only
   private void initialize() {
-    stack.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-    backgroundImage.setImage(new Image("edu/wpi/first/pathui/2018-field.jpg"));
 
+    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    //scroll.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+    backgroundImage.setImage(image);
+    Scale scale = new Scale();
+    scale.xProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(topPane.getWidth()/image.getWidth(),topPane.getHeight()/image.getHeight()),
+        topPane.widthProperty(),topPane.heightProperty()));
+    scale.yProperty().bind(Bindings.createDoubleBinding(() ->
+            Math.min(topPane.getWidth()/image.getWidth(),topPane.getHeight()/image.getHeight()),
+        topPane.widthProperty(),topPane.heightProperty()));
+
+    group.getTransforms().add(scale);
+
+
+
+    //scroll.setScaleY(0.5);
+    //scroll.setScaleX(0.5);
+;
     setupDrag();
 
     createInitialWaypoints();
@@ -42,9 +64,9 @@ public class MainController {
   }
 
   private void createInitialWaypoints() {
-    Waypoint start = new Waypoint(100, 100, false);
+    Waypoint start = new Waypoint(0, 0, false);
     start.setTheta(0);
-    Waypoint end = new Waypoint(500, 500, false);
+    Waypoint end = new Waypoint(250, 250, false);
     end.setTheta(3.14 / 2);
     drawPane.getChildren().add(start.getTangentLine());
     drawPane.getChildren().add(end.getTangentLine());
@@ -76,8 +98,22 @@ public class MainController {
 
   private void setupWaypoint(Waypoint waypoint) {
     waypoint.getDot().setOnMousePressed(e -> {
-      selectWaypoint(waypoint);
-      e.consume();
+      if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
+        selectWaypoint(waypoint);
+        e.consume();
+      }
+    });
+    waypoint.getDot().setOnContextMenuRequested(e -> {
+      ContextMenu menu = new ContextMenu();
+      if (isDeletable(waypoint)) {
+        menu.getItems().add(FxUtils.menuItem("Delete", __ -> delete(waypoint)));
+      }
+      if (waypoint.getTangentLine().isVisible()) {
+        menu.getItems().add(FxUtils.menuItem("Hide control vector", __ -> waypoint.getTangentLine().setVisible(false)));
+      } else {
+        menu.getItems().add(FxUtils.menuItem("Show control vector", __ -> waypoint.getTangentLine().setVisible(true)));
+      }
+      menu.show(drawPane.getScene().getWindow(), e.getScreenX(), e.getScreenY());
     });
   }
 
@@ -155,6 +191,11 @@ public class MainController {
     setupWaypoint(newPoint);
     selectWaypoint(newPoint);
 
+    System.out.println("top " + topPane.getWidth() + " " + topPane.getHeight());
+    System.out.println("translate" + group.getTranslateX() + " " + group.getTranslateY());
+    System.out.println("image " + backgroundImage.getFitWidth() + " " + backgroundImage.getFitWidth());
+
+
     return newPoint;
   }
 
@@ -165,23 +206,29 @@ public class MainController {
    */
   private void makeDeletable(Waypoint newPoint) {
     newPoint.getDot().setOnKeyPressed(event -> {
-      if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
-        Waypoint previousWaypoint = newPoint.getPreviousWaypoint();
-        Waypoint nextWaypoint = newPoint.getNextWaypoint();
-        if (previousWaypoint != null && nextWaypoint != null) {
-          drawPane.getChildren().remove(newPoint.getDot());
-          drawPane.getChildren().remove(newPoint.getTangentLine());
-          drawPane.getChildren().remove(newPoint.getPreviousSpline().getCubic());
-          drawPane.getChildren().remove(newPoint.getNextSpline().getCubic());
-          previousWaypoint.setNextWaypoint(nextWaypoint);
-          nextWaypoint.setPreviousWaypoint(previousWaypoint);
-          createCurve(previousWaypoint, nextWaypoint);
-          previousWaypoint.update();
-          nextWaypoint.update();
-        }
+      if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) && isDeletable(newPoint)) {
+        delete(newPoint);
       }
     });
   }
 
+  private boolean isDeletable(Waypoint waypoint) {
+    return waypoint.getPreviousWaypoint() != null
+        && waypoint.getNextWaypoint() != null;
+  }
+
+  private void delete(Waypoint waypoint) {
+    Waypoint previousWaypoint = waypoint.getPreviousWaypoint();
+    Waypoint nextWaypoint = waypoint.getNextWaypoint();
+    drawPane.getChildren().remove(waypoint.getDot());
+    drawPane.getChildren().remove(waypoint.getTangentLine());
+    drawPane.getChildren().remove(waypoint.getPreviousSpline().getCubic());
+    drawPane.getChildren().remove(waypoint.getNextSpline().getCubic());
+    previousWaypoint.setNextWaypoint(nextWaypoint);
+    nextWaypoint.setPreviousWaypoint(previousWaypoint);
+    createCurve(previousWaypoint, nextWaypoint);
+    previousWaypoint.update();
+    nextWaypoint.update();
+  }
 
 }
