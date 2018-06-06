@@ -13,12 +13,9 @@ public class DisplayPath {
   private Pane group = new Pane();
   static private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-  private Pane drawPane;
-  public DisplayPath(Pane pane){
-    drawPane = pane;
+  public DisplayPath(){
     createInitialWaypoints();
     setupDrag();
-
   }
   private void createInitialWaypoints() {
     Waypoint start = new Waypoint(0, 0, false);
@@ -99,8 +96,10 @@ public class DisplayPath {
   }
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    wp.setX(event.getX());
-    wp.setY(event.getY());
+    if(group.getLayoutBounds().contains(event.getX(),event.getY())){
+      wp.setX(event.getX());
+      wp.setY(event.getY());
+    }
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
@@ -154,10 +153,6 @@ public class DisplayPath {
     makeDeletable(newPoint);
     setupWaypoint(newPoint);
     selectWaypoint(newPoint);
-
-    System.out.println("TopDrawPane " + drawPane.getWidth() + " " + drawPane.getHeight());
-    System.out.println("Path Group " + group.getLayoutBounds());
-
     return newPoint;
   }
 

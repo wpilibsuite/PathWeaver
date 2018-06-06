@@ -46,39 +46,33 @@ public class PathDisplayController {
 
     group.getTransforms().add(scale);
 
+
     setupDrawPaneSizing();
 
 
-    DisplayPath firstPath = new DisplayPath(drawPane);
+    /*DisplayPath firstPath = new DisplayPath(drawPane);
     drawPane.getChildren().add(firstPath.getGroup());
     firstPath.getGroup().minHeightProperty().bind(drawPane.heightProperty());
     firstPath.getGroup().minWidthProperty().bind(drawPane.widthProperty());
+    firstPath.getGroup().maxHeightProperty().bind(drawPane.heightProperty());
+    firstPath.getGroup().maxWidthProperty().bind(drawPane.widthProperty());*/
 
-    DisplayPath secondPath = new DisplayPath(drawPane);
+    DisplayPath secondPath = new DisplayPath();
     drawPane.getChildren().add(secondPath.getGroup());
     secondPath.getGroup().minHeightProperty().bind(drawPane.heightProperty());
     secondPath.getGroup().minWidthProperty().bind(drawPane.widthProperty());
-    System.out.println(drawPane.getChildren());
+    secondPath.getGroup().maxHeightProperty().bind(drawPane.heightProperty());
+    secondPath.getGroup().maxWidthProperty().bind(drawPane.widthProperty());
 
   }
 void setupDrawPaneSizing(){
-  double aspectRatio = image.getWidth() / image.getHeight();
 
-  drawPane.maxWidthProperty().bind(Bindings.createDoubleBinding(()->
-          Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
-      backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-
-  drawPane.maxHeightProperty().bind(Bindings.createDoubleBinding(()->
-          Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
-      backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-
-  drawPane.minWidthProperty().bind(Bindings.createDoubleBinding(()->
-          Math.min(backgroundImage.getFitWidth(), backgroundImage.getFitHeight() * aspectRatio),
-      backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
-
-  drawPane.minHeightProperty().bind(Bindings.createDoubleBinding(()->
-          Math.min(backgroundImage.getFitHeight(), backgroundImage.getFitWidth() / aspectRatio),
-      backgroundImage.fitWidthProperty(),backgroundImage.fitHeightProperty()));
+  drawPane.setMaxWidth(image.getWidth());
+  drawPane.setMinWidth(image.getWidth());
+  drawPane.setMaxHeight(image.getHeight());
+  drawPane.setMinHeight(image.getHeight());
+  drawPane.setPrefHeight(image.getHeight());
+  drawPane.setPrefWidth(image.getWidth());
 
 }
 

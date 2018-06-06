@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.layout.Pane?>
-<BorderPane fx:controller="edu.wpi.first.pathui.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #101824;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="edu.wpi.first.pathui.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
    <right>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="sidePane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
          <items>
             <TreeView fx:id="autons" prefHeight="200.0" prefWidth="200.0" />
             <TreeView fx:id="paths" prefHeight="200.0" prefWidth="200.0" />
