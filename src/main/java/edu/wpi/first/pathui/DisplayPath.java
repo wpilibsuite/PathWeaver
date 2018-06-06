@@ -10,7 +10,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 
 public class DisplayPath {
-  private Pane group = new Pane();
+  private Pane pathPane = new Pane();
   static private Waypoint selectedWaypoint = null;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   public DisplayPath(){
@@ -22,10 +22,10 @@ public class DisplayPath {
     start.setTheta(0);
     Waypoint end = new Waypoint(250, 250, false);
     end.setTheta(3.14 / 2);
-    group.getChildren().add(start.getTangentLine());
-    group.getChildren().add(end.getTangentLine());
-    group.getChildren().add(start.getDot());
-    group.getChildren().add(end.getDot());
+    pathPane.getChildren().add(start.getTangentLine());
+    pathPane.getChildren().add(end.getTangentLine());
+    pathPane.getChildren().add(start.getDot());
+    pathPane.getChildren().add(end.getDot());
     start.setNextWaypoint(end);
     end.setPreviousWaypoint(start);
     start.setTangent(new Point2D(200, 0));
@@ -38,7 +38,7 @@ public class DisplayPath {
   private void selectWaypoint(Waypoint waypoint) {
     if (selectedWaypoint == waypoint) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
-      group.requestFocus();
+      pathPane.requestFocus();
       selectedWaypoint = null;
     } else {
       if (selectedWaypoint != null) {
@@ -67,16 +67,16 @@ public class DisplayPath {
       } else {
         menu.getItems().add(FxUtils.menuItem("Show control vector", __ -> waypoint.getTangentLine().setVisible(true)));
       }
-      menu.show(group.getScene().getWindow(), e.getScreenX(), e.getScreenY());
+      menu.show(pathPane.getScene().getWindow(), e.getScreenX(), e.getScreenY());
     });
   }
 
   private void setupDrag() {
-    group.setOnDragDone(event -> {
+    pathPane.setOnDragDone(event -> {
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
-    group.setOnDragOver(event -> {
+    pathPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
       if (dragboard.hasContent(DataFormats.WAYPOINT)) {
@@ -87,7 +87,7 @@ public class DisplayPath {
         handleSplineDrag(event, wp);
       }
     });
-    group.setOnMousePressed(e -> {
+    pathPane.setOnMousePressed(e -> {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;
@@ -96,7 +96,7 @@ public class DisplayPath {
   }
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    if(group.getLayoutBounds().contains(event.getX(),event.getY())){
+    if(pathPane.getLayoutBounds().contains(event.getX(),event.getY())){
       wp.setX(event.getX());
       wp.setY(event.getY());
     }
@@ -128,7 +128,7 @@ public class DisplayPath {
 
   private void createCurve(Waypoint start, Waypoint end) {
     Spline curve = new Spline(start, end);
-    group.getChildren().add(curve.getCubic());
+    pathPane.getChildren().add(curve.getCubic());
     curve.getCubic().toBack();
   }
 
@@ -142,8 +142,8 @@ public class DisplayPath {
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);
     previous.setNextWaypoint(newPoint);
-    group.getChildren().add(newPoint.getTangentLine());
-    group.getChildren().add(newPoint.getDot());
+    pathPane.getChildren().add(newPoint.getTangentLine());
+    pathPane.getChildren().add(newPoint.getDot());
 
     //tell spline going from previous -> next to go from previous -> new
     newPoint.addSpline(previous.getNextSpline(), false);
@@ -177,10 +177,10 @@ public class DisplayPath {
   private void delete(Waypoint waypoint) {
     Waypoint previousWaypoint = waypoint.getPreviousWaypoint();
     Waypoint nextWaypoint = waypoint.getNextWaypoint();
-    group.getChildren().remove(waypoint.getDot());
-    group.getChildren().remove(waypoint.getTangentLine());
-    group.getChildren().remove(waypoint.getPreviousSpline().getCubic());
-    group.getChildren().remove(waypoint.getNextSpline().getCubic());
+    pathPane.getChildren().remove(waypoint.getDot());
+    pathPane.getChildren().remove(waypoint.getTangentLine());
+    pathPane.getChildren().remove(waypoint.getPreviousSpline().getCubic());
+    pathPane.getChildren().remove(waypoint.getNextSpline().getCubic());
     previousWaypoint.setNextWaypoint(nextWaypoint);
     nextWaypoint.setPreviousWaypoint(previousWaypoint);
     createCurve(previousWaypoint, nextWaypoint);
@@ -188,7 +188,7 @@ public class DisplayPath {
     nextWaypoint.update();
   }
 
-  public Pane getGroup() {
-    return group;
+  public Pane getPathPane() {
+    return pathPane;
   }
 }

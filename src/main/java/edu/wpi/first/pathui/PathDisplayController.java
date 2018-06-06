@@ -1,25 +1,11 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 public class PathDisplayController {
@@ -50,19 +36,19 @@ public class PathDisplayController {
     setupDrawPaneSizing();
 
 
-    /*DisplayPath firstPath = new DisplayPath(drawPane);
-    drawPane.getChildren().add(firstPath.getGroup());
-    firstPath.getGroup().minHeightProperty().bind(drawPane.heightProperty());
-    firstPath.getGroup().minWidthProperty().bind(drawPane.widthProperty());
-    firstPath.getGroup().maxHeightProperty().bind(drawPane.heightProperty());
-    firstPath.getGroup().maxWidthProperty().bind(drawPane.widthProperty());*/
+    DisplayPath firstPath = new DisplayPath();
+    drawPane.getChildren().add(firstPath.getPathPane());
+    firstPath.getPathPane().minHeightProperty().bind(drawPane.heightProperty());
+    firstPath.getPathPane().minWidthProperty().bind(drawPane.widthProperty());
+    firstPath.getPathPane().maxHeightProperty().bind(drawPane.heightProperty());
+    firstPath.getPathPane().maxWidthProperty().bind(drawPane.widthProperty());
 
     DisplayPath secondPath = new DisplayPath();
-    drawPane.getChildren().add(secondPath.getGroup());
-    secondPath.getGroup().minHeightProperty().bind(drawPane.heightProperty());
-    secondPath.getGroup().minWidthProperty().bind(drawPane.widthProperty());
-    secondPath.getGroup().maxHeightProperty().bind(drawPane.heightProperty());
-    secondPath.getGroup().maxWidthProperty().bind(drawPane.widthProperty());
+    drawPane.getChildren().add(secondPath.getPathPane());
+    secondPath.getPathPane().minHeightProperty().bind(drawPane.heightProperty());
+    secondPath.getPathPane().minWidthProperty().bind(drawPane.widthProperty());
+    secondPath.getPathPane().maxHeightProperty().bind(drawPane.heightProperty());
+    secondPath.getPathPane().maxWidthProperty().bind(drawPane.widthProperty());
 
   }
 void setupDrawPaneSizing(){
