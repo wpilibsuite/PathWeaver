@@ -16,6 +16,7 @@ public class DisplayPath {
   public DisplayPath(){
     createInitialWaypoints();
     setupDrag();
+    pathPane.setPickOnBounds(false);
   }
   private void createInitialWaypoints() {
     Waypoint start = new Waypoint(0, 0, false);
