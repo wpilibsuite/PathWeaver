@@ -25,7 +25,7 @@ public class Waypoint {
   private Spline nextSpline = null;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
-  private Path path;
+  private final Path path;
   public static Waypoint currentWaypoint = null;
 
 

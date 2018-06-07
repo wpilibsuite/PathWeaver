@@ -23,15 +23,14 @@ public class PathDisplayController {
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
   private Image image;
-  private Scale scale;
+
 
   @FXML
   private void initialize() {
 
     image = new Image("edu/wpi/first/pathui/2018-field.jpg");
     backgroundImage.setImage(image);
-
-    scale = new Scale();
+    Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
             Math.min(topPane.getWidth() / image.getWidth(), topPane.getHeight() / image.getHeight()),
         topPane.widthProperty(), topPane.heightProperty()));
@@ -50,37 +49,35 @@ public class PathDisplayController {
     addPathToPane(second);
 
     removePathFromPane(first);
-    //addPathToPane(third);
+    addPathToPane(third);
   }
-  private void addPathToPane(Path newPath){
+
+  private void addPathToPane(Path newPath) {
     Waypoint current = newPath.getStart();
-    while(current != null){
+    while (current != null) {
       drawPane.getChildren().add(current.getDot());
       drawPane.getChildren().add(current.getTangentLine());
       current = current.getNextWaypoint();
-      System.out.println("running");
-      if(current != null){
+      if (current != null) {
         drawPane.getChildren().add(current.getPreviousSpline().getCubic());
       }
     }
   }
-  private void removePathFromPane(Path newPath){
+
+  private void removePathFromPane(Path newPath) {
     Waypoint current = newPath.getStart();
-    while(current != null){
+    while (current != null) {
       drawPane.getChildren().remove(current.getDot());
       drawPane.getChildren().remove(current.getTangentLine());
       current = current.getNextWaypoint();
-      System.out.println("running");
-      if(current != null){
+      if (current != null) {
         drawPane.getChildren().remove(current.getPreviousSpline().getCubic());
       }
     }
   }
 
 
-
-
-  void setupDrawPaneSizing() {
+  private void setupDrawPaneSizing() {
 
     drawPane.setMaxWidth(image.getWidth());
     drawPane.setMinWidth(image.getWidth());
@@ -203,7 +200,7 @@ public class PathDisplayController {
       Spline current = Spline.currentSpline;
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
-      Waypoint newPoint = current.getEnd().getPath() .addNewWaypoint(start,end);
+      Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
       drawPane.getChildren().add(newPoint.getNextSpline().getCubic());
       drawPane.getChildren().add(newPoint.getDot());
       drawPane.getChildren().add(newPoint.getTangentLine());

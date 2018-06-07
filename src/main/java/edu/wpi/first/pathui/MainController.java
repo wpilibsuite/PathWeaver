@@ -11,7 +11,6 @@ public class MainController {
   @FXML
   private void initialize() {
     TreeItem<String> root = new TreeItem<String>("Autons");
-    System.out.println("root + " + root);
     root.getChildren().addAll(
         new TreeItem<String>("Left Scoring Auton"),
         new TreeItem<String>("Left Defensive Auton"),
