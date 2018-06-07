@@ -10,7 +10,7 @@
       <Group fx:id="group">
          <children>
             <ImageView fx:id="backgroundImage" preserveRatio="true" />
-            <StackPane fx:id="drawPane" />
+            <Pane fx:id="drawPane" />
          </children>
       </Group>
    </children>

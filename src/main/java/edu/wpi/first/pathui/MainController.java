@@ -3,8 +3,6 @@ package edu.wpi.first.pathui;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class MainController {
   @FXML private TreeView<String> autons;
@@ -36,9 +34,7 @@ public class MainController {
     );
 
 
-
-
   }
 
-  }
+}
 
