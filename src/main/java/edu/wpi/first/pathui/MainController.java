@@ -12,24 +12,24 @@ public class MainController {
   private void initialize() {
     TreeItem<String> root = new TreeItem<String>("Autons");
     root.getChildren().addAll(
-        new TreeItem<String>("Left Scoring Auton"),
-        new TreeItem<String>("Left Defensive Auton"),
-        new TreeItem<String>("Center Auton")
+        new TreeItem<>("Left Scoring Auton"),
+        new TreeItem<>("Left Defensive Auton"),
+        new TreeItem<>("Center Auton")
     );
     autons.setRoot(root);
     autons.getRoot().setExpanded(true);
     root.getChildren().get(0).getChildren().addAll(
-        new TreeItem<String>("Left - Left Cube"),
-        new TreeItem<String>("Left Cube - Switch"),
-        new TreeItem<String>("Switch to Center Cube Pile")
+        new TreeItem<>("Left - Left Cube"),
+        new TreeItem<>("Left Cube - Switch"),
+        new TreeItem<>("Switch to Center Cube Pile")
     );
     root.getChildren().get(1).getChildren().addAll(
-        new TreeItem<String>("Left - Defensive Position")
+        new TreeItem<>("Left - Defensive Position")
     );
     root.getChildren().get(2).getChildren().addAll(
-        new TreeItem<String>("Right - Right Cube"),
-        new TreeItem<String>("Right Cube - Switch"),
-        new TreeItem<String>("Switch to Center Cube Pile")
+        new TreeItem<>("Right - Right Cube"),
+        new TreeItem<>("Right Cube - Switch"),
+        new TreeItem<>("Switch to Center Cube Pile")
     );
 
 
