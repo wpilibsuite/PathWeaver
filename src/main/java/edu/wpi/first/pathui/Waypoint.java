@@ -25,7 +25,7 @@ public class Waypoint {
   private Spline nextSpline = null;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
-
+  private final Path path;
   public static Waypoint currentWaypoint = null;
 
 
@@ -38,6 +38,10 @@ public class Waypoint {
     }
   };
 
+  public Path getPath() {
+    return path;
+  }
+
   /**
    * Creates Waypoint object containing javafx circle.
    *
@@ -45,7 +49,8 @@ public class Waypoint {
    * @param yPosition  Y coordinate in pixels
    * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
    */
-  public Waypoint(double xPosition, double yPosition, boolean fixedAngle) {
+  public Waypoint(double xPosition, double yPosition, boolean fixedAngle, Path myPath) {
+    path = myPath;
     lockTheta = fixedAngle;
     setX(xPosition);
     setY(yPosition);
