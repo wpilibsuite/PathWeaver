@@ -2,7 +2,7 @@ package edu.wpi.first.pathui;
 
 import javafx.geometry.Point2D;
 
-public class Path { //NOPMD
+public class Path {
   private Waypoint start;
   private Waypoint end;
 
