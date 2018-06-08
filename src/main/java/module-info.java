@@ -3,4 +3,5 @@ module edu.wpi.first.pathui {
   requires javafx.graphics;
   requires javafx.controls;
   requires javafx.fxml;
+  requires commons.csv;
 }
