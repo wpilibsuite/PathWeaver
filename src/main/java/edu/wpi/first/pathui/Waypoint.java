@@ -19,8 +19,7 @@ public class Waypoint {
   private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
-  private final DoubleProperty theta = new SimpleDoubleProperty();
-  private boolean lockTheta;
+  private boolean lockTangent;
   private Spline previousSpline = null;
   private Spline nextSpline = null;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
@@ -32,8 +31,8 @@ public class Waypoint {
   private final Line tangentLine;
   private final Circle dot;
   private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
-    if (event.getClickCount() == 2 && lockTheta) {
-      lockTheta = false;
+    if (event.getClickCount() == 2 && lockTangent) {
+      lockTangent = false;
       update();
     }
   };
@@ -51,7 +50,7 @@ public class Waypoint {
    */
   public Waypoint(double xPosition, double yPosition,double xTangent,double yTangent, boolean fixedAngle, Path myPath) {
     path = myPath;
-    lockTheta = fixedAngle;
+    lockTangent = fixedAngle;
     setX(xPosition);
     setY(yPosition);
     dot = new Circle(10);
@@ -85,7 +84,7 @@ public class Waypoint {
   }
 
   public void lockTangent() {
-    lockTheta = true;
+    lockTangent = true;
   }
 
   /**
@@ -110,11 +109,11 @@ public class Waypoint {
   }
 
   /**
-   * Forces Waypoint to recompute optimal theta value. Does nothing if lockTheta is true.
+   * Forces Waypoint to recompute optimal theta value. Does nothing if lockTangent is true.
    */
   @SuppressWarnings("PMD.NcssCount")
   public void updateTheta() {
-    if (lockTheta) {
+    if (lockTangent) {
       return;
     }
     if (previousWaypoint == null) {
@@ -170,9 +169,6 @@ public class Waypoint {
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
     this.tangent.set(tangent);
-
-    double newTheta = Math.atan2(getTangent().getY(), getTangent().getX());
-    setTheta(newTheta);
   }
 
   /**
@@ -196,8 +192,8 @@ public class Waypoint {
     }
   }
 
-  public boolean isLockTheta() {
-    return lockTheta;
+  public boolean isLockTangent() {
+    return lockTangent;
   }
 
   public Line getTangentLine() {
@@ -222,18 +218,6 @@ public class Waypoint {
 
   public Spline getNextSpline() {
     return nextSpline;
-  }
-
-  public double getTheta() {
-    return theta.get();
-  }
-
-  public DoubleProperty thetaProperty() {
-    return theta;
-  }
-
-  public void setTheta(double theta) {
-    this.theta.set(theta);
   }
 
   public Circle getDot() {

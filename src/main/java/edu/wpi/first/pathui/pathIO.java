@@ -20,7 +20,7 @@ public class pathIO {
         double Y = current.getY();
         double tangentX = current.getTangent().getX();
         double tangentY = current.getTangent().getY();
-        csvPrinter.printRecord(X, Y, tangentX, tangentY,current.isLockTheta());
+        csvPrinter.printRecord(X, Y, tangentX, tangentY,current.isLockTangent());
 
         current = current.getNextWaypoint();
 
