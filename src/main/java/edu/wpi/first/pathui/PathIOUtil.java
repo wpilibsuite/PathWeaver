@@ -10,13 +10,16 @@ import java.nio.file.Paths;
 
 public final class PathIOUtil {
 
-  private PathIOUtil(){}
+  private PathIOUtil() {
+  }
 
 
-  /** Exports path object to csv file.
+  /**
+   * Exports path object to csv file.
    *
    * @param filePath the directory and filename to write to
-   * @param path Path object to save
+   * @param path     Path object to save
+   *
    * @return true if successful file write was preformed
    */
   public static boolean export(String filePath, Path path) {
@@ -42,8 +45,6 @@ public final class PathIOUtil {
     }
     return true;
   }
-
-
 
 
 }

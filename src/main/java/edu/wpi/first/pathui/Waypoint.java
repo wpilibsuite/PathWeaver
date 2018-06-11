@@ -44,10 +44,10 @@ public class Waypoint {
   /**
    * Creates Waypoint object containing javafx circle.
    *
-   * @param position  x and y coordinates in pixels
-   * @param tangentVector  tangent vector in pixels
-   * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
-   * @param myPath the path this waypoint belongs to
+   * @param position      x and y coordinates in pixels
+   * @param tangentVector tangent vector in pixels
+   * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
+   * @param myPath        the path this waypoint belongs to
    */
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
