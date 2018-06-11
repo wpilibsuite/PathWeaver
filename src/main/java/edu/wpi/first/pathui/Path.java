@@ -1,17 +1,34 @@
 package edu.wpi.first.pathui;
 
 
+import javafx.geometry.Point2D;
+
 public class Path {
   private Waypoint start;
   private Waypoint end;
 
   public Path() {
-    createInitialWaypoints();
+    createDefaultWaypoints();
   }
 
-  private void createInitialWaypoints() {
-    start = new Waypoint(0, 0, 200, 0, false, this);
-    end = new Waypoint(250, 250, 0, 200, false, this);
+  public Path(Point2D start , Point2D end, Point2D startTangent , Point2D endTangent){
+    createInitialWaypoints(start , end , startTangent , endTangent);
+
+  }
+
+
+  private void createDefaultWaypoints() {
+    Point2D startPos = new Point2D(0,0);
+    Point2D endPos = new Point2D(250,250);
+
+    Point2D startTangent = new Point2D(200,0);
+    Point2D endTangent = new Point2D(0,200);
+    createInitialWaypoints(startPos , endPos , startTangent , endTangent);
+  }
+  private void createInitialWaypoints(Point2D startPos , Point2D endPos, Point2D startTangent , Point2D endTangent){
+    start = new Waypoint(startPos, startTangent, false, this);
+    end = new Waypoint(endPos , endTangent , false, this);
+
     start.setNextWaypoint(end);
     end.setPreviousWaypoint(start);
     createCurve(start, end);
@@ -43,8 +60,9 @@ public class Path {
     if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
-    Waypoint newPoint = new Waypoint((previous.getX() + next.getX()) / 2,
-        (previous.getY() + next.getY()) / 2, 0, 0, false, this);
+    Point2D position = new Point2D(previous.getX() + next.getX() / 2 , (previous.getY() + next.getY()) / 2);
+    Point2D tangent = new Point2D(0,0);
+    Waypoint newPoint = new Waypoint(position , tangent , false, this);
     newPoint.setPreviousWaypoint(previous);
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);

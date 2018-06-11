@@ -44,16 +44,16 @@ public class Waypoint {
   /**
    * Creates Waypoint object containing javafx circle.
    *
-   * @param xPosition  X coordinate in pixels
-   * @param yPosition  Y coordinate in pixels
+   * @param position  x and y coordinates in pixels
+   * @param tangentVector  tangent vector in pixels
    * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
+   * @param myPath the path this waypoint belongs to
    */
-  public Waypoint(double xPosition, double yPosition,
-                  double xTangent, double yTangent, boolean fixedAngle, Path myPath) {
+  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
     lockTangent = fixedAngle;
-    setX(xPosition);
-    setY(yPosition);
+    setX(position.getX());
+    setY(position.getY());
     dot = new Circle(10);
     dot.centerXProperty().bind(x);
     dot.centerYProperty().bind(y);
@@ -63,7 +63,7 @@ public class Waypoint {
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(new Point2D(xTangent, yTangent));
+    tangent.set(tangentVector);
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
