@@ -49,7 +49,7 @@ public class Waypoint {
    * @param yPosition  Y coordinate in pixels
    * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
    */
-  public Waypoint(double xPosition, double yPosition, boolean fixedAngle, Path myPath) {
+  public Waypoint(double xPosition, double yPosition,double xTangent,double yTangent, boolean fixedAngle, Path myPath) {
     path = myPath;
     lockTheta = fixedAngle;
     setX(xPosition);
@@ -63,13 +63,12 @@ public class Waypoint {
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(new Point2D(0, 0));
+    tangent.set(new Point2D(xTangent, yTangent));
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
     setupDnd();
   }
-
   private void setupDnd() {
     dot.setOnDragDetected(event -> {
       currentWaypoint = this;
@@ -195,6 +194,10 @@ public class Waypoint {
       previousSpline.getCubic().endYProperty().bind(y);
       newSpline.setEnd(this);
     }
+  }
+
+  public boolean isLockTheta() {
+    return lockTheta;
   }
 
   public Line getTangentLine() {

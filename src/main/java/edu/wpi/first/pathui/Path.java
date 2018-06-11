@@ -11,17 +11,11 @@ public class Path {
   }
 
   private void createInitialWaypoints() {
-    start = new Waypoint(0, 0, false, this);
-    start.setTheta(0);
-    end = new Waypoint(250, 250, false, this);
-    end.setTheta(3.14 / 2);
+    start = new Waypoint(0, 0,200,0, false, this);
+    end = new Waypoint(250, 250,0,200, false, this);
     start.setNextWaypoint(end);
     end.setPreviousWaypoint(start);
-    start.setTangent(new Point2D(200, 0));
-    end.setTangent(new Point2D(0, 200));
     createCurve(start, end);
-    //setupWaypoint(start);
-    //setupWaypoint(end);
   }
 
   /**
@@ -47,7 +41,7 @@ public class Path {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
     Waypoint newPoint = new Waypoint((previous.getX() + next.getX()) / 2,
-        (previous.getY() + next.getY()) / 2, false, this);
+        (previous.getY() + next.getY()) / 2,0,0, false, this);
     newPoint.setPreviousWaypoint(previous);
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);

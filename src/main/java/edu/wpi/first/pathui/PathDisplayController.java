@@ -154,6 +154,7 @@ public class PathDisplayController {
 
   private void setupDrag() {
     drawPane.setOnDragDone(event -> {
+      pathIO.export("test",Waypoint.currentWaypoint.getPath());
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
