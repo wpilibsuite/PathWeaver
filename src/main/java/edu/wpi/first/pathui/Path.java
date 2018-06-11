@@ -1,6 +1,5 @@
 package edu.wpi.first.pathui;
 
-import javafx.geometry.Point2D;
 
 public class Path {
   private Waypoint start;
@@ -11,8 +10,8 @@ public class Path {
   }
 
   private void createInitialWaypoints() {
-    start = new Waypoint(0, 0,200,0, false, this);
-    end = new Waypoint(250, 250,0,200, false, this);
+    start = new Waypoint(0, 0, 200, 0, false, this);
+    end = new Waypoint(250, 250, 0, 200, false, this);
     start.setNextWaypoint(end);
     end.setPreviousWaypoint(start);
     createCurve(start, end);
@@ -20,8 +19,10 @@ public class Path {
 
   /**
    * Make new Spline object.
+   *
    * @param start First Waypoint connected
-   * @param end Second Waypoint connected
+   * @param end   Second Waypoint connected
+   *
    * @return Spline object
    */
   public Spline createCurve(Waypoint start, Waypoint end) {
@@ -32,8 +33,10 @@ public class Path {
 
   /**
    * Add Waypoint between previous and next.
+   *
    * @param previous The point prior to new point
-   * @param next The point after the new point
+   * @param next     The point after the new point
+   *
    * @return new Waypoint
    */
   public Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
@@ -41,7 +44,7 @@ public class Path {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
     Waypoint newPoint = new Waypoint((previous.getX() + next.getX()) / 2,
-        (previous.getY() + next.getY()) / 2,0,0, false, this);
+        (previous.getY() + next.getY()) / 2, 0, 0, false, this);
     newPoint.setPreviousWaypoint(previous);
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);

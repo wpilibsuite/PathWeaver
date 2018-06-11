@@ -48,7 +48,8 @@ public class Waypoint {
    * @param yPosition  Y coordinate in pixels
    * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
    */
-  public Waypoint(double xPosition, double yPosition,double xTangent,double yTangent, boolean fixedAngle, Path myPath) {
+  public Waypoint(double xPosition, double yPosition,
+                  double xTangent, double yTangent, boolean fixedAngle, Path myPath) {
     path = myPath;
     lockTangent = fixedAngle;
     setX(xPosition);
@@ -68,6 +69,7 @@ public class Waypoint {
 
     setupDnd();
   }
+
   private void setupDnd() {
     dot.setOnDragDetected(event -> {
       currentWaypoint = this;

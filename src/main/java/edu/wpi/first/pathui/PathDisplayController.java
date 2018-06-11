@@ -41,6 +41,7 @@ public class PathDisplayController {
     group.getTransforms().add(scale);
     setupDrawPaneSizing();
     setupDrag();
+    setupPress();
     Path first = new Path();
     Path second = new Path();
     Path third = new Path();
@@ -154,7 +155,7 @@ public class PathDisplayController {
 
   private void setupDrag() {
     drawPane.setOnDragDone(event -> {
-      pathIO.export("test",Waypoint.currentWaypoint.getPath());
+      PathIOUtil.export("test", Waypoint.currentWaypoint.getPath());
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
@@ -169,6 +170,9 @@ public class PathDisplayController {
         handleSplineDrag(event, wp);
       }
     });
+  }
+
+  private void setupPress() {
     drawPane.setOnMousePressed(e -> {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
