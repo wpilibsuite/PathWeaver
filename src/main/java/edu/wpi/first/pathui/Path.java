@@ -5,12 +5,14 @@ import javafx.geometry.Point2D;
 public class Path {
   private Waypoint start;
   private Waypoint end;
+  String pathName = "default";
 
   public Path() {
     createDefaultWaypoints();
   }
 
-  public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent) {
+  public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent , String name) {
+    pathName = name;
     createInitialWaypoints(start, end, startTangent, endTangent);
 
   }
@@ -62,17 +64,45 @@ public class Path {
     }
     Point2D position = new Point2D(previous.getX() + next.getX() / 2, (previous.getY() + next.getY()) / 2);
     Point2D tangent = new Point2D(0, 0);
-    Waypoint newPoint = new Waypoint(position, tangent, false, this);
-    newPoint.setPreviousWaypoint(previous);
+
+    //add new point after previous
+    Waypoint newPoint = addNewWaypoint(previous, position, tangent , false);
+
+    //connect newPoint to next
     newPoint.setNextWaypoint(next);
     next.setPreviousWaypoint(newPoint);
-    previous.setNextWaypoint(newPoint);
     //tell spline going from previous -> next to go from previous -> new
-    newPoint.addSpline(previous.getNextSpline(), false);
-    createCurve(newPoint, next); //new spline from new -> next
-
+    newPoint.addSpline(next.getPreviousSpline(), true);
     newPoint.update();
     return newPoint;
+  }
+
+  /**
+   * Create new Waypoint in Path after previous.
+   *
+   * @param previous The node before this one
+   * @param position Position to play new Waypoint
+   * @param tangent  Tangent vector at the new point
+   *
+   * @return new Waypoint
+   */
+  public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent , Boolean locked) {
+    Waypoint newPoint = new Waypoint(position, tangent, locked, this);
+    newPoint.setPreviousWaypoint(previous);
+    previous.setNextWaypoint(newPoint);
+    createCurve(previous, newPoint); //new spline from new -> next
+    if(previous == getEnd()){
+      setEnd(newPoint);
+    }
+    return newPoint;
+  }
+
+  public String getPathName() {
+    return pathName;
+  }
+
+  public void setPathName(String pathName) {
+    this.pathName = pathName;
   }
 
   public Waypoint getStart() {
@@ -81,5 +111,9 @@ public class Path {
 
   public Waypoint getEnd() {
     return end;
+  }
+
+  public void setEnd(Waypoint end) {
+    this.end = end;
   }
 }

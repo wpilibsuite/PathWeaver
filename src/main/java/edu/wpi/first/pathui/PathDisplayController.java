@@ -42,15 +42,15 @@ public class PathDisplayController {
     setupDrawPaneSizing();
     setupDrag();
     setupPress();
+
     Path first = new Path();
     Path second = new Path();
     Path third = new Path();
-
+    Path fourth = PathIOUtil.importPath("Paths/","default");
     addPathToPane(first);
-    addPathToPane(second);
 
     removePathFromPane(first);
-    addPathToPane(third);
+    addPathToPane(fourth);
   }
 
   private void addPathToPane(Path newPath) {
@@ -58,9 +58,11 @@ public class PathDisplayController {
     while (current != null) {
       drawPane.getChildren().add(current.getDot());
       drawPane.getChildren().add(current.getTangentLine());
+      current.getTangentLine().toBack();
       current = current.getNextWaypoint();
       if (current != null) {
         drawPane.getChildren().add(current.getPreviousSpline().getCubic());
+        current.getPreviousSpline().getCubic().toBack();
       }
     }
   }
@@ -155,7 +157,7 @@ public class PathDisplayController {
 
   private void setupDrag() {
     drawPane.setOnDragDone(event -> {
-      PathIOUtil.export("test", Waypoint.currentWaypoint.getPath());
+      PathIOUtil.export("Paths/", Waypoint.currentWaypoint.getPath());
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
@@ -206,7 +208,7 @@ public class PathDisplayController {
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
       Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      drawPane.getChildren().add(newPoint.getNextSpline().getCubic());
+      drawPane.getChildren().add(newPoint.getPreviousSpline().getCubic());
       drawPane.getChildren().add(newPoint.getDot());
       drawPane.getChildren().add(newPoint.getTangentLine());
       makeDeletable(newPoint);

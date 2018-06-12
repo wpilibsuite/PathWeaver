@@ -1,12 +1,17 @@
 package edu.wpi.first.pathui;
 
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import javafx.geometry.Point2D;
 
 public final class PathIOUtil {
 
@@ -22,9 +27,10 @@ public final class PathIOUtil {
    *
    * @return true if successful file write was preformed
    */
-  public static boolean export(String filePath, Path path) {
+  public static boolean export(String fileLocation, Path path) {
     try (
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath + ".path"));
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName() + ".path"));
+
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
             .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
     ) {
@@ -40,10 +46,52 @@ public final class PathIOUtil {
 
       }
       csvPrinter.flush();
+      System.out.println("saved");
     } catch (IOException except) {
       return false;
     }
     return true;
+  }
+
+  public static Path importPath(String fileLocation , String fileName) {
+    try (
+        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName + ".path"));
+        CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+            .withFirstRecordAsHeader()
+            .withIgnoreHeaderCase()
+            .withTrim());
+    ) {
+      int count = 0;
+      Point2D startPosition = null;
+      Point2D startTangent = null;
+      Path path = null;
+      for (CSVRecord csvRecord : csvParser) {
+        // Accessing values by Header names
+        count ++;
+        Point2D position = new Point2D(
+            Double.parseDouble(csvRecord.get("X")),
+            Double.parseDouble(csvRecord.get("Y")));
+        Point2D tangent = new Point2D(
+            Double.parseDouble(csvRecord.get("Tangent X")),
+            Double.parseDouble(csvRecord.get("Tangent Y")));
+        boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
+        if(count ==1){
+          startPosition = position;
+          startTangent = tangent;
+        }else if(count ==2 ){
+          path = new Path(startPosition,position,startTangent,tangent,fileName);
+        }else{
+          System.out.println(count);
+          path.addNewWaypoint(path.getEnd(),position,tangent,locked);
+        }
+      }
+      return path;
+
+    } catch (IOException except) {
+      System.out.println("couldnt read " + fileLocation + fileName + ".path");
+      return null;
+    }
+
   }
 
 
