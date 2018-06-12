@@ -17,7 +17,7 @@ CubicCurve {
     -fx-stroke: derive(orange, -25%);
     -fx-stroke-width: 4px;
     -fx-stroke-line-cap: round;
-    -fx-fill: transparent;
+    -fx-fill: null;
     -fx-cursor: hand;
 }
 

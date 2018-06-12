@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<Pane fx:id="topPane" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.PathDisplayController">
+    <children>
+        <Group fx:id="group">
+            <children>
+                <ImageView fx:id="backgroundImage" preserveRatio="true"/>
+                <Pane fx:id="drawPane"/>
+            </children>
+        </Group>
+    </children>
+</Pane>

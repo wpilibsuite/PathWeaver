@@ -24,6 +24,12 @@
         <exclude name="ShortVariable"/>
         <exclude name="TooManyStaticImports"/>
     </rule>
+    <rule ref="category/java/codestyle.xml/ShortClassName">
+        <properties>
+            <property name="minimum" value="4"></property>
+        </properties>
+
+    </rule>
     <rule ref="category/java/design.xml">
         <exclude name="DataClass"/>
         <exclude name="LawOfDemeter"/>
