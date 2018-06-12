@@ -5,16 +5,23 @@ import javafx.geometry.Point2D;
 public class Path {
   private Waypoint start;
   private Waypoint end;
-  String pathName = "default";
+  private String pathName = "default";
 
   public Path() {
     createDefaultWaypoints();
   }
 
-  public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent , String name) {
+  /** Path constructor based on known start and end points.
+   *
+   * @param start The starting waypoint of new path
+   * @param end The ending waypoint of new path
+   * @param startTangent The starting tangent vector of new path
+   * @param endTangent The ending tangent vector of new path
+   * @param name The string name to assign path, also used for naming exported files
+   */
+  public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
     createInitialWaypoints(start, end, startTangent, endTangent);
-
   }
 
 
@@ -66,7 +73,7 @@ public class Path {
     Point2D tangent = new Point2D(0, 0);
 
     //add new point after previous
-    Waypoint newPoint = addNewWaypoint(previous, position, tangent , false);
+    Waypoint newPoint = addNewWaypoint(previous, position, tangent, false);
 
     //connect newPoint to next
     newPoint.setNextWaypoint(next);
@@ -86,12 +93,12 @@ public class Path {
    *
    * @return new Waypoint
    */
-  public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent , Boolean locked) {
+  public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, Boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
     newPoint.setPreviousWaypoint(previous);
     previous.setNextWaypoint(newPoint);
     createCurve(previous, newPoint); //new spline from new -> next
-    if(previous == getEnd()){
+    if (previous == getEnd()) {
       setEnd(newPoint);
     }
     return newPoint;

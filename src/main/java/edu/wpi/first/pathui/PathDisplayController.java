@@ -44,9 +44,8 @@ public class PathDisplayController {
     setupPress();
 
     Path first = new Path();
-    Path second = new Path();
-    Path third = new Path();
-    Path fourth = PathIOUtil.importPath("Paths/","default");
+
+    Path fourth = PathIOUtil.importPath("Paths/", "default");
     addPathToPane(first);
 
     removePathFromPane(first);

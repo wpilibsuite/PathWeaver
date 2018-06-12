@@ -22,7 +22,7 @@ public final class PathIOUtil {
   /**
    * Exports path object to csv file.
    *
-   * @param filePath the directory and filename to write to
+   * @param fileLocation the directory and filename to write to
    * @param path     Path object to save
    *
    * @return true if successful file write was preformed
@@ -46,14 +46,20 @@ public final class PathIOUtil {
 
       }
       csvPrinter.flush();
-      System.out.println("saved");
     } catch (IOException except) {
       return false;
     }
     return true;
   }
 
-  public static Path importPath(String fileLocation , String fileName) {
+  /** Imports Path object from disk.
+   *
+   * @param fileLocation Folder with path file
+   * @param fileName Name of path file
+   * @return Path object saved in Path file
+   */
+  @SuppressWarnings("PMD.NcssCount")
+  public static Path importPath(String fileLocation, String fileName) {
     try (
         Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName + ".path"));
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
@@ -67,7 +73,7 @@ public final class PathIOUtil {
       Path path = null;
       for (CSVRecord csvRecord : csvParser) {
         // Accessing values by Header names
-        count ++;
+        count++;
         Point2D position = new Point2D(
             Double.parseDouble(csvRecord.get("X")),
             Double.parseDouble(csvRecord.get("Y")));
@@ -75,20 +81,18 @@ public final class PathIOUtil {
             Double.parseDouble(csvRecord.get("Tangent X")),
             Double.parseDouble(csvRecord.get("Tangent Y")));
         boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
-        if(count ==1){
+        if (count == 1) {
           startPosition = position;
           startTangent = tangent;
-        }else if(count ==2 ){
-          path = new Path(startPosition,position,startTangent,tangent,fileName);
-        }else{
-          System.out.println(count);
-          path.addNewWaypoint(path.getEnd(),position,tangent,locked);
+        } else if (count == 2) {
+          path = new Path(startPosition, position, startTangent, tangent, fileName);
+        } else {
+          path.addNewWaypoint(path.getEnd(), position, tangent, locked);
         }
       }
       return path;
 
     } catch (IOException except) {
-      System.out.println("couldnt read " + fileLocation + fileName + ".path");
       return null;
     }
 
