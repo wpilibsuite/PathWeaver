@@ -55,6 +55,7 @@ public class PathDisplayController {
   private void addPathToPane(Path newPath) {
     Waypoint current = newPath.getStart();
     while (current != null) {
+      setupWaypoint(current);
       drawPane.getChildren().add(current.getDot());
       drawPane.getChildren().add(current.getTangentLine());
       current.getTangentLine().toBack();
@@ -135,6 +136,7 @@ public class PathDisplayController {
     nextWaypoint.setPreviousWaypoint(previousWaypoint);
     Spline newCurve = previousWaypoint.getPath().createCurve(previousWaypoint, nextWaypoint);
     drawPane.getChildren().add(newCurve.getCubic());
+    newCurve.getCubic().toBack();
     previousWaypoint.update();
     nextWaypoint.update();
   }
@@ -210,6 +212,8 @@ public class PathDisplayController {
       drawPane.getChildren().add(newPoint.getPreviousSpline().getCubic());
       drawPane.getChildren().add(newPoint.getDot());
       drawPane.getChildren().add(newPoint.getTangentLine());
+      newPoint.getTangentLine().toBack();
+      newPoint.getPreviousSpline().getCubic().toBack();
       makeDeletable(newPoint);
       setupWaypoint(newPoint);
       selectWaypoint(newPoint);
