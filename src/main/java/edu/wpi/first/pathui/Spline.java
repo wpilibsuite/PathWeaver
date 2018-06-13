@@ -1,6 +1,10 @@
 package edu.wpi.first.pathui;
 
+import java.util.Map;
+
 import javafx.geometry.Point2D;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
@@ -9,10 +13,13 @@ public class Spline {
   private Waypoint start;
   private Waypoint end;
 
-  /** Makes a spline.
+  public static Spline currentSpline = null;
+
+  /**
+   * Makes a spline.
    *
    * @param first Waypoint at start of spline
-   * @param last Waypoing at end of spline
+   * @param last  Waypoing at end of spline
    */
   public Spline(Waypoint first, Waypoint last) {
     start = first;
@@ -21,11 +28,17 @@ public class Spline {
     start.addSpline(this, true);
     end.addSpline(this, false);
     updateControlPoints();
+
+
+    cubic.setOnDragDetected(event -> {
+      Dragboard board = cubic.startDragAndDrop(TransferMode.ANY);
+      board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
+      currentSpline = this;
+    });
   }
 
   /**
    * Forces Spline to recompute and update its bezier curve control points.
-   *
    */
   public void updateControlPoints() {
     Pair<Point2D, Point2D> points = computeControlPoints();

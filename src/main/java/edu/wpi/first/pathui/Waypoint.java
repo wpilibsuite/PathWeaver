@@ -7,9 +7,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -19,30 +19,41 @@ public class Waypoint {
   private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
-  private final DoubleProperty theta = new SimpleDoubleProperty();
-  private boolean lockTheta;
+  private boolean lockTangent;
   private Spline previousSpline = null;
   private Spline nextSpline = null;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
-
-
+  private final Path path;
   public static Waypoint currentWaypoint = null;
 
 
   private final Line tangentLine;
   private final Circle dot;
+  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
+    if (event.getClickCount() == 2 && lockTangent) {
+      lockTangent = false;
+      update();
+    }
+  };
+
+  public Path getPath() {
+    return path;
+  }
 
   /**
    * Creates Waypoint object containing javafx circle.
-   * @param xPosition X coordinate in pixels
-   * @param yPosition Y coordinate in pixels
-   * @param fixedAngle If the angle the of the waypoint should be fixed. Used for first and last waypoint
+   *
+   * @param position      x and y coordinates in pixels
+   * @param tangentVector tangent vector in pixels
+   * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
+   * @param myPath        the path this waypoint belongs to
    */
-  public Waypoint(double xPosition, double yPosition, boolean fixedAngle) {
-    lockTheta = fixedAngle;
-    setX(xPosition);
-    setY(yPosition);
+  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
+    path = myPath;
+    lockTangent = fixedAngle;
+    setX(position.getX());
+    setY(position.getY());
     dot = new Circle(10);
     dot.centerXProperty().bind(x);
     dot.centerYProperty().bind(y);
@@ -52,7 +63,7 @@ public class Waypoint {
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(new Point2D(0, 0));
+    tangent.set(tangentVector);
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
@@ -62,24 +73,20 @@ public class Waypoint {
   private void setupDnd() {
     dot.setOnDragDetected(event -> {
       currentWaypoint = this;
-      Dragboard board = dot.startDragAndDrop(TransferMode.MOVE);
-      board.setContent(Map.of(DataFormat.PLAIN_TEXT, "point"));
+      dot.startDragAndDrop(TransferMode.MOVE)
+          .setContent(Map.of(DataFormats.WAYPOINT, "point"));
     });
+    dot.setOnMouseClicked(resetOnDoubleClick);
     tangentLine.setOnDragDetected(event -> {
       currentWaypoint = this;
       tangentLine.startDragAndDrop(TransferMode.MOVE)
-          .setContent(Map.of(DataFormat.PLAIN_TEXT, "vector"));
+          .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
     });
-    tangentLine.setOnMouseClicked(event -> {
-      if (event.getClickCount() == 2 && lockTheta) {
-        lockTheta = false;
-        update();
-      }
-    });
+    tangentLine.setOnMouseClicked(resetOnDoubleClick);
   }
 
   public void lockTangent() {
-    lockTheta = true;
+    lockTangent = true;
   }
 
   /**
@@ -104,11 +111,11 @@ public class Waypoint {
   }
 
   /**
-   * Forces Waypoint to recompute optimal theta value. Does nothing if lockTheta is true.
+   * Forces Waypoint to recompute optimal theta value. Does nothing if lockTangent is true.
    */
   @SuppressWarnings("PMD.NcssCount")
   public void updateTheta() {
-    if (lockTheta) {
+    if (lockTangent) {
       return;
     }
     if (previousWaypoint == null) {
@@ -164,27 +171,31 @@ public class Waypoint {
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
     this.tangent.set(tangent);
-
-    double newTheta = Math.atan2(getTangent().getY(), getTangent().getX());
-    setTheta(newTheta);
   }
 
   /**
    * Sets previous or nextSpline and binds the Spline to waypoints position.
+   *
    * @param newSpline The spline to add
-   * @param amFirst True if this waypoint is the first point in the spline
+   * @param amFirst   True if this waypoint is the first point in the spline
    */
   public void addSpline(Spline newSpline, boolean amFirst) {
     if (amFirst) {
       nextSpline = newSpline;
       nextSpline.getCubic().startXProperty().bind(x);
       nextSpline.getCubic().startYProperty().bind(y);
+      newSpline.setStart(this);
     }
     if (!amFirst) {
       previousSpline = newSpline;
       previousSpline.getCubic().endXProperty().bind(x);
       previousSpline.getCubic().endYProperty().bind(y);
+      newSpline.setEnd(this);
     }
+  }
+
+  public boolean isLockTangent() {
+    return lockTangent;
   }
 
   public Line getTangentLine() {
@@ -209,18 +220,6 @@ public class Waypoint {
 
   public Spline getNextSpline() {
     return nextSpline;
-  }
-
-  public double getTheta() {
-    return theta.get();
-  }
-
-  public DoubleProperty thetaProperty() {
-    return theta;
-  }
-
-  public void setTheta(double theta) {
-    this.theta.set(theta);
   }
 
   public Circle getDot() {
