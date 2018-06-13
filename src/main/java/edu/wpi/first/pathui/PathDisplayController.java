@@ -23,12 +23,13 @@ public class PathDisplayController {
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
   private Image image;
+  private Field field = new Field();
 
 
   @FXML
   private void initialize() {
 
-    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    image = field.getImage();
     backgroundImage.setImage(image);
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
