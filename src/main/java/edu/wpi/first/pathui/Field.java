@@ -12,14 +12,15 @@ import javax.measure.UnitConverter;
 import javax.measure.quantity.Length;
 import javax.measure.Unit;
 
+import static systems.uom.common.USCustomary.FOOT;
+import static systems.uom.common.USCustomary.METER;
 
-import static tec.units.indriya.unit.Units.METRE;
 
 public class Field {
     private Image image= new Image("edu/wpi/first/pathui/2018-field.jpg");
     private double width=54;
     private double height=27;
-    Quantity<Length> heightReal = Quantities.getQuantity(5,METRE);
+    Quantity<Length> heightReal = Quantities.getQuantity(5,METER);
 
 
 
@@ -28,6 +29,7 @@ public class Field {
     
 
     public Field(){
+
 
     }
 
