@@ -18,15 +18,11 @@ import static systems.uom.common.USCustomary.METER;
 
 public class Field {
     private Image image= new Image("edu/wpi/first/pathui/2018-field.jpg");
-    private double width=54;
-    private double height=27;
-    Quantity<Length> heightReal = Quantities.getQuantity(5,METER);
-
-
-
+    Quantity<Length> widthReal = Quantities.getQuantity(54,FOOT);
+    Quantity<Length> heightReal = Quantities.getQuantity(27,FOOT);
     private int x=0;
     private int y=0;
-    
+
 
     public Field(){
 
@@ -41,15 +37,15 @@ public class Field {
         this.image = image;
     }
 
-    public double getWidth() {
-        return width;
+    public Number getRealWidth() {
+        return widthReal.getValue();
     }
 
-    public void setWidth(double width) {
-        this.width = width;
+    public void setRealWidth(double width,String unit) {
+        this.widthReal = Quantities.getQuantity(width, unit);
     }
 
-    public double getHeight() {
+    public double getRealHeight() {
         return height;
     }
 
