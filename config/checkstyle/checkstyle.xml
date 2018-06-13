@@ -27,7 +27,8 @@
 
     <!-- Suppress checkstyle for certain files and directories -->
     <module name="SuppressionFilter">
-        <property name="file" value="checkstyleSuppressions.xml"/>
+        <!-- Path is relative to the project's root directory -->
+        <property name="file" value="config/checkstyle/checkstyleSuppressions.xml"/>
     </module>
 
     <property name="fileExtensions" value="java, properties, xml"/>
