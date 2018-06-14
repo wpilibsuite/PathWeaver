@@ -28,7 +28,7 @@ public class PathDisplayController {
   private Waypoint selectedWaypoint = null;
   private Image image;
 
-  ObservableList<Pair<String , Path>> pathList = FXCollections.observableArrayList();
+  private final ObservableList<Pair<String, Path>> pathList = FXCollections.observableArrayList();
 
   @FXML
   private void initialize() {
@@ -48,40 +48,47 @@ public class PathDisplayController {
     setupDrag();
     setupPress();
     setupPathList();
-    System.out.println("setup Path Controller");
-
   }
-  private void setupPathList(){
+
+  private void setupPathList() {
     pathList.addListener((ListChangeListener) change -> {
-      while(change.next()){
-        for(Object o : change.getRemoved()){
-          Pair<String,Path> pair = (Pair<String,Path>) o;
+      while (change.next()) {
+        for (Object o : change.getRemoved()) {
+          Pair<String, Path> pair = (Pair<String, Path>) o;
           removePathFromPane(pair.getValue());
         }
-        for(Object o : change.getAddedSubList()){
-          Pair<String,Path> pair = (Pair<String,Path>) o;
+        for (Object o : change.getAddedSubList()) {
+          Pair<String, Path> pair = (Pair<String, Path>) o;
           addPathToPane(pair.getValue());
         }
       }
     });
   }
-  public void addPath(String fileLocations, String fileName){
-    //System.out.println("add " + fileName);
-    for(Pair<String,Path> pair :pathList){
-      if(fileName == pair.getKey()) {
+
+  /** Add path to Controller.
+   *
+   * @param fileLocations Current working directory
+   * @param fileName Name of path file inside directory
+   */
+  public void addPath(String fileLocations, String fileName) {
+    for (Pair<String, Path> pair : pathList) {
+      if (fileName == pair.getKey()) {
         return;
       }
     }
-    //System.out.println("going to add " + fileName);
-
-    Path newPath = PathIOUtil.importPath(fileLocations,fileName);
-   // System.out.println(newPath);
-    Pair<String,Path> newPair = new Pair<>(fileName,newPath);
+    Path newPath = PathIOUtil.importPath(fileLocations, fileName);
+    Pair<String, Path> newPair = new Pair<>(fileName, newPath);
     pathList.add(newPair);
   }
-  public void removePath(String fileLocations, String fileName){
-    for(Pair<String,Path> pair :pathList){
-      if(fileName == pair.getKey()){
+
+  /** Remove path from Controller.
+   *
+   * @param fileLocations Current working directory
+   * @param fileName Name of path file inside directory
+   */
+  public void removePath(String fileLocations, String fileName) {
+    for (Pair<String, Path> pair : pathList) {
+      if (fileName == pair.getKey()) {
         pathList.remove(pair);
       }
     }

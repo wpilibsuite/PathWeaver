@@ -11,22 +11,25 @@ public class Path {
     createDefaultWaypoints();
   }
 
-  /** Path constructor based on known start and end points.
+  /**
+   * Path constructor based on known start and end points.
    *
-   * @param start The starting waypoint of new path
-   * @param end The ending waypoint of new path
+   * @param start        The starting waypoint of new path
+   * @param end          The ending waypoint of new path
    * @param startTangent The starting tangent vector of new path
-   * @param endTangent The ending tangent vector of new path
-   * @param name The string name to assign path, also used for naming exported files
+   * @param endTangent   The ending tangent vector of new path
+   * @param name         The string name to assign path, also used for naming exported files
    */
   public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
     createInitialWaypoints(start, end, startTangent, endTangent);
   }
+
   @Override
   public String toString() {
     return getPathName();
   }
+
   private void createDefaultWaypoints() {
     Point2D startPos = new Point2D(0, 0);
     Point2D endPos = new Point2D(250, 250);

@@ -13,8 +13,6 @@ import java.nio.file.Paths;
 
 import javafx.geometry.Point2D;
 
-import javax.sound.midi.Soundbank;
-
 public final class PathIOUtil {
 
   private PathIOUtil() {
@@ -25,7 +23,7 @@ public final class PathIOUtil {
    * Exports path object to csv file.
    *
    * @param fileLocation the directory and filename to write to
-   * @param path     Path object to save
+   * @param path         Path object to save
    *
    * @return true if successful file write was preformed
    */
@@ -54,10 +52,12 @@ public final class PathIOUtil {
     return true;
   }
 
-  /** Imports Path object from disk.
+  /**
+   * Imports Path object from disk.
    *
    * @param fileLocation Folder with path file
-   * @param fileName Name of path file
+   * @param fileName     Name of path file
+   *
    * @return Path object saved in Path file
    */
   @SuppressWarnings("PMD.NcssCount")
@@ -73,7 +73,6 @@ public final class PathIOUtil {
       Point2D startPosition = null;
       Point2D startTangent = null;
       Path path = null;
-      System.out.println("loading " +fileName);
       for (CSVRecord csvRecord : csvParser) {
         // Accessing values by Header names
         count++;

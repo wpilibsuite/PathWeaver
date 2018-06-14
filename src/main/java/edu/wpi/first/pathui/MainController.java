@@ -11,11 +11,13 @@ public class MainController {
   @FXML private TreeView<String> autons;
   @FXML private TreeView<String> paths;
   @FXML private Pane pathDisplay;
-  @FXML private PathDisplayController pathDisplayController;
+  // Variable is auto generated as Pane name + Controller
+  @FXML private PathDisplayController pathDisplayController; //NOPMD
 
 
   private String directory = "Paths/";
-  private TreeItem<String> pathRoot = new TreeItem<>("Paths");
+  private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
+
   @FXML
   private void initialize() {
     TreeItem<String> root = new TreeItem<String>("Autons");
@@ -44,33 +46,40 @@ public class MainController {
     setupPathsInDirectory(directory);
     setupClickablePaths();
   }
-  private void setupClickablePaths(){
+
+  private void setupClickablePaths() {
     paths.getSelectionModel()
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
-              if(newValue !=null) {
+              if (newValue != null) {
                 pathDisplayController.addPath(directory, newValue.getValue());
               }
-              if(oldValue !=null){
-                pathDisplayController.removePath(directory,oldValue.getValue());
+              if (oldValue != null) {
+                pathDisplayController.removePath(directory, oldValue.getValue());
               }
 
             });
   }
-  private void setupPathTreeItem(String fileLocation, String fileName){
+
+  private void setupPathTreeItem(String fileName) {
     TreeItem<String> item = new TreeItem<>(fileName);
 
     pathRoot.getChildren().add(item);
 
     //drag and click events
   }
-  private void setupPathsInDirectory(String directory){
+
+  private void setupPathsInDirectory(String directory) {
     File folder = new File(directory);
     File[] listOfFiles = folder.listFiles();
-    for(File file : listOfFiles){
-      setupPathTreeItem(directory,file.getName());
+    for (File file : listOfFiles) {
+      setupPathTreeItem(file.getName());
     }
+  }
+
+  public void setDirectory(String directory) {
+    this.directory = directory;
   }
 }
 
