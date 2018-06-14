@@ -23,8 +23,10 @@ public class Path {
     pathName = name;
     createInitialWaypoints(start, end, startTangent, endTangent);
   }
-
-
+  @Override
+  public String toString() {
+    return getPathName();
+  }
   private void createDefaultWaypoints() {
     Point2D startPos = new Point2D(0, 0);
     Point2D endPos = new Point2D(250, 250);

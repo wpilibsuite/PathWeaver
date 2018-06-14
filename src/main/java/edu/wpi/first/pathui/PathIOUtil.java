@@ -13,6 +13,8 @@ import java.nio.file.Paths;
 
 import javafx.geometry.Point2D;
 
+import javax.sound.midi.Soundbank;
+
 public final class PathIOUtil {
 
   private PathIOUtil() {
@@ -29,7 +31,7 @@ public final class PathIOUtil {
    */
   public static boolean export(String fileLocation, Path path) {
     try (
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName() + ".path"));
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
             .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
@@ -61,7 +63,7 @@ public final class PathIOUtil {
   @SuppressWarnings("PMD.NcssCount")
   public static Path importPath(String fileLocation, String fileName) {
     try (
-        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName + ".path"));
+        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName));
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
             .withFirstRecordAsHeader()
             .withIgnoreHeaderCase()
@@ -71,6 +73,7 @@ public final class PathIOUtil {
       Point2D startPosition = null;
       Point2D startTangent = null;
       Path path = null;
+      System.out.println("loading " +fileName);
       for (CSVRecord csvRecord : csvParser) {
         // Accessing values by Header names
         count++;

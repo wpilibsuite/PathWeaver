@@ -1,6 +1,9 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -14,6 +17,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
+import javafx.util.Pair;
 
 public class PathDisplayController {
   @FXML private ImageView backgroundImage;
@@ -24,6 +28,7 @@ public class PathDisplayController {
   private Waypoint selectedWaypoint = null;
   private Image image;
 
+  ObservableList<Pair<String , Path>> pathList = FXCollections.observableArrayList();
 
   @FXML
   private void initialize() {
@@ -42,16 +47,48 @@ public class PathDisplayController {
     setupDrawPaneSizing();
     setupDrag();
     setupPress();
+    setupPathList();
+    System.out.println("setup Path Controller");
 
-    Path first = new Path();
+  }
+  private void setupPathList(){
+    pathList.addListener((ListChangeListener) change -> {
+      while(change.next()){
+        for(Object o : change.getRemoved()){
+          Pair<String,Path> pair = (Pair<String,Path>) o;
+          removePathFromPane(pair.getValue());
+        }
+        for(Object o : change.getAddedSubList()){
+          Pair<String,Path> pair = (Pair<String,Path>) o;
+          addPathToPane(pair.getValue());
+        }
+      }
+    });
+  }
+  public void addPath(String fileLocations, String fileName){
+    //System.out.println("add " + fileName);
+    for(Pair<String,Path> pair :pathList){
+      if(fileName == pair.getKey()) {
+        return;
+      }
+    }
+    //System.out.println("going to add " + fileName);
 
-    Path fourth = PathIOUtil.importPath("Paths/", "default");
-    addPathToPane(first);
-
-    removePathFromPane(first);
-    addPathToPane(fourth);
+    Path newPath = PathIOUtil.importPath(fileLocations,fileName);
+   // System.out.println(newPath);
+    Pair<String,Path> newPair = new Pair<>(fileName,newPath);
+    pathList.add(newPair);
+  }
+  public void removePath(String fileLocations, String fileName){
+    for(Pair<String,Path> pair :pathList){
+      if(fileName == pair.getKey()){
+        pathList.remove(pair);
+      }
+    }
   }
 
+
+  //between this and above public function better names could be found
   private void addPathToPane(Path newPath) {
     Waypoint current = newPath.getStart();
     while (current != null) {
