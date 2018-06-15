@@ -42,6 +42,6 @@
         </VBox>
     </top>
     <center>
-        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" ></fx:include>
+        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml"></fx:include>
     </center>
 </BorderPane>

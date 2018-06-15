@@ -52,13 +52,16 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
-              if (newValue != null) {
-                pathDisplayController.addPath(directory, newValue.getValue());
+              if (newValue.getValue() == pathRoot.getValue()) {
+                pathRoot.setExpanded(!pathRoot.isExpanded());
+              } else {
+                if (newValue != null) {
+                  pathDisplayController.addPath(directory, newValue.getValue());
+                }
+                if (oldValue != null) {
+                  pathDisplayController.removePath(directory, oldValue.getValue());
+                }
               }
-              if (oldValue != null) {
-                pathDisplayController.removePath(directory, oldValue.getValue());
-              }
-
             });
   }
 

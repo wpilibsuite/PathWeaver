@@ -65,10 +65,11 @@ public class PathDisplayController {
     });
   }
 
-  /** Add path to Controller.
+  /**
+   * Add path to Controller.
    *
    * @param fileLocations Current working directory
-   * @param fileName Name of path file inside directory
+   * @param fileName      Name of path file inside directory
    */
   public void addPath(String fileLocations, String fileName) {
     for (Pair<String, Path> pair : pathList) {
@@ -81,10 +82,11 @@ public class PathDisplayController {
     pathList.add(newPair);
   }
 
-  /** Remove path from Controller.
+  /**
+   * Remove path from Controller.
    *
    * @param fileLocations Current working directory
-   * @param fileName Name of path file inside directory
+   * @param fileName      Name of path file inside directory
    */
   public void removePath(String fileLocations, String fileName) {
     for (Pair<String, Path> pair : pathList) {
