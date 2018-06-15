@@ -23,13 +23,13 @@ public final class PathIOUtil {
    * Exports path object to csv file.
    *
    * @param fileLocation the directory and filename to write to
-   * @param path     Path object to save
+   * @param path         Path object to save
    *
    * @return true if successful file write was preformed
    */
   public static boolean export(String fileLocation, Path path) {
     try (
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName() + ".path"));
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
             .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
@@ -52,16 +52,18 @@ public final class PathIOUtil {
     return true;
   }
 
-  /** Imports Path object from disk.
+  /**
+   * Imports Path object from disk.
    *
    * @param fileLocation Folder with path file
-   * @param fileName Name of path file
+   * @param fileName     Name of path file
+   *
    * @return Path object saved in Path file
    */
   @SuppressWarnings("PMD.NcssCount")
   public static Path importPath(String fileLocation, String fileName) {
     try (
-        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName + ".path"));
+        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName));
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
             .withFirstRecordAsHeader()
             .withIgnoreHeaderCase()

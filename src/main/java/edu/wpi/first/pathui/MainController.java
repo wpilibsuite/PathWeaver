@@ -1,12 +1,22 @@
 package edu.wpi.first.pathui;
 
+import java.io.File;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.Pane;
 
 public class MainController {
   @FXML private TreeView<String> autons;
   @FXML private TreeView<String> paths;
+  @FXML private Pane pathDisplay;
+  // Variable is auto generated as Pane name + Controller
+  @FXML private PathDisplayController pathDisplayController; //NOPMD
+
+
+  private String directory = "Paths/";
+  private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   @FXML
   private void initialize() {
@@ -31,9 +41,48 @@ public class MainController {
         new TreeItem<>("Right Cube - Switch"),
         new TreeItem<>("Switch to Center Cube Pile")
     );
-
-
+    paths.setRoot(pathRoot);
+    pathRoot.setExpanded(true);
+    setupPathsInDirectory(directory);
+    setupClickablePaths();
   }
 
+  private void setupClickablePaths() {
+    paths.getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              if (newValue.getValue() == pathRoot.getValue()) {
+                pathRoot.setExpanded(!pathRoot.isExpanded());
+              } else {
+                if (newValue != null) {
+                  pathDisplayController.addPath(directory, newValue.getValue());
+                }
+                if (oldValue != null) {
+                  pathDisplayController.removePath(directory, oldValue.getValue());
+                }
+              }
+            });
+  }
+
+  private void setupPathTreeItem(String fileName) {
+    TreeItem<String> item = new TreeItem<>(fileName);
+
+    pathRoot.getChildren().add(item);
+
+    //drag and click events
+  }
+
+  private void setupPathsInDirectory(String directory) {
+    File folder = new File(directory);
+    File[] listOfFiles = folder.listFiles();
+    for (File file : listOfFiles) {
+      setupPathTreeItem(file.getName());
+    }
+  }
+
+  public void setDirectory(String directory) {
+    this.directory = directory;
+  }
 }
 
