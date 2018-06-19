@@ -2,17 +2,10 @@ package edu.wpi.first.pathui;
 
 import java.io.File;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
-import javafx.util.Callback;
 
 public class MainController {
   @FXML private TreeView<String> autons;
@@ -27,6 +20,8 @@ public class MainController {
 
   @FXML
   private void initialize() {
+    setupDrag(paths);
+    setupDrag(autons);
     TreeItem<String> root = new TreeItem<String>("Autons");
     root.getChildren().addAll(
         new TreeItem<>("Left Scoring Auton"),
@@ -52,8 +47,7 @@ public class MainController {
     pathRoot.setExpanded(true);
     setupPathsInDirectory(directory);
     setupClickablePaths();
-    setupDrag(paths);
-    setupDrag(autons);
+
   }
 
   private void setupClickablePaths() {
@@ -73,56 +67,11 @@ public class MainController {
               }
             });
   }
-  private void setupDrag(TreeView<String> tree){
-    tree.setCellFactory(new Callback<>() {
-      @Override
-      public TreeCell<String> call(TreeView<String> stringTreeView) {
-        TreeCell<String> cell = new TreeCell<>() {
-          protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item != null) {
-              setText(item);
-            }else{
-              setText(null);
-            }
-          }
-        };
 
-        cell.setOnDragDetected(event -> {
-          TreeItem<String> item = cell.getTreeItem();
-          if (item != null && item.isLeaf()) {
-            Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-            ClipboardContent content = new ClipboardContent();
-            content.putString(item.getValue());
-            db.setContent(content);
-            event.consume();
-          }
-        });
-        cell.setOnDragOver(event -> {
-          TreeItem<String> item = cell.getTreeItem();
-          if (item != null &&
-              event.getGestureSource() != cell &&
-              event.getDragboard().hasString()) {
-            String target = cell.getTreeItem().getValue();
-            Object source = event.getGestureSource();
-            //TODO check if duplicate
+  private void setupDrag(TreeView<String> tree) {
+    tree.setCellFactory(param -> new PathCell());
 
-            if (item.isLeaf()) {
-              System.out.println("ontop of " + target);
-            } else {
-              event.acceptTransferModes(TransferMode.COPY);
-              
-              System.out.println("dragging " + source);
-              System.out.println("over " + target);
-              event.consume();
 
-            }
-          }
-        });
-
-        return cell;
-      }
-    });
   }
 
   private void setupPathTreeItem(String fileName) {
