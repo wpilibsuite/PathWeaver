@@ -22,7 +22,7 @@ public class MainController {
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
 
-  private String directory = "Paths/";
+  private String directory = "pathUI/Paths/";
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   @FXML
