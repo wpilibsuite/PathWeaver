@@ -15,37 +15,42 @@ public class MainController {
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
 
-  private String directory = "pathUI/Paths/";
+  private String directory = "pathUI/";
+  private String pathDirectory;
+  private String autonDirectory;
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   @FXML
   private void initialize() {
-    setupDrag(paths);
-    setupDrag(autons);
-    TreeItem<String> root = new TreeItem<String>("Autons");
-    root.getChildren().addAll(
+    pathDirectory = directory + "Paths/";
+    autonDirectory = directory + "Autons/";
+    setupDrag(paths,false);
+    setupDrag(autons,true);
+    TreeItem<String> autonRoot = new TreeItem<String>("Autons");
+    autonRoot.getChildren().addAll(
         new TreeItem<>("Left Scoring Auton"),
         new TreeItem<>("Left Defensive Auton"),
         new TreeItem<>("Center Auton")
     );
-    autons.setRoot(root);
+    autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
-    root.getChildren().get(0).getChildren().addAll(
+    autonRoot.getChildren().get(0).getChildren().addAll(
         new TreeItem<>("Left - Left Cube"),
         new TreeItem<>("Left Cube - Switch"),
         new TreeItem<>("Switch to Center Cube Pile")
     );
-    root.getChildren().get(1).getChildren().addAll(
+    autonRoot.getChildren().get(1).getChildren().addAll(
         new TreeItem<>("Left - Defensive Position")
     );
-    root.getChildren().get(2).getChildren().addAll(
+    autonRoot.getChildren().get(2).getChildren().addAll(
         new TreeItem<>("Right - Right Cube"),
         new TreeItem<>("Right Cube - Switch"),
         new TreeItem<>("Switch to Center Cube Pile")
     );
     paths.setRoot(pathRoot);
     pathRoot.setExpanded(true);
-    setupPathsInDirectory(directory);
+    setupItemsInDirectory(pathDirectory,pathRoot);
+    setupItemsInDirectory(autonDirectory,autonRoot);
     setupClickablePaths();
 
   }
@@ -59,35 +64,30 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 if (newValue != null) {
-                  pathDisplayController.addPath(directory, newValue.getValue());
+                  pathDisplayController.addPath(pathDirectory, newValue.getValue());
                 }
                 if (oldValue != null) {
-                  pathDisplayController.removePath(directory, oldValue.getValue());
+                  pathDisplayController.removePath(pathDirectory, oldValue.getValue());
                 }
               }
             });
   }
 
-  private void setupDrag(TreeView<String> tree) {
-    tree.setCellFactory(param -> new PathCell());
-
-
+  private void setupDrag(TreeView<String> tree,boolean validDropTarget) {
+    tree.setCellFactory(param -> new PathCell(validDropTarget));
   }
 
-  private void setupPathTreeItem(String fileName) {
-    TreeItem<String> item = new TreeItem<>(fileName);
-
-    pathRoot.getChildren().add(item);
-
-    //drag and click events
-  }
-
-  private void setupPathsInDirectory(String directory) {
+  private void setupItemsInDirectory(String directory, TreeItem<String> root) {
     File folder = new File(directory);
     File[] listOfFiles = folder.listFiles();
     for (File file : listOfFiles) {
-      setupPathTreeItem(file.getName());
-    }
+      TreeItem<String> item = new TreeItem<>(file.getName());
+      root.getChildren().add(item);    }
+  }
+  private void loadAuton(String location,String filename){
+    File file = new File(location+filename);
+
+
   }
 
   public void setDirectory(String directory) {

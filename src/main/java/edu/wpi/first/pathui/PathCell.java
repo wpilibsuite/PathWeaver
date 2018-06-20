@@ -15,11 +15,14 @@ public class PathCell extends TreeCell<String> {
   //each cell might have its own dragover call as you move around
   private static TreeItem<String> tempItem = new TreeItem<>("");
 
-  public PathCell() {
+  public PathCell(boolean validDropTarget) {
     cell = this;
-    setupDragOver();
     setupDragStart();
-    setupDragDrop();
+
+    if(validDropTarget){
+      setupDragOver();
+      setupDragDrop();
+    }
   }
 
   @Override
@@ -74,7 +77,7 @@ public class PathCell extends TreeCell<String> {
           String target = ((TreeItem<String>) cell.getTreeItem()).getValue();
           Dragboard db = event.getDragboard();
           String source = db.getString();
-          
+
           //TODO check if duplicate
           if (item.isLeaf()) {
             int currentIndex = parent.getChildren().indexOf(item);
