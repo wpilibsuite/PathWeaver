@@ -79,6 +79,9 @@ public class MainController {
 
   private void setupItemsInDirectory(String directory, TreeItem<String> root) {
     File folder = new File(directory);
+    if(!folder.exists()){
+      folder.mkdir();
+    }
     File[] listOfFiles = folder.listFiles();
     for (File file : listOfFiles) {
       TreeItem<String> item = new TreeItem<>(file.getName());
@@ -86,6 +89,7 @@ public class MainController {
   }
   private void loadAuton(String location,String filename){
     File file = new File(location+filename);
+
 
 
   }
