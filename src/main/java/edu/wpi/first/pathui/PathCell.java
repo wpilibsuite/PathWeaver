@@ -38,22 +38,14 @@ public class PathCell extends TreeCell<String> {
     this.setOnDragDropped(event -> {
       //reset temp and leave old temp where it is
       tempItem = new TreeItem<>("");
-      System.out.println("dropped");
       //should also write to file
     });
-
-
-
   }
 
   private void setupDragStart() {
     this.setOnDragDetected(event -> {
       TreeItem<String> item = cell.getTreeItem();
-      System.out.println("drag started");
-      System.out.println(item);
-      System.out.println("first " + item!=null + " second " + item.isLeaf());
       if (item != null && item.isLeaf()) {
-        System.out.println("drag succeeded");
         Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
         ClipboardContent content = new ClipboardContent();
         content.putString(item.getValue());
@@ -79,11 +71,11 @@ public class PathCell extends TreeCell<String> {
           String source = db.getString();
 
           //TODO check if duplicate
-          if (item.isLeaf()) {
+          if (item.isLeaf() && item.getParent().getParent() != null) {
             int currentIndex = parent.getChildren().indexOf(item);
             event.acceptTransferModes(TransferMode.COPY);
-
             //place it
+            parent.setExpanded(true);
             setTemp(source, parent, currentIndex);
           } else {
             item.setExpanded(true);

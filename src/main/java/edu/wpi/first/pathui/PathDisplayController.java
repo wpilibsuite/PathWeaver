@@ -96,6 +96,10 @@ public class PathDisplayController {
     }
   }
 
+  public void removeAllPath(){
+    pathList.clear();
+  }
+
 
   //between this and above public function better names could be found
   private void addPathToPane(Path newPath) {

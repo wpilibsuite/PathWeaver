@@ -1,6 +1,11 @@
 package edu.wpi.first.pathui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -18,6 +23,7 @@ public class MainController {
   private String directory = "pathUI/";
   private String pathDirectory;
   private String autonDirectory;
+  private final TreeItem<String> autonRoot = new TreeItem<String>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   @FXML
@@ -26,35 +32,31 @@ public class MainController {
     autonDirectory = directory + "Autons/";
     setupDrag(paths,false);
     setupDrag(autons,true);
-    TreeItem<String> autonRoot = new TreeItem<String>("Autons");
-    autonRoot.getChildren().addAll(
-        new TreeItem<>("Left Scoring Auton"),
-        new TreeItem<>("Left Defensive Auton"),
-        new TreeItem<>("Center Auton")
-    );
+
     autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
-    autonRoot.getChildren().get(0).getChildren().addAll(
-        new TreeItem<>("Left - Left Cube"),
-        new TreeItem<>("Left Cube - Switch"),
-        new TreeItem<>("Switch to Center Cube Pile")
-    );
-    autonRoot.getChildren().get(1).getChildren().addAll(
-        new TreeItem<>("Left - Defensive Position")
-    );
-    autonRoot.getChildren().get(2).getChildren().addAll(
-        new TreeItem<>("Right - Right Cube"),
-        new TreeItem<>("Right Cube - Switch"),
-        new TreeItem<>("Switch to Center Cube Pile")
-    );
+
     paths.setRoot(pathRoot);
     pathRoot.setExpanded(true);
+
     setupItemsInDirectory(pathDirectory,pathRoot);
     setupItemsInDirectory(autonDirectory,autonRoot);
+
+
     setupClickablePaths();
-
+    loadAllAutons();
   }
-
+  private void loadAllAutons(){
+    for(TreeItem<String> item : autonRoot.getChildren()){
+      System.out.println(item.getValue());
+      loadAuton(autonDirectory,item.getValue(),item);
+    }
+  }
+  private void saveAllAutons(){
+    for(TreeItem<String> item : autonRoot.getChildren()){
+      saveAuton(autonDirectory,item.getValue(),item);
+    }
+  }
   private void setupClickablePaths() {
     paths.getSelectionModel()
         .selectedItemProperty()
@@ -63,35 +65,84 @@ public class MainController {
               if (newValue.getValue() == pathRoot.getValue()) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
+                pathDisplayController.removeAllPath();
                 if (newValue != null) {
                   pathDisplayController.addPath(pathDirectory, newValue.getValue());
                 }
-                if (oldValue != null) {
-                  pathDisplayController.removePath(pathDirectory, oldValue.getValue());
+              }
+            });
+    autons.getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              if (newValue.getValue() == autonRoot.getValue()) {
+                //pathRoot.setExpanded(!pathRoot.isExpanded());
+              } else {
+                pathDisplayController.removeAllPath();
+                if (newValue != null) {
+                  for(TreeItem<String> item : newValue.getChildren()){
+                    pathDisplayController.addPath(pathDirectory, item.getValue());
+                  }
                 }
               }
             });
+
   }
 
   private void setupDrag(TreeView<String> tree,boolean validDropTarget) {
     tree.setCellFactory(param -> new PathCell(validDropTarget));
+    autons.setOnDragDropped(event -> {
+      //simpler than communicating which was updated from the cells
+      saveAllAutons();
+      loadAllAutons();
+    });
   }
+
 
   private void setupItemsInDirectory(String directory, TreeItem<String> root) {
     File folder = new File(directory);
     if(!folder.exists()){
       folder.mkdir();
     }
-    File[] listOfFiles = folder.listFiles();
-    for (File file : listOfFiles) {
-      TreeItem<String> item = new TreeItem<>(file.getName());
-      root.getChildren().add(item);    }
+    String[] listOfFiles = folder.list();
+    for (String name : listOfFiles) {
+      addChild(root, name);
+    }
   }
-  private void loadAuton(String location,String filename){
-    File file = new File(location+filename);
 
+  private void addChild(TreeItem<String> root, String name) {
+    TreeItem<String> item = new TreeItem<>(name);
+    root.getChildren().add(item);
+  }
 
+  private void loadAuton(String location,String filename,TreeItem<String> root){
+    BufferedReader reader;
+    root.getChildren().clear();
+    try {
+      reader = new BufferedReader((new FileReader(location+filename)));
+      String line = reader.readLine();
+      while(line != null){
+        addChild(root,line);
+        line = reader.readLine();
+      }
+      reader.close();
+    } catch(IOException e){
+      e.printStackTrace();
+    }
+  }
+  private void saveAuton(String location,String filename,TreeItem<String> root){
+    BufferedWriter writer;
+    try {
+      writer = new BufferedWriter((new FileWriter(location+filename)));
+      for(TreeItem<String> item : root.getChildren())  {
+        writer.write(item.getValue());
+        writer.newLine();
+      }
 
+      writer.close();
+    } catch(IOException e){
+      e.printStackTrace();
+    }
   }
 
   public void setDirectory(String directory) {
