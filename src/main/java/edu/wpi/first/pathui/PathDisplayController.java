@@ -85,7 +85,6 @@ public class PathDisplayController {
 
   /**
    * Remove all paths from Controller.
-   *
    */
   public void removeAllPath() {
     pathList.clear();

@@ -10,10 +10,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.geometry.Point2D;
 
 public final class PathIOUtil {
+  private static final Logger LOGGER = Logger.getLogger(PathIOUtil.class.getName());
 
   private PathIOUtil() {
   }
@@ -47,7 +50,7 @@ public final class PathIOUtil {
       }
       csvPrinter.flush();
     } catch (IOException except) {
-      except.printStackTrace();
+      LOGGER.log(Level.WARNING, "Could not save Path file", except);
       return false;
     }
     return true;
@@ -96,7 +99,7 @@ public final class PathIOUtil {
       return path;
 
     } catch (IOException except) {
-      except.printStackTrace();
+      LOGGER.log(Level.WARNING, "Could not read Path file", except);
       return null;
     }
 

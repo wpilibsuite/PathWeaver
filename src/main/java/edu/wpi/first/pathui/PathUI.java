@@ -16,5 +16,8 @@ public class PathUI extends Application {
     scene.getStylesheets().add("/edu/wpi/first/pathui/style.css");
     primaryStage.setScene(scene);
     primaryStage.show();
+
+    Loggers.setupLoggers();
+
   }
 }

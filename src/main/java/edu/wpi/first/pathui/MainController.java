@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -19,6 +21,7 @@ public class MainController {
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
+  private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
   private String directory = "pathUI/";
   private String pathDirectory;
@@ -46,6 +49,7 @@ public class MainController {
 
     setupClickablePaths();
     loadAllAutons();
+
   }
 
   private void loadAllAutons() {
@@ -130,7 +134,8 @@ public class MainController {
       }
       reader.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.WARNING, "Could not load auton file", e);
+
     }
   }
 
@@ -145,7 +150,7 @@ public class MainController {
 
       writer.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.WARNING, "Could not save auton file", e);
     }
   }
 
