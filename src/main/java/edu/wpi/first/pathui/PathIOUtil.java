@@ -47,6 +47,7 @@ public final class PathIOUtil {
       }
       csvPrinter.flush();
     } catch (IOException except) {
+      except.printStackTrace();
       return false;
     }
     return true;

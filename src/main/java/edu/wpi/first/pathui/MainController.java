@@ -42,6 +42,7 @@ public class MainController {
     setupItemsInDirectory(pathDirectory,pathRoot);
     setupItemsInDirectory(autonDirectory,autonRoot);
 
+    pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
     loadAllAutons();

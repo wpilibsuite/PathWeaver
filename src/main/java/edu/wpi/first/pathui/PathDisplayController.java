@@ -29,7 +29,7 @@ public class PathDisplayController {
   private Image image;
 
   private final ObservableList<Pair<String, Path>> pathList = FXCollections.observableArrayList();
-
+  private String pathDirectory;
   @FXML
   private void initialize() {
 
@@ -208,7 +208,7 @@ public class PathDisplayController {
 
   private void setupDrag() {
     drawPane.setOnDragDone(event -> {
-      PathIOUtil.export("Paths/", Waypoint.currentWaypoint.getPath());
+      PathIOUtil.export(pathDirectory, Waypoint.currentWaypoint.getPath());
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
@@ -274,4 +274,7 @@ public class PathDisplayController {
     }
   }
 
+  public void setPathDirectory(String pathDirectory) {
+    this.pathDirectory = pathDirectory;
+  }
 }
