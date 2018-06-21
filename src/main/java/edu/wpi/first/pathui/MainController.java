@@ -30,8 +30,8 @@ public class MainController {
   private void initialize() {
     pathDirectory = directory + "Paths/";
     autonDirectory = directory + "Autons/";
-    setupDrag(paths,false);
-    setupDrag(autons,true);
+    setupDrag(paths, false);
+    setupDrag(autons, true);
 
     autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
@@ -39,25 +39,27 @@ public class MainController {
     paths.setRoot(pathRoot);
     pathRoot.setExpanded(true);
 
-    setupItemsInDirectory(pathDirectory,pathRoot);
-    setupItemsInDirectory(autonDirectory,autonRoot);
+    setupItemsInDirectory(pathDirectory, pathRoot);
+    setupItemsInDirectory(autonDirectory, autonRoot);
 
     pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
     loadAllAutons();
   }
-  private void loadAllAutons(){
-    for(TreeItem<String> item : autonRoot.getChildren()){
-      System.out.println(item.getValue());
-      loadAuton(autonDirectory,item.getValue(),item);
+
+  private void loadAllAutons() {
+    for (TreeItem<String> item : autonRoot.getChildren()) {
+      loadAuton(autonDirectory, item.getValue(), item);
     }
   }
-  private void saveAllAutons(){
-    for(TreeItem<String> item : autonRoot.getChildren()){
-      saveAuton(autonDirectory,item.getValue(),item);
+
+  private void saveAllAutons() {
+    for (TreeItem<String> item : autonRoot.getChildren()) {
+      saveAuton(autonDirectory, item.getValue(), item);
     }
   }
+
   private void setupClickablePaths() {
     paths.getSelectionModel()
         .selectedItemProperty()
@@ -81,7 +83,7 @@ public class MainController {
               } else {
                 pathDisplayController.removeAllPath();
                 if (newValue != null) {
-                  for(TreeItem<String> item : newValue.getChildren()){
+                  for (TreeItem<String> item : newValue.getChildren()) {
                     pathDisplayController.addPath(pathDirectory, item.getValue());
                   }
                 }
@@ -90,7 +92,7 @@ public class MainController {
 
   }
 
-  private void setupDrag(TreeView<String> tree,boolean validDropTarget) {
+  private void setupDrag(TreeView<String> tree, boolean validDropTarget) {
     tree.setCellFactory(param -> new PathCell(validDropTarget));
     autons.setOnDragDropped(event -> {
       //simpler than communicating which was updated from the cells
@@ -102,7 +104,7 @@ public class MainController {
 
   private void setupItemsInDirectory(String directory, TreeItem<String> root) {
     File folder = new File(directory);
-    if(!folder.exists()){
+    if (!folder.exists()) {
       folder.mkdir();
     }
     String[] listOfFiles = folder.list();
@@ -116,32 +118,33 @@ public class MainController {
     root.getChildren().add(item);
   }
 
-  private void loadAuton(String location,String filename,TreeItem<String> root){
+  private void loadAuton(String location, String filename, TreeItem<String> root) {
     BufferedReader reader;
     root.getChildren().clear();
     try {
-      reader = new BufferedReader((new FileReader(location+filename)));
+      reader = new BufferedReader(new FileReader(location + filename));
       String line = reader.readLine();
-      while(line != null){
-        addChild(root,line);
+      while (line != null) {
+        addChild(root, line);
         line = reader.readLine();
       }
       reader.close();
-    } catch(IOException e){
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
-  private void saveAuton(String location,String filename,TreeItem<String> root){
+
+  private void saveAuton(String location, String filename, TreeItem<String> root) {
     BufferedWriter writer;
     try {
-      writer = new BufferedWriter((new FileWriter(location+filename)));
-      for(TreeItem<String> item : root.getChildren())  {
+      writer = new BufferedWriter(new FileWriter(location + filename));
+      for (TreeItem<String> item : root.getChildren()) {
         writer.write(item.getValue());
         writer.newLine();
       }
 
       writer.close();
-    } catch(IOException e){
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

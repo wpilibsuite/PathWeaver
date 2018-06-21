@@ -7,7 +7,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
 public class PathCell extends TreeCell<String> {
-  private TreeCell cell;
+  private final TreeCell cell;
 
   //having a single tempItem you use for all dragging
   //means that any dragover call is able to remove the temporary
@@ -15,11 +15,17 @@ public class PathCell extends TreeCell<String> {
   //each cell might have its own dragover call as you move around
   private static TreeItem<String> tempItem = new TreeItem<>("");
 
+  /**
+   * TreeItem with support for dragging.
+   *
+   * @param validDropTarget If this item should allow drag over and drag drop.
+   */
   public PathCell(boolean validDropTarget) {
+    super();
     cell = this;
     setupDragStart();
 
-    if(validDropTarget){
+    if (validDropTarget) {
       setupDragOver();
       setupDragDrop();
     }
@@ -28,13 +34,10 @@ public class PathCell extends TreeCell<String> {
   @Override
   protected void updateItem(String item, boolean empty) {
     super.updateItem(item, empty);
-    if (item != null) {
-      setText(item);
-    } else {
-      setText(null);
-    }
+    setText(item);
   }
-  private void setupDragDrop(){
+
+  private void setupDragDrop() {
     this.setOnDragDropped(event -> {
       //reset temp and leave old temp where it is
       tempItem = new TreeItem<>("");
@@ -60,13 +63,12 @@ public class PathCell extends TreeCell<String> {
 
     cell.setOnDragOver(event -> {
       TreeItem<String> item = cell.getTreeItem();
-      if(item != null) {
+      if (item != null) {
         TreeItem<String> parent = item.getParent();
 
-        if (parent != null &&
-            event.getGestureSource() != cell &&
-            event.getDragboard().hasString()) {
-          String target = ((TreeItem<String>) cell.getTreeItem()).getValue();
+        if (parent != null
+            && event.getGestureSource() != cell
+            && event.getDragboard().hasString()) {
           Dragboard db = event.getDragboard();
           String source = db.getString();
 

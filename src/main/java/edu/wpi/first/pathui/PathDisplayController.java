@@ -30,6 +30,7 @@ public class PathDisplayController {
 
   private final ObservableList<Pair<String, Path>> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
+
   @FXML
   private void initialize() {
 
@@ -83,20 +84,10 @@ public class PathDisplayController {
   }
 
   /**
-   * Remove path from Controller.
+   * Remove all paths from Controller.
    *
-   * @param fileLocations Current working directory
-   * @param fileName      Name of path file inside directory
    */
-  public void removePath(String fileLocations, String fileName) {
-    for (Pair<String, Path> pair : pathList) {
-      if (fileName == pair.getKey()) {
-        pathList.remove(pair);
-      }
-    }
-  }
-
-  public void removeAllPath(){
+  public void removeAllPath() {
     pathList.clear();
   }
 

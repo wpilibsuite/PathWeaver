@@ -96,6 +96,7 @@ public final class PathIOUtil {
       return path;
 
     } catch (IOException except) {
+      except.printStackTrace();
       return null;
     }
 
