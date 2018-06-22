@@ -10,10 +10,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.geometry.Point2D;
 
 public final class PathIOUtil {
+  private static final Logger LOGGER = Logger.getLogger(PathIOUtil.class.getName());
 
   private PathIOUtil() {
   }
@@ -23,13 +26,13 @@ public final class PathIOUtil {
    * Exports path object to csv file.
    *
    * @param fileLocation the directory and filename to write to
-   * @param path     Path object to save
+   * @param path         Path object to save
    *
    * @return true if successful file write was preformed
    */
   public static boolean export(String fileLocation, Path path) {
     try (
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName() + ".path"));
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
             .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
@@ -47,21 +50,24 @@ public final class PathIOUtil {
       }
       csvPrinter.flush();
     } catch (IOException except) {
+      LOGGER.log(Level.WARNING, "Could not save Path file", except);
       return false;
     }
     return true;
   }
 
-  /** Imports Path object from disk.
+  /**
+   * Imports Path object from disk.
    *
    * @param fileLocation Folder with path file
-   * @param fileName Name of path file
+   * @param fileName     Name of path file
+   *
    * @return Path object saved in Path file
    */
   @SuppressWarnings("PMD.NcssCount")
   public static Path importPath(String fileLocation, String fileName) {
     try (
-        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName + ".path"));
+        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName));
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
             .withFirstRecordAsHeader()
             .withIgnoreHeaderCase()
@@ -93,6 +99,7 @@ public final class PathIOUtil {
       return path;
 
     } catch (IOException except) {
+      LOGGER.log(Level.WARNING, "Could not read Path file", except);
       return null;
     }
 

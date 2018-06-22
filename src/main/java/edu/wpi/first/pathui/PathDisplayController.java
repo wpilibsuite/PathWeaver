@@ -1,6 +1,9 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -24,6 +27,8 @@ public class PathDisplayController {
   private Waypoint selectedWaypoint = null;
   private Image image;
 
+  private final ObservableList<Path> pathList = FXCollections.observableArrayList();
+  private String pathDirectory;
 
   @FXML
   private void initialize() {
@@ -42,16 +47,49 @@ public class PathDisplayController {
     setupDrawPaneSizing();
     setupDrag();
     setupPress();
-
-    Path first = new Path();
-
-    Path fourth = PathIOUtil.importPath("Paths/", "default");
-    addPathToPane(first);
-
-    removePathFromPane(first);
-    addPathToPane(fourth);
+    setupPathList();
   }
 
+  private void setupPathList() {
+    pathList.addListener((ListChangeListener<Path>) change -> {
+      while (change.next()) {
+        for (Object o : change.getRemoved()) {
+          Path path = (Path) o;
+          removePathFromPane(path);
+        }
+        for (Object o : change.getAddedSubList()) {
+          Path path = (Path) o;
+          addPathToPane(path);
+        }
+      }
+    });
+  }
+
+  /**
+   * Add path to Controller.
+   *
+   * @param fileLocations Current working directory
+   * @param fileName      Name of path file inside directory
+   */
+  public void addPath(String fileLocations, String fileName) {
+    for (Path path : pathList) {
+      if (fileName.equals( path.getPathName())) {
+        return;
+      }
+    }
+    Path newPath = PathIOUtil.importPath(fileLocations, fileName);
+    pathList.add(newPath);
+  }
+
+  /**
+   * Remove all paths from Controller.
+   */
+  public void removeAllPath() {
+    pathList.clear();
+  }
+
+
+  //between this and above public function better names could be found
   private void addPathToPane(Path newPath) {
     Waypoint current = newPath.getStart();
     while (current != null) {
@@ -158,7 +196,7 @@ public class PathDisplayController {
 
   private void setupDrag() {
     drawPane.setOnDragDone(event -> {
-      PathIOUtil.export("Paths/", Waypoint.currentWaypoint.getPath());
+      PathIOUtil.export(pathDirectory, Waypoint.currentWaypoint.getPath());
       Waypoint.currentWaypoint = null;
       Spline.currentSpline = null;
     });
@@ -224,4 +262,7 @@ public class PathDisplayController {
     }
   }
 
+  public void setPathDirectory(String pathDirectory) {
+    this.pathDirectory = pathDirectory;
+  }
 }
