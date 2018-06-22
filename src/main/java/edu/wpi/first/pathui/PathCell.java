@@ -6,6 +6,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
+/** TreeItem with support for dragging.
+ *
+ */
 public class PathCell extends TreeCell<String> {
   private final TreeCell cell;
 
@@ -13,10 +16,10 @@ public class PathCell extends TreeCell<String> {
   //means that any dragover call is able to remove the temporary
   //item from past locations
   //each cell might have its own dragover call as you move around
-  private static TreeItem<String> tempItem = new TreeItem<>("");
+  private static final TreeItem<String> tempItem = new TreeItem<>("");
 
   /**
-   * TreeItem with support for dragging.
+   * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
    *
    * @param validDropTarget If this item should allow drag over and drag drop.
    */
