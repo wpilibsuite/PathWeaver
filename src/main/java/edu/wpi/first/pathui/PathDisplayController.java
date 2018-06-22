@@ -28,7 +28,7 @@ public class PathDisplayController {
   private Waypoint selectedWaypoint = null;
   private Image image;
 
-  private final ObservableList<Pair<String, Path>> pathList = FXCollections.observableArrayList();
+  private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
 
   @FXML
@@ -55,12 +55,12 @@ public class PathDisplayController {
     pathList.addListener((ListChangeListener) change -> {
       while (change.next()) {
         for (Object o : change.getRemoved()) {
-          Pair<String, Path> pair = (Pair<String, Path>) o;
-          removePathFromPane(pair.getValue());
+          Path path = (Path) o;
+          removePathFromPane(path);
         }
         for (Object o : change.getAddedSubList()) {
-          Pair<String, Path> pair = (Pair<String, Path>) o;
-          addPathToPane(pair.getValue());
+          Path path = (Path) o;
+          addPathToPane(path);
         }
       }
     });
@@ -73,14 +73,13 @@ public class PathDisplayController {
    * @param fileName      Name of path file inside directory
    */
   public void addPath(String fileLocations, String fileName) {
-    for (Pair<String, Path> pair : pathList) {
-      if (fileName == pair.getKey()) {
+    for (Path path : pathList) {
+      if (fileName == path.getPathName()) {
         return;
       }
     }
     Path newPath = PathIOUtil.importPath(fileLocations, fileName);
-    Pair<String, Path> newPair = new Pair<>(fileName, newPath);
-    pathList.add(newPair);
+    pathList.add(newPath);
   }
 
   /**
