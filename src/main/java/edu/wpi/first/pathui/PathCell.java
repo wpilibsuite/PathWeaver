@@ -39,9 +39,13 @@ public class PathCell extends TreeCell<String> {
 
   private void setupDragDrop() {
     this.setOnDragDropped(event -> {
-      //reset temp and leave old temp where it is
-      tempItem = new TreeItem<>("");
-      //should also write to file
+      TreeItem<String> newItem= new TreeItem<>(tempItem.getValue()); //make new item
+
+      int index = tempItem.getParent().getChildren().indexOf(tempItem); //get location of old item
+      tempItem.getParent().getChildren().add(index,newItem); // add new item to temp item location
+
+      tempItem.getParent().getChildren().remove(tempItem); //reset tempItem
+      tempItem.setValue("");
     });
   }
 
