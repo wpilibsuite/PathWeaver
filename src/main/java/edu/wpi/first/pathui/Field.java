@@ -16,8 +16,8 @@ public class Field {
     private Image image = new Image("edu/wpi/first/pathui/2018-field.jpg");
     private Quantity<Length> rWidth = Quantities.getQuantity(54,FOOT);
     private Quantity<Length> rLength = Quantities.getQuantity(27,FOOT);
-    private double scale = 1;
-    private Point2D coord = new Point2D.Double(0, 0);
+    private double scale = 16.5;
+    private Point2D coord = new Point2D.Double(450,175);
     public Unit<Length> unit = FOOT;
     public Unit<Length> Pixel;
     public Field() {

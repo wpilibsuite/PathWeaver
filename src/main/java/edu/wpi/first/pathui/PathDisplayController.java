@@ -96,7 +96,6 @@ public class PathDisplayController {
         drawPane.setLayoutY(field.getCoord().getY());
         drawPane.setScaleX(field.getScale());
         drawPane.setScaleY(field.getScale());
-
     }
 
     private void setupWaypoint(Waypoint waypoint) {
@@ -196,8 +195,6 @@ public class PathDisplayController {
         if (drawPane.getLayoutBounds().contains(event.getX(), event.getY())) {
             wp.setX(event.getX());
             wp.setY(event.getY());
-        }else{
-            System.out.println("nope");
         }
     }
 
