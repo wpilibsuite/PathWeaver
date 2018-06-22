@@ -18,6 +18,7 @@ import java.util.logging.StreamHandler;
  * Helper class for setting up the application loggers.
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
+
 final class Loggers {
 
   private Loggers() {
@@ -37,7 +38,7 @@ final class Loggers {
       globalLogger.removeHandler(handler);
     }
 
-    String directory = "~/PathUI";
+    String directory = "../../PathUI";
     File folder = new File(directory);
     if (!folder.exists()) {
       folder.mkdir();
