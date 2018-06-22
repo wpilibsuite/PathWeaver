@@ -16,15 +16,12 @@ public class Field {
     private Image image = new Image("edu/wpi/first/pathui/2018-field.jpg");
     private Quantity<Length> rWidth = Quantities.getQuantity(54,FOOT);
     private Quantity<Length> rLength = Quantities.getQuantity(27,FOOT);
-    private double scale = 100;
+    private double scale = 1;
     private Point2D coord = new Point2D.Double(0, 0);
-
-
-
-    Unit<Length> unit = FOOT;
-
+    public Unit<Length> unit = FOOT;
+    public Unit<Length> Pixel;
     public Field() {
-
+        Pixel = PathUnits.addUnit(unit.multiply(scale),"Pixel","pix");
     }
 
     public Field(Image image,Unit<Length> u, double realWidth, double realLength, double xPixel, double yPixel, double pixelWidth, double pixelLength) {

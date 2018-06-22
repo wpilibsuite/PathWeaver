@@ -38,8 +38,10 @@ public class PathUnits extends AbstractSystemOfUnits {
     public static final Unit<Length> CENTIMETER = addUnit(METER.divide(100), "Centimeter", "cm");
     public static final Unit<Length> MILLIMETER = addUnit(METER.divide(100), "Millimeter", "mm");
 
+
     public static final Unit<Time> MINUTE = addUnit(USCustomary.MINUTE, "Minute", "min");
     public static final Unit<Time> HOUR = addUnit(USCustomary.HOUR, "Hour", "hr");
+    public static final Unit<Time> SECOND = addUnit(MINUTE.divide(60), "Second", "sec");
 
     public static <U extends Unit<?>> U addUnit(U unit, String name, String label) {
         return addUnit(unit, name, label, true);
