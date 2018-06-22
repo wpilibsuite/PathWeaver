@@ -73,10 +73,9 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
-                if (newValue != null) {
-                  pathDisplayController.addPath(pathDirectory, newValue.getValue());
-                }
+                pathDisplayController.addPath(pathDirectory, newValue.getValue());
               }
+
             });
     autons.getSelectionModel()
         .selectedItemProperty()
@@ -86,10 +85,9 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
-                if (newValue != null) {
-                  for (TreeItem<String> item : newValue.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, item.getValue());
-                  }
+                for (TreeItem<String> item : newValue.getChildren()) {
+                  pathDisplayController.addPath(pathDirectory, item.getValue());
+
                 }
               }
             });

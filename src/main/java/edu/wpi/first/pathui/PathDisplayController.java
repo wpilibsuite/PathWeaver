@@ -17,7 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
-import javafx.util.Pair;
 
 public class PathDisplayController {
   @FXML private ImageView backgroundImage;
@@ -52,7 +51,7 @@ public class PathDisplayController {
   }
 
   private void setupPathList() {
-    pathList.addListener((ListChangeListener) change -> {
+    pathList.addListener((ListChangeListener<Path>) change -> {
       while (change.next()) {
         for (Object o : change.getRemoved()) {
           Path path = (Path) o;
