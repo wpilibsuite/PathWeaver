@@ -15,7 +15,6 @@ Circle:selected {
 
 CubicCurve {
     -fx-stroke: derive(orange, -25%);
-    -fx-stroke-width: 4px;
     -fx-stroke-line-cap: round;
     -fx-fill: null;
     -fx-cursor: hand;
@@ -23,6 +22,5 @@ CubicCurve {
 
 Line {
     -fx-stroke: cyan;
-    -fx-stroke-width: 6px;
     -fx-cursor: hand;
 }
