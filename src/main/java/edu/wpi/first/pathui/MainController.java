@@ -69,7 +69,7 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
-              if (newValue.getValue() == pathRoot.getValue()) {
+              if (newValue == pathRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
@@ -81,7 +81,7 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
-              if (newValue.getValue() == autonRoot.getValue()) {
+              if (newValue == autonRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();

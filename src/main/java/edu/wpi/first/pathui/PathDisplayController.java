@@ -73,7 +73,7 @@ public class PathDisplayController {
    */
   public void addPath(String fileLocations, String fileName) {
     for (Path path : pathList) {
-      if (fileName == path.getPathName()) {
+      if (fileName.equals( path.getPathName())) {
         return;
       }
     }
