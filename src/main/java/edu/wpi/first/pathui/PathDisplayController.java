@@ -1,6 +1,9 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -31,6 +34,8 @@ public class PathDisplayController {
     private Image image;
     private Field field = new Field();
 
+  private final ObservableList<Path> pathList = FXCollections.observableArrayList();
+  private String pathDirectory;
 
     @FXML
     private void initialize() {
@@ -45,33 +50,65 @@ public class PathDisplayController {
                         Math.min(topPane.getWidth() / image.getWidth(), topPane.getHeight() / image.getHeight()),
                 topPane.widthProperty(), topPane.heightProperty()));
 
-        group.getTransforms().add(scale);
-        setupDrawPaneSizing();
-        setupDrag();
-        setupPress();
+    group.getTransforms().add(scale);
+    setupDrawPaneSizing();
+    setupDrag();
+    setupPress();
+    setupPathList();
+  }
 
-        Path first = new Path();
-
-        Path fourth = PathIOUtil.importPath("Paths/", "default");
-        addPathToPane(first);
-
-        removePathFromPane(first);
-        addPathToPane(fourth);
-    }
-
-    private void addPathToPane(Path newPath) {
-        Waypoint current = newPath.getStart();
-        while (current != null) {
-            setupWaypoint(current);
-            drawPane.getChildren().add(current.getDot());
-            drawPane.getChildren().add(current.getTangentLine());
-            current.getTangentLine().toBack();
-            current = current.getNextWaypoint();
-            if (current != null) {
-                drawPane.getChildren().add(current.getPreviousSpline().getCubic());
-                current.getPreviousSpline().getCubic().toBack();
-            }
+  private void setupPathList() {
+    pathList.addListener((ListChangeListener<Path>) change -> {
+      while (change.next()) {
+        for (Object o : change.getRemoved()) {
+          Path path = (Path) o;
+          removePathFromPane(path);
         }
+        for (Object o : change.getAddedSubList()) {
+          Path path = (Path) o;
+          addPathToPane(path);
+        }
+      }
+    });
+  }
+
+  /**
+   * Add path to Controller.
+   *
+   * @param fileLocations Current working directory
+   * @param fileName      Name of path file inside directory
+   */
+  public void addPath(String fileLocations, String fileName) {
+    for (Path path : pathList) {
+      if (fileName.equals( path.getPathName())) {
+        return;
+      }
+    }
+    Path newPath = PathIOUtil.importPath(fileLocations, fileName);
+    pathList.add(newPath);
+  }
+
+  /**
+   * Remove all paths from Controller.
+   */
+  public void removeAllPath() {
+    pathList.clear();
+  }
+
+
+  //between this and above public function better names could be found
+  private void addPathToPane(Path newPath) {
+    Waypoint current = newPath.getStart();
+    while (current != null) {
+      setupWaypoint(current);
+      drawPane.getChildren().add(current.getDot());
+      drawPane.getChildren().add(current.getTangentLine());
+      current.getTangentLine().toBack();
+      current = current.getNextWaypoint();
+      if (current != null) {
+        drawPane.getChildren().add(current.getPreviousSpline().getCubic());
+        current.getPreviousSpline().getCubic().toBack();
+      }
     }
 
     private void removePathFromPane(Path newPath) {
@@ -191,11 +228,38 @@ public class PathDisplayController {
         });
     }
 
-    private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-        if (drawPane.getLayoutBounds().contains(event.getX(), event.getY())) {
-            wp.setX(event.getX());
-            wp.setY(event.getY());
-        }
+  private void setupDrag() {
+    drawPane.setOnDragDone(event -> {
+      PathIOUtil.export(pathDirectory, Waypoint.currentWaypoint.getPath());
+      Waypoint.currentWaypoint = null;
+      Spline.currentSpline = null;
+    });
+    drawPane.setOnDragOver(event -> {
+      Dragboard dragboard = event.getDragboard();
+      Waypoint wp = Waypoint.currentWaypoint;
+      if (dragboard.hasContent(DataFormats.WAYPOINT)) {
+        handleWaypointDrag(event, wp);
+      } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
+        handleVectorDrag(event, wp);
+      } else if (dragboard.hasContent(DataFormats.SPLINE)) {
+        handleSplineDrag(event, wp);
+      }
+    });
+  }
+
+  private void setupPress() {
+    drawPane.setOnMousePressed(e -> {
+      if (selectedWaypoint != null) {
+        selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypoint = null;
+      }
+    });
+  }
+
+  private void handleWaypointDrag(DragEvent event, Waypoint wp) {
+    if (drawPane.getLayoutBounds().contains(event.getX(), event.getY())) {
+      wp.setX(event.getX());
+      wp.setY(event.getY());
     }
 
     private void handleVectorDrag(DragEvent event, Waypoint wp) {
@@ -231,4 +295,7 @@ public class PathDisplayController {
         }
     }
 
+  public void setPathDirectory(String pathDirectory) {
+    this.pathDirectory = pathDirectory;
+  }
 }
