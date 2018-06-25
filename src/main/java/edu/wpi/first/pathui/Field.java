@@ -26,9 +26,9 @@ public class Field {
 
     public Field(Image image,Unit<Length> u, double realWidth, double realLength, double xPixel, double yPixel, double pixelWidth, double pixelLength) {
         setImage(image);
-        setRealWidth(Quantities.getQuantity(54,FOOT));
-        setRealLength(Quantities.getQuantity(27,FOOT));
-        setCoord(new Point2D.Double(xPixel,yPixel));
+        setRealWidth(Quantities.getQuantity(realWidth,FOOT));
+        setRealLength(Quantities.getQuantity(realLength,FOOT));
+        setCoord(new Point2D.Double(xPixel+pixelWidth/2,yPixel+pixelLength/2));
         setScale(((pixelWidth/realWidth)+(pixelLength/realLength))/2);
         setUnit(u);
         Unit<Length> Pixel = PathUnits.addUnit(unit.multiply(scale),"Pixel","pix");

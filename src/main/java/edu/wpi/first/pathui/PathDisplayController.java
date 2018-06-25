@@ -36,9 +36,10 @@ public class PathDisplayController {
 
     private final ObservableList<Path> pathList = FXCollections.observableArrayList();
     private String pathDirectory;
-    private double circleScale=.75;
-    private double splineScale=6;
-    private double lineScale=2;
+    private double circleScale = .75;
+    private double splineScale = 6;
+    private double lineScale = 2;
+
     @FXML
     private void initialize() {
 
@@ -109,17 +110,17 @@ public class PathDisplayController {
         }
     }
 
-    private void addPathStuff(Waypoint current){
+    private void addPathStuff(Waypoint current) {
         drawPane.getChildren().add(current.getDot());
         drawPane.getChildren().add(current.getTangentLine());
-        current.getDot().setScaleX(circleScale/field.getScale());
-        current.getDot().setScaleY(circleScale/field.getScale());
-        current.getTangentLine().setStrokeWidth(lineScale/field.getScale());
+        current.getDot().setScaleX(circleScale / field.getScale());
+        current.getDot().setScaleY(circleScale / field.getScale());
+        current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
         current.getTangentLine().toBack();
-        if (current != null && current.getPreviousWaypoint()!=null) {
+        if (current != null && current.getPreviousWaypoint() != null) {
             drawPane.getChildren().add(current.getPreviousSpline().getCubic());
             current.getPreviousSpline().getCubic().toBack();
-            current.getPreviousSpline().getCubic().setStrokeWidth(splineScale/field.getScale());
+            current.getPreviousSpline().getCubic().setStrokeWidth(splineScale / field.getScale());
         }
     }
 
@@ -191,6 +192,7 @@ public class PathDisplayController {
         previousWaypoint.setNextWaypoint(nextWaypoint);
         nextWaypoint.setPreviousWaypoint(previousWaypoint);
         Spline newCurve = previousWaypoint.getPath().createCurve(previousWaypoint, nextWaypoint);
+        newCurve.getCubic().setStrokeWidth(splineScale / field.getScale());
         drawPane.getChildren().add(newCurve.getCubic());
         newCurve.getCubic().toBack();
         previousWaypoint.update();
