@@ -38,7 +38,8 @@ final class Loggers {
       globalLogger.removeHandler(handler);
     }
 
-    String directory = System.getProperty("user.home") + "/PathUI";;
+    String directory = System.getProperty("user.home") + "/PathUI";
+    ;
     File folder = new File(directory);
     if (!folder.exists()) {
       folder.mkdir();

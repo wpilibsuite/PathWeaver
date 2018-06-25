@@ -13,7 +13,10 @@ repositories {
 }
 
 dependencies {
-    compile("org.apache.commons","commons-csv","1.5")
+    compile("org.apache.commons", "commons-csv", "1.5")
+    compile("javax.measure", "unit-api", "1.0");
+    compile("si.uom", "si-units", "0.9");
+    compile("systems.uom", "systems-common", "0.8");
 
 }
 

@@ -18,22 +18,31 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
+@SuppressWarnings("PMD.TooManyMethods") //Griffin will fix it 
 public class PathDisplayController {
-  @FXML private ImageView backgroundImage;
-  @FXML private Pane drawPane;
-  @FXML private Group group;
-  @FXML private Pane topPane;
+  @FXML
+  private ImageView backgroundImage;
+  @FXML
+  private Pane drawPane;
+  @FXML
+  private Group group;
+  @FXML
+  private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
   private Image image;
+  private final Field field = new Field();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
+  private final double circleScale = .75; //NOPMD should be static, will be modified later
+  private final double splineScale = 6; //NOPMD should be static, will be modified later
+  private final double lineScale = 2; //NOPMD should be static, will be modified later
 
   @FXML
   private void initialize() {
 
-    image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+    image = field.getImage();
     backgroundImage.setImage(image);
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
@@ -73,7 +82,7 @@ public class PathDisplayController {
    */
   public void addPath(String fileLocations, String fileName) {
     for (Path path : pathList) {
-      if (fileName.equals( path.getPathName())) {
+      if (fileName.equals(path.getPathName())) {
         return;
       }
     }
@@ -94,14 +103,23 @@ public class PathDisplayController {
     Waypoint current = newPath.getStart();
     while (current != null) {
       setupWaypoint(current);
-      drawPane.getChildren().add(current.getDot());
-      drawPane.getChildren().add(current.getTangentLine());
-      current.getTangentLine().toBack();
+      addPathStuff(current);
       current = current.getNextWaypoint();
-      if (current != null) {
-        drawPane.getChildren().add(current.getPreviousSpline().getCubic());
-        current.getPreviousSpline().getCubic().toBack();
-      }
+
+    }
+  }
+
+  private void addPathStuff(Waypoint current) {
+    drawPane.getChildren().add(current.getDot());
+    drawPane.getChildren().add(current.getTangentLine());
+    current.getDot().setScaleX(circleScale / field.getScale());
+    current.getDot().setScaleY(circleScale / field.getScale());
+    current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
+    current.getTangentLine().toBack();
+    if (current != null && current.getPreviousWaypoint() != null) {
+      drawPane.getChildren().add(current.getPreviousSpline().getCubic());
+      current.getPreviousSpline().getCubic().toBack();
+      current.getPreviousSpline().getCubic().setStrokeWidth(splineScale / field.getScale());
     }
   }
 
@@ -119,14 +137,14 @@ public class PathDisplayController {
 
 
   private void setupDrawPaneSizing() {
-
     drawPane.setMaxWidth(image.getWidth());
-    drawPane.setMinWidth(image.getWidth());
     drawPane.setMaxHeight(image.getHeight());
-    drawPane.setMinHeight(image.getHeight());
-    drawPane.setPrefHeight(image.getHeight());
-    drawPane.setPrefWidth(image.getWidth());
-
+    drawPane.setPrefHeight(field.getRealLength().getValue().doubleValue());
+    drawPane.setPrefWidth(field.getRealWidth().getValue().doubleValue());
+    drawPane.setLayoutX(field.getCoord().getX());
+    drawPane.setLayoutY(field.getCoord().getY());
+    drawPane.setScaleX(field.getScale());
+    drawPane.setScaleY(field.getScale());
   }
 
   private void setupWaypoint(Waypoint waypoint) {
@@ -173,6 +191,7 @@ public class PathDisplayController {
     previousWaypoint.setNextWaypoint(nextWaypoint);
     nextWaypoint.setPreviousWaypoint(previousWaypoint);
     Spline newCurve = previousWaypoint.getPath().createCurve(previousWaypoint, nextWaypoint);
+    newCurve.getCubic().setStrokeWidth(splineScale / field.getScale());
     drawPane.getChildren().add(newCurve.getCubic());
     newCurve.getCubic().toBack();
     previousWaypoint.update();
@@ -247,10 +266,7 @@ public class PathDisplayController {
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
       Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      drawPane.getChildren().add(newPoint.getPreviousSpline().getCubic());
-      drawPane.getChildren().add(newPoint.getDot());
-      drawPane.getChildren().add(newPoint.getTangentLine());
-      newPoint.getTangentLine().toBack();
+      addPathStuff(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
       makeDeletable(newPoint);
       setupWaypoint(newPoint);
