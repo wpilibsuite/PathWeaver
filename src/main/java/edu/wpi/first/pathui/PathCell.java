@@ -6,17 +6,17 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
-/** TreeItem with support for dragging.
- *
+/**
+ * TreeItem with support for dragging.
  */
 public class PathCell extends TreeCell<String> {
   private final TreeCell cell;
 
-  //having a single tempItem you use for all dragging
+  //having a single EMPTY_ITEM you use for all dragging
   //means that any dragover call is able to remove the temporary
   //item from past locations
   //each cell might have its own dragover call as you move around
-  private static final TreeItem<String> tempItem = new TreeItem<>("");
+  private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
 
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
@@ -42,13 +42,13 @@ public class PathCell extends TreeCell<String> {
 
   private void setupDragDrop() {
     this.setOnDragDropped(event -> {
-      TreeItem<String> newItem= new TreeItem<>(tempItem.getValue()); //make new item
+      TreeItem<String> newItem = new TreeItem<>(EMPTY_ITEM.getValue()); //make new item
 
-      int index = tempItem.getParent().getChildren().indexOf(tempItem); //get location of old item
-      tempItem.getParent().getChildren().add(index,newItem); // add new item to temp item location
+      int index = EMPTY_ITEM.getParent().getChildren().indexOf(EMPTY_ITEM); //get location of old item
+      EMPTY_ITEM.getParent().getChildren().add(index, newItem); // add new item to temp item location
 
-      tempItem.getParent().getChildren().remove(tempItem); //reset tempItem
-      tempItem.setValue("");
+      EMPTY_ITEM.getParent().getChildren().remove(EMPTY_ITEM); //reset EMPTY_ITEM
+      EMPTY_ITEM.setValue("");
     });
   }
 
@@ -101,15 +101,15 @@ public class PathCell extends TreeCell<String> {
   private void setTemp(String source, TreeItem<String> parent, int currentIndex) {
     removeTemp();
     if (currentIndex >= 0) {
-      parent.getChildren().add(currentIndex, tempItem);
-      tempItem.setValue(source);
+      parent.getChildren().add(currentIndex, EMPTY_ITEM);
+      EMPTY_ITEM.setValue(source);
     }
   }
 
   private void removeTemp() {
-    TreeItem<String> tempParent = tempItem.getParent();
+    TreeItem<String> tempParent = EMPTY_ITEM.getParent();
     if (tempParent != null) {
-      tempParent.getChildren().remove(tempItem);
+      tempParent.getChildren().remove(EMPTY_ITEM);
     }
   }
 
