@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:controller="edu.wpi.first.pathui.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.MainController">
     <right>
         <SplitPane fx:id="sidePane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <items>
-                <TreeView fx:id="autons" prefHeight="200.0" prefWidth="200.0"/>
-                <TreeView fx:id="paths" prefHeight="200.0" prefWidth="200.0"/>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                      <TreeView fx:id="autons" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ToolBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                     <items>
+                        <Button mnemonicParsing="false" text="+" />
+                        <Button mnemonicParsing="false" text="-" />
+                     </items>
+                  </ToolBar>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                      <TreeView fx:id="paths" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ToolBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                     <items>
+                        <Button mnemonicParsing="false" text="+" />
+                        <Button mnemonicParsing="false" text="-" />
+                     </items>
+                  </ToolBar>
+               </children>
+            </VBox>
             </items>
         </SplitPane>
     </right>
@@ -23,17 +46,17 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Close"/>
+                                <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Edit">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                <MenuItem mnemonicParsing="false" text="Delete" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="About"/>
+                                <MenuItem mnemonicParsing="false" text="About" />
                             </items>
                         </Menu>
                     </menus>
@@ -42,6 +65,6 @@
         </VBox>
     </top>
     <center>
-        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml"/>
+        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
     </center>
 </BorderPane>
