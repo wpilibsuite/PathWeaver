@@ -49,7 +49,6 @@ public class MainController {
 
     setupClickablePaths();
     loadAllAutons();
-
   }
 
   private void loadAllAutons() {
@@ -63,6 +62,16 @@ public class MainController {
       saveAuton(autonDirectory, item.getValue(), item);
     }
   }
+  @FXML
+  private void createPath(){
+    addChild(pathRoot,"Unnamed");
+  }
+  @FXML
+  private void createAuton(){
+    addChild(autonRoot,"Unnamed");
+  }
+
+
 
   private void setupClickablePaths() {
     paths.getSelectionModel()

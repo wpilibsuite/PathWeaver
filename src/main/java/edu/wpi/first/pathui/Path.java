@@ -32,10 +32,10 @@ public class Path {
 
   private void createDefaultWaypoints() {
     Point2D startPos = new Point2D(0, 0);
-    Point2D endPos = new Point2D(250, 250);
+    Point2D endPos = new Point2D(10, 10);
 
-    Point2D startTangent = new Point2D(200, 0);
-    Point2D endTangent = new Point2D(0, 200);
+    Point2D startTangent = new Point2D(10, 0);
+    Point2D endTangent = new Point2D(0, 10);
     createInitialWaypoints(startPos, endPos, startTangent, endTangent);
   }
 
