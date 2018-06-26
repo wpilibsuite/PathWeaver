@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 public class MainController {
@@ -28,6 +30,8 @@ public class MainController {
   private String autonDirectory;
   private final TreeItem<String> autonRoot = new TreeItem<String>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
+
+  private TreeItem<String> selected = null;
 
   @FXML
   private void initialize() {
@@ -62,15 +66,56 @@ public class MainController {
       saveAuton(autonDirectory, item.getValue(), item);
     }
   }
+
   @FXML
-  private void createPath(){
-    addChild(pathRoot,"Unnamed");
-  }
-  @FXML
-  private void createAuton(){
-    addChild(autonRoot,"Unnamed");
+  private void createPath() {
+    addChild(pathRoot, "Unnamed");
   }
 
+  @FXML
+  private void createAuton() {
+    addChild(autonRoot, "Unnamed");
+  }
+
+  @FXML
+  private void delete() {
+    if (selected == null) {
+      return;
+    }
+    TreeItem<String> root = getRoot(selected);
+    if (selected == root) {
+      System.out.println("clicked something dumb");
+      return;
+    }
+    if (autonRoot == root) {
+      if(selected.getParent().getParent() == null){
+        System.out.println("delete auton");
+      }else{
+        System.out.println("remove path from auton");
+      }
+    } else if (pathRoot == root) {
+      //delete Path file and everyone using it
+      System.out.println("delete path file");
+    }
+  }
+
+  @FXML
+  private void keyPressed(KeyEvent event) {
+    if (event.getCode() == KeyCode.DELETE) {
+      delete();
+    }
+    if (event.getCode() == KeyCode.BACK_SPACE) {
+      delete();
+    }
+  }
+
+  private TreeItem<String> getRoot(TreeItem<String> item) {
+    TreeItem<String> root = item;
+    while (root.getParent() != null) {
+      root = root.getParent();
+    }
+    return root;
+  }
 
 
   private void setupClickablePaths() {
@@ -78,6 +123,7 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              selected = newValue;
               if (newValue == pathRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
@@ -90,6 +136,7 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              selected = newValue;
               if (newValue == autonRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
