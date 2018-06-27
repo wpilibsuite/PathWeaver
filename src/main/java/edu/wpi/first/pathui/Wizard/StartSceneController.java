@@ -6,7 +6,10 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
-public class StartSceneController {
+import static edu.wpi.first.pathui.wizard.WizardController.Panes.LoadProject;
+import static edu.wpi.first.pathui.wizard.WizardController.Panes.NewProjectSave;
+
+public class StartSceneController implements Controllers {
 
   @FXML
   private AnchorPane mainPane;
@@ -17,32 +20,39 @@ public class StartSceneController {
   @FXML
   private RadioButton newProject;
 
-  private ToggleGroup options;
+  private static WizardController.Panes nextPane;
 
-  public StartSceneController(){
+  private ToggleGroup options = new ToggleGroup();
+
+  public StartSceneController() {
+  }
+
+  @FXML
+  private void initialize() {
     setupButtons();
   }
+
 
   private void setupButtons() {
     loadProject.setToggleGroup(options);
     newProject.setToggleGroup(options);
+    newProject.setSelected(true);
+    newProject.fire();
   }
 
-  public AnchorPane getMainPane(){
-    return this.mainPane;
+  public WizardController.Panes getNextPane() {
+    return nextPane;
   }
-
-  public
 
 
   @FXML
   void loadProject(ActionEvent event) {
-
+    nextPane = LoadProject;
   }
 
   @FXML
   void newProject(ActionEvent event) {
-
+    nextPane = NewProjectSave;
   }
 
 
