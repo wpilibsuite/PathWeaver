@@ -91,7 +91,7 @@ public class MainController {
       if(selected.getParent().getParent() == null){
         deleteAuton(selected);
       }else{
-        System.out.println("remove path from auton");
+        removePath(selected);
       }
     } else if (pathRoot == root) {
       //delete Path file and everyone using it
@@ -108,6 +108,13 @@ public class MainController {
       delete();
     }
   }
+
+  private void removePath(TreeItem<String> path){
+    TreeItem<String> auton = path.getParent();
+    auton.getChildren().remove(path);
+    saveAuton(autonDirectory,auton.getValue(),auton);
+  }
+
 
   private TreeItem<String> getRoot(TreeItem<String> item) {
     TreeItem<String> root = item;
