@@ -89,7 +89,7 @@ public class MainController {
     }
     if (autonRoot == root) {
       if(selected.getParent().getParent() == null){
-        System.out.println("delete auton");
+        deleteAuton(selected);
       }else{
         System.out.println("remove path from auton");
       }
@@ -207,6 +207,19 @@ public class MainController {
       LOGGER.log(Level.WARNING, "Could not save auton file", e);
     }
   }
+
+  private void deleteAuton(TreeItem<String> auton){
+
+    File autonFile = new File(autonDirectory+auton.getValue());
+    if(autonFile.delete()){
+      System.out.println("deleted auton");
+      auton.getParent().getChildren().remove(auton);
+    }else{
+      System.out.println("couldnt delete auton");
+    }
+  }
+
+
 
   public void setDirectory(String directory) {
     this.directory = directory;
