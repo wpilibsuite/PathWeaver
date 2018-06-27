@@ -24,11 +24,12 @@ public class StartSceneController implements Controllers {
 
   private ToggleGroup options = new ToggleGroup();
 
-  public StartSceneController() {
+  public StartSceneController(){
   }
 
   @FXML
   private void initialize() {
+    nextPane=NewProjectSave;
     setupButtons();
   }
 
@@ -42,6 +43,11 @@ public class StartSceneController implements Controllers {
 
   public WizardController.Panes getNextPane() {
     return nextPane;
+  }
+
+  @Override
+  public void storeInfo() {
+    //does Nothing
   }
 
 

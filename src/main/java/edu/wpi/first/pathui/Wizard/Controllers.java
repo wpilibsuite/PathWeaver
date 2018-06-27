@@ -4,4 +4,5 @@ public interface Controllers {
 
   public WizardController.Panes getNextPane();
 
+  void storeInfo();
 }

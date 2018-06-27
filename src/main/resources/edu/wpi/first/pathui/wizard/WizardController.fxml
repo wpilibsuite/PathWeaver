@@ -31,5 +31,6 @@
       </SplitPane>
        <fx:include source="StartScreen.fxml" fx:id="startScreen"/>
        <fx:include source="LoadProject.fxml" fx:id="loadProject"/>
+       <fx:include source="NewProjectSave.fxml" fx:id="newProjectSave"/>
    </children>
 </AnchorPane>

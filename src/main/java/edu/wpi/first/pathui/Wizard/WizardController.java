@@ -33,11 +33,15 @@ public class WizardController {
   @FXML
   private Pane loadProject;
 
+  @FXML
+  private Pane newProjectSave;
+
 
   public enum Panes {
     StartScene,
     LoadProject,
-    NewProjectSave
+    NewProjectSave,
+    FieldCreator
   }
 
 
@@ -69,6 +73,7 @@ public class WizardController {
   void nextScene(ActionEvent event) {
     previousPanes.add(currentPane);
     setupPanes();
+    currentController.storeInfo();
     currentPane = currentController.getNextPane();
     goToPane(currentPane);
 
@@ -99,6 +104,13 @@ public class WizardController {
         break;
 
       case NewProjectSave:
+        topPane.getChildren().setAll(newProjectSave);
+        newProjectSave.visibleProperty().setValue(true);
+        currentController = new NewProjectSaveController();
+        previous.disableProperty().setValue(false);
+        break;
+
+      case FieldCreator:
         break;
 
     }
@@ -108,6 +120,7 @@ public class WizardController {
   void setupPanes(){
     startScreen.visibleProperty().setValue(false);
     loadProject.visibleProperty().setValue(false);
+    newProjectSave.visibleProperty().setValue(false);
   }
 }
 
