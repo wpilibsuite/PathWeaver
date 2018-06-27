@@ -53,7 +53,6 @@ public class NewProjectSaveController implements Controllers {
 
   @Override
   public void storeInfo() {
-    pName= projectName.getText();
 
   }
 }

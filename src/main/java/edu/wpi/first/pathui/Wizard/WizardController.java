@@ -36,12 +36,18 @@ public class WizardController {
   @FXML
   private Pane newProjectSave;
 
+  @FXML
+  private Pane fieldCreator;
+
 
   public enum Panes {
     StartScene,
     LoadProject,
     NewProjectSave,
-    FieldCreator
+    FieldCreator,
+    FieldEditor,
+    FieldLoader,
+    ImageSelector
   }
 
 
@@ -111,6 +117,10 @@ public class WizardController {
         break;
 
       case FieldCreator:
+        topPane.getChildren().setAll(fieldCreator);
+        fieldCreator.visibleProperty().setValue(true);
+        currentController = new FieldCreatorController();
+        previous.disableProperty().setValue(false);
         break;
 
     }
@@ -121,6 +131,7 @@ public class WizardController {
     startScreen.visibleProperty().setValue(false);
     loadProject.visibleProperty().setValue(false);
     newProjectSave.visibleProperty().setValue(false);
+    fieldCreator.visibleProperty().setValue(false);
   }
 }
 
