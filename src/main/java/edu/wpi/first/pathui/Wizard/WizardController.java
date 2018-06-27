@@ -67,19 +67,18 @@ public class WizardController {
 
   @FXML
   void nextScene(ActionEvent event) {
-    System.out.println("storing old pane");
     previousPanes.add(currentPane);
-    System.out.println("hiding old Panes");
     setupPanes();
-    System.out.println("reciving new pane");
     currentPane = currentController.getNextPane();
-    System.out.println("going to new Plane");
     goToPane(currentPane);
 
   }
 
   @FXML
   void previousScene(ActionEvent event) {
+    currentPane=previousPanes.pop();
+    setupPanes();
+    goToPane(currentPane);
   }
 
   void goToPane(Panes pane) {
@@ -89,12 +88,14 @@ public class WizardController {
         topPane.getChildren().setAll(startScreen);
         startScreen.visibleProperty().setValue(true);
         currentController = new StartSceneController();
+        previous.disableProperty().setValue(true);
         break;
 
       case LoadProject:
         topPane.getChildren().setAll(loadProject);
         loadProject.visibleProperty().setValue(true);
         currentController=new LoadProjectController();
+        previous.disableProperty().setValue(false);
         break;
 
       case NewProjectSave:
