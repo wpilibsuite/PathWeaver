@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,13 +91,14 @@ public class MainController {
     }
     if (autonRoot == root) {
       if(selected.getParent().getParent() == null){
-        deleteAuton(selected);
+        deleteItem(autonDirectory,selected);
       }else{
         removePath(selected);
       }
     } else if (pathRoot == root) {
-      //delete Path file and everyone using it
-      System.out.println("delete path file");
+       deletePath(selected);
+      saveAllAutons();
+      loadAllAutons();
     }
   }
 
@@ -107,6 +110,24 @@ public class MainController {
     if (event.getCode() == KeyCode.BACK_SPACE) {
       delete();
     }
+  }
+  private void deletePath(TreeItem<String> pathDelete){
+    ArrayList<TreeItem<String>> deleteList = new ArrayList<>();
+    for(TreeItem<String> auton : autonRoot.getChildren()){
+      System.out.println("auton  " +auton);
+      for (TreeItem<String> path : auton.getChildren()){
+        System.out.println("path  "+path);
+        if(path.getValue().equals(pathDelete.getValue())){
+          System.out.println("same as " + pathDelete);
+          //removePath(path);
+          deleteList.add(path);
+        }
+      }
+    }
+    for(TreeItem<String> path : deleteList){
+      removePath(path);
+    }
+    deleteItem(pathDirectory,pathDelete);
   }
 
   private void removePath(TreeItem<String> path){
@@ -215,14 +236,14 @@ public class MainController {
     }
   }
 
-  private void deleteAuton(TreeItem<String> auton){
+  private void deleteItem(String directory, TreeItem<String> item){
 
-    File autonFile = new File(autonDirectory+auton.getValue());
-    if(autonFile.delete()){
-      System.out.println("deleted auton");
-      auton.getParent().getChildren().remove(auton);
+    File itemFile = new File(directory+item.getValue());
+    if(itemFile.delete()){
+      item.getParent().getChildren().remove(item);
+      System.out.println("did delete");
     }else{
-      System.out.println("couldnt delete auton");
+      System.out.println("didnt delete");
     }
   }
 
