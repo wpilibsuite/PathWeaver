@@ -11,13 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-import edu.wpi.first.pathui.Wizard.Wizard;
+import edu.wpi.first.pathui.wizard.Wizard;
 
 public class MainController {
   @FXML private TreeView<String> autons;
@@ -162,7 +160,7 @@ public class MainController {
   }
 
   @FXML
-  void newProject(){
+  void newProject() throws IOException {
     Wizard wizard= new Wizard();
 
     wizard.show();
