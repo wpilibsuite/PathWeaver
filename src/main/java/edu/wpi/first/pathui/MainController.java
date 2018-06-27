@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,21 +81,22 @@ public class MainController {
   @FXML
   private void delete() {
     if (selected == null) {
+      // have nothing selected
       return;
     }
     TreeItem<String> root = getRoot(selected);
     if (selected == root) {
-      System.out.println("clicked something dumb");
+      // clicked impossible thing to delete
       return;
     }
     if (autonRoot == root) {
-      if(selected.getParent().getParent() == null){
-        deleteItem(autonDirectory,selected);
-      }else{
+      if (selected.getParent().getParent() == null) {
+        deleteItem(autonDirectory, selected);
+      } else {
         removePath(selected);
       }
     } else if (pathRoot == root) {
-       deletePath(selected);
+      deletePath(selected);
       saveAllAutons();
       loadAllAutons();
     }
@@ -111,29 +111,26 @@ public class MainController {
       delete();
     }
   }
-  private void deletePath(TreeItem<String> pathDelete){
+
+  private void deletePath(TreeItem<String> pathDelete) {
     ArrayList<TreeItem<String>> deleteList = new ArrayList<>();
-    for(TreeItem<String> auton : autonRoot.getChildren()){
-      System.out.println("auton  " +auton);
-      for (TreeItem<String> path : auton.getChildren()){
-        System.out.println("path  "+path);
-        if(path.getValue().equals(pathDelete.getValue())){
-          System.out.println("same as " + pathDelete);
-          //removePath(path);
+    for (TreeItem<String> auton : autonRoot.getChildren()) {
+      for (TreeItem<String> path : auton.getChildren()) {
+        if (path.getValue().equals(pathDelete.getValue())) {
           deleteList.add(path);
         }
       }
     }
-    for(TreeItem<String> path : deleteList){
+    for (TreeItem<String> path : deleteList) {
       removePath(path);
     }
-    deleteItem(pathDirectory,pathDelete);
+    deleteItem(pathDirectory, pathDelete);
   }
 
-  private void removePath(TreeItem<String> path){
+  private void removePath(TreeItem<String> path) {
     TreeItem<String> auton = path.getParent();
     auton.getChildren().remove(path);
-    saveAuton(autonDirectory,auton.getValue(),auton);
+    saveAuton(autonDirectory, auton.getValue(), auton);
   }
 
 
@@ -236,17 +233,14 @@ public class MainController {
     }
   }
 
-  private void deleteItem(String directory, TreeItem<String> item){
+  private void deleteItem(String directory, TreeItem<String> item) {
 
-    File itemFile = new File(directory+item.getValue());
-    if(itemFile.delete()){
+    File itemFile = new File(directory + item.getValue());
+    if (itemFile.delete()) {
       item.getParent().getChildren().remove(item);
-      System.out.println("did delete");
-    }else{
-      System.out.println("didnt delete");
     }
-  }
 
+  }
 
 
   public void setDirectory(String directory) {
