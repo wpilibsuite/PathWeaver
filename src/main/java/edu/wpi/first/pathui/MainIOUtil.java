@@ -34,6 +34,21 @@ public final class MainIOUtil {
     }
   }
 
+  /** Checks if a file exists with filename if so appends incremental value.
+   *
+   * @param directory The directory the file will be saved to
+   * @param filename The preferred filename
+   * @param extension The file extension
+   * @return
+   */
+  public static String getValidFileName(String directory, String filename, String extension) {
+    File file = new File(directory, filename + extension);
+    for (int num = 0; file.exists(); num++) {
+      file = new File(directory, filename + num + extension);
+    }
+    return file.getName();
+  }
+
   /**
    * Create new tree item and add it as child to root.
    *

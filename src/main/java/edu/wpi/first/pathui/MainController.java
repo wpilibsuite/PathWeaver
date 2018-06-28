@@ -165,12 +165,16 @@ public class MainController {
 
   @FXML
   private void createPath() {
-    MainIOUtil.addChild(pathRoot, "Unnamed");
+    String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
+    MainIOUtil.addChild(pathRoot, name);
+    Path newPath = new Path(name);
+    PathIOUtil.export(pathDirectory, newPath);
   }
 
   @FXML
   private void createAuton() {
-    TreeItem<String> auton = MainIOUtil.addChild(autonRoot, "Unnamed");
+    String name = MainIOUtil.getValidFileName(autonDirectory, "Unnamed", "");
+    TreeItem<String> auton = MainIOUtil.addChild(autonRoot, name);
     MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
   }
 
