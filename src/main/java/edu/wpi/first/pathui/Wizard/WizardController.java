@@ -58,6 +58,8 @@ public class WizardController {
 
   private Controllers currentController;
 
+
+
   @FXML
   private void initialize() {
     setupPanes();
@@ -132,6 +134,9 @@ public class WizardController {
     loadProject.visibleProperty().setValue(false);
     newProjectSave.visibleProperty().setValue(false);
     fieldCreator.visibleProperty().setValue(false);
+
+
+    next.disableProperty().setValue(false);
   }
 }
 

@@ -2,6 +2,8 @@ package edu.wpi.first.pathui.wizard;
 
 import java.io.File;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -18,6 +20,7 @@ public class LoadProjectController implements Controllers {
 
   FileChooser fileChooser;
 
+  private BooleanProperty readyForNext=new SimpleBooleanProperty(false);
 
   @FXML
   private void initialize() {
@@ -33,6 +36,11 @@ public class LoadProjectController implements Controllers {
   }
 
   public LoadProjectController() {
+  }
+
+  @Override
+  public BooleanProperty getReadyForNext() {
+    return readyForNext;
   }
 
   @Override

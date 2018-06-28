@@ -1,5 +1,7 @@
 package edu.wpi.first.pathui.wizard;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -24,6 +26,8 @@ public class StartSceneController implements Controllers {
 
   private ToggleGroup options = new ToggleGroup();
 
+  private BooleanProperty readyForNext=new SimpleBooleanProperty(false);
+
   public StartSceneController(){
   }
 
@@ -31,6 +35,7 @@ public class StartSceneController implements Controllers {
   private void initialize() {
     nextPane=NewProjectSave;
     setupButtons();
+    readyForNext.setValue(true);
   }
 
 
@@ -39,6 +44,11 @@ public class StartSceneController implements Controllers {
     newProject.setToggleGroup(options);
     newProject.setSelected(true);
     newProject.fire();
+  }
+
+  @Override
+  public BooleanProperty getReadyForNext() {
+    return readyForNext;
   }
 
   public WizardController.Panes getNextPane() {

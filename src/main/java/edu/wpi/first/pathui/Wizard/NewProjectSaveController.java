@@ -2,6 +2,8 @@ package edu.wpi.first.pathui.wizard;
 
 import java.io.File;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -24,6 +26,8 @@ public class NewProjectSaveController implements Controllers {
 
   private String pName;
 
+  private BooleanProperty readyForNext=new SimpleBooleanProperty(false);
+
 
 
   @FXML
@@ -45,6 +49,11 @@ public class NewProjectSaveController implements Controllers {
     projectLocation.setText(directory.getPath());
   }
 
+
+  @Override
+  public BooleanProperty getReadyForNext() {
+    return readyForNext;
+  }
 
   @Override
   public WizardController.Panes getNextPane() {

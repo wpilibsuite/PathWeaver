@@ -1,5 +1,7 @@
 package edu.wpi.first.pathui.wizard;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -25,6 +27,8 @@ public class FieldCreatorController implements Controllers{
 
   private ToggleGroup options = new ToggleGroup();
 
+  private BooleanProperty readyForNext=new SimpleBooleanProperty(false);
+
   public FieldCreatorController(){
   }
 
@@ -41,6 +45,11 @@ public class FieldCreatorController implements Controllers{
     editField.setToggleGroup(options);
     newField.setSelected(true);
     newField.fire();
+  }
+
+  @Override
+  public BooleanProperty getReadyForNext() {
+    return readyForNext;
   }
 
   public WizardController.Panes getNextPane() {
