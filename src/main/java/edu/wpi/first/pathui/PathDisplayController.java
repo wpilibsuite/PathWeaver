@@ -88,7 +88,8 @@ public class PathDisplayController {
     }
     Path newPath = PathIOUtil.importPath(fileLocations, fileName);
     if (newPath == null) {
-      newPath = new Path();
+      newPath = new Path(fileName);
+      PathIOUtil.export(fileLocations, newPath);
     }
     pathList.add(newPath);
   }

@@ -7,7 +7,8 @@ public class Path {
   private Waypoint end;
   private String pathName = "default";
 
-  public Path() {
+  public Path(String name) {
+    pathName = name;
     createDefaultWaypoints();
   }
 

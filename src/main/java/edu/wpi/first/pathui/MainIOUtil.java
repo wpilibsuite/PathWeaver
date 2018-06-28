@@ -54,10 +54,14 @@ public final class MainIOUtil {
   public static void deleteItem(String directory, TreeItem<String> item) {
 
     File itemFile = new File(directory + item.getValue());
-    if (itemFile.delete()) {
-      item.getParent().getChildren().remove(item);
+    if (itemFile.exists()) {
+      if (itemFile.delete()) {
+        item.getParent().getChildren().remove(item);
+      } else {
+        LOGGER.log(Level.WARNING, "Could not delete file: " + itemFile.getAbsolutePath());
+      }
     } else {
-      LOGGER.log(Level.WARNING, "Could not delete file: " + itemFile.getAbsolutePath());
+      LOGGER.log(Level.WARNING, "Could not find file to delete: " + itemFile.getAbsolutePath());
     }
   }
 
