@@ -1,7 +1,6 @@
 package edu.wpi.first.pathui;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -17,8 +16,6 @@ public class MainController {
   @FXML private Pane pathDisplay;
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
-
-  private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
   private String directory = "pathUI/";
   private String pathDirectory;

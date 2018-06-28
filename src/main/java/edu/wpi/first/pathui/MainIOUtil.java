@@ -17,6 +17,12 @@ public final class MainIOUtil {
   private MainIOUtil() {
   }
 
+  /**
+   * Creates treeItem for every file in directory.
+   *
+   * @param directory absolute location of directory
+   * @param root      Treeitem to add all new items as children
+   */
   public static void setupItemsInDirectory(String directory, TreeItem<String> root) {
     File folder = new File(directory);
     if (!folder.exists()) {
@@ -28,11 +34,23 @@ public final class MainIOUtil {
     }
   }
 
+  /**
+   * Create new tree item and add it as child to root.
+   *
+   * @param root Root of new treeItem.
+   * @param name String name for new treeItem.
+   */
   public static void addChild(TreeItem<String> root, String name) {
     TreeItem<String> item = new TreeItem<>(name);
     root.getChildren().add(item);
   }
 
+  /**
+   * Delete item and file associated with it.
+   *
+   * @param directory Location of file
+   * @param item      Item to delete
+   */
   public static void deleteItem(String directory, TreeItem<String> item) {
 
     File itemFile = new File(directory + item.getValue());
@@ -43,6 +61,13 @@ public final class MainIOUtil {
     }
   }
 
+  /**
+   * Load auton from file.
+   *
+   * @param location Directory of file
+   * @param filename Name of auton file
+   * @param root     Auton treeItem to add new created items to.
+   */
   public static void loadAuton(String location, String filename, TreeItem<String> root) {
     BufferedReader reader;
     root.getChildren().clear();
@@ -59,6 +84,13 @@ public final class MainIOUtil {
     }
   }
 
+  /**
+   * Save auton to its file.
+   *
+   * @param location Directory to save auton file
+   * @param filename Name of new auton file
+   * @param root     Auton treeItem to save
+   */
   public static void saveAuton(String location, String filename, TreeItem<String> root) {
     BufferedWriter writer;
     try {
