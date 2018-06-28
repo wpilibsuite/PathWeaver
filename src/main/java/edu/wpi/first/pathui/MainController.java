@@ -85,10 +85,8 @@ public class MainController {
 
   @FXML
   private void keyPressed(KeyEvent event) {
-    if (event.getCode() == KeyCode.DELETE) {
-      delete();
-    }
-    if (event.getCode() == KeyCode.BACK_SPACE) {
+    if (event.getCode() == KeyCode.DELETE
+        || event.getCode() == KeyCode.BACK_SPACE) {
       delete();
     }
   }
@@ -173,7 +171,7 @@ public class MainController {
   @FXML
   private void createAuton() {
     TreeItem<String> auton = MainIOUtil.addChild(autonRoot, "Unnamed");
-    MainIOUtil.saveAuton(autonDirectory,auton.getValue(), auton);
+    MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
   }
 
   public void setDirectory(String directory) {

@@ -70,11 +70,11 @@ public final class PathIOUtil {
     File file = new File(fileLocation + fileName);
     if (file.exists()) {
       try (
-           Reader reader = Files.newBufferedReader(file.toPath());
-           CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
-               .withFirstRecordAsHeader()
-               .withIgnoreHeaderCase()
-               .withTrim());
+          Reader reader = Files.newBufferedReader(file.toPath());
+          CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+              .withFirstRecordAsHeader()
+              .withIgnoreHeaderCase()
+              .withTrim());
       ) {
         int count = 0;
         Point2D startPosition = null;
