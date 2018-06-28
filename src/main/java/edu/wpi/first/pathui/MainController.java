@@ -172,7 +172,8 @@ public class MainController {
 
   @FXML
   private void createAuton() {
-    MainIOUtil.addChild(autonRoot, "Unnamed");
+    TreeItem<String> auton = MainIOUtil.addChild(autonRoot, "Unnamed");
+    MainIOUtil.saveAuton(autonDirectory,auton.getValue(), auton);
   }
 
   public void setDirectory(String directory) {

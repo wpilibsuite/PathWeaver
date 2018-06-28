@@ -39,10 +39,12 @@ public final class MainIOUtil {
    *
    * @param root Root of new treeItem.
    * @param name String name for new treeItem.
+   * @return the TreeItem created
    */
-  public static void addChild(TreeItem<String> root, String name) {
+  public static TreeItem<String> addChild(TreeItem<String> root, String name) {
     TreeItem<String> item = new TreeItem<>(name);
     root.getChildren().add(item);
+    return item;
   }
 
   /**
