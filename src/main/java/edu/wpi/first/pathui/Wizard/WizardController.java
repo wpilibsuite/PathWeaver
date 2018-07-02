@@ -39,6 +39,8 @@ public class WizardController {
   @FXML
   private Pane fieldCreator;
 
+  @FXML
+  private Pane loadField;
 
   public enum Panes {
     StartScene,
@@ -125,6 +127,12 @@ public class WizardController {
         previous.disableProperty().setValue(false);
         break;
 
+      case FieldLoader:
+        topPane.getChildren().setAll(loadField);
+        loadField.visibleProperty().setValue(true);
+        currentController = new LoadFieldController();
+        previous.disableProperty().setValue(true);
+
     }
 
   }
@@ -134,7 +142,7 @@ public class WizardController {
     loadProject.visibleProperty().setValue(false);
     newProjectSave.visibleProperty().setValue(false);
     fieldCreator.visibleProperty().setValue(false);
-
+    loadField.visibleProperty().setValue(false);
 
     next.disableProperty().setValue(false);
   }
