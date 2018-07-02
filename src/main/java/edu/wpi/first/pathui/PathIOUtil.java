@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -66,44 +67,46 @@ public final class PathIOUtil {
    */
   @SuppressWarnings("PMD.NcssCount")
   public static Path importPath(String fileLocation, String fileName) {
-    try (
-        Reader reader = Files.newBufferedReader(Paths.get(fileLocation + fileName));
-        CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
-            .withFirstRecordAsHeader()
-            .withIgnoreHeaderCase()
-            .withTrim());
-    ) {
-      int count = 0;
-      Point2D startPosition = null;
-      Point2D startTangent = null;
-      Path path = null;
-      for (CSVRecord csvRecord : csvParser) {
-        // Accessing values by Header names
-        count++;
-        Point2D position = new Point2D(
-            Double.parseDouble(csvRecord.get("X")),
-            Double.parseDouble(csvRecord.get("Y")));
-        Point2D tangent = new Point2D(
-            Double.parseDouble(csvRecord.get("Tangent X")),
-            Double.parseDouble(csvRecord.get("Tangent Y")));
-        boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
-        if (count == 1) {
-          startPosition = position;
-          startTangent = tangent;
-        } else if (count == 2) {
-          path = new Path(startPosition, position, startTangent, tangent, fileName);
-        } else {
-          path.addNewWaypoint(path.getEnd(), position, tangent, locked);
+    File file = new File(fileLocation + fileName);
+    if (file.exists()) {
+      try (
+          Reader reader = Files.newBufferedReader(file.toPath());
+          CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+              .withFirstRecordAsHeader()
+              .withIgnoreHeaderCase()
+              .withTrim());
+      ) {
+        int count = 0;
+        Point2D startPosition = null;
+        Point2D startTangent = null;
+        Path path = null;
+        for (CSVRecord csvRecord : csvParser) {
+          // Accessing values by Header names
+          count++;
+          Point2D position = new Point2D(
+              Double.parseDouble(csvRecord.get("X")),
+              Double.parseDouble(csvRecord.get("Y")));
+          Point2D tangent = new Point2D(
+              Double.parseDouble(csvRecord.get("Tangent X")),
+              Double.parseDouble(csvRecord.get("Tangent Y")));
+          boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
+          if (count == 1) {
+            startPosition = position;
+            startTangent = tangent;
+          } else if (count == 2) {
+            path = new Path(startPosition, position, startTangent, tangent, fileName);
+          } else {
+            path.addNewWaypoint(path.getEnd(), position, tangent, locked);
+          }
         }
+        return path;
+
+      } catch (IOException except) {
+        LOGGER.log(Level.WARNING, "Could not read Path file", except);
+        return null;
       }
-      return path;
 
-    } catch (IOException except) {
-      LOGGER.log(Level.WARNING, "Could not read Path file", except);
-      return null;
     }
-
+    return null; //there was no file
   }
-
-
 }
