@@ -33,6 +33,7 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragOver();
       setupDragDrop();
     }
+    this.setConverter(new PathCellConverter());
   }
 
   /*@Override

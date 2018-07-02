@@ -2,7 +2,10 @@ package edu.wpi.first.pathui;
 
 import java.util.ArrayList;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -47,9 +50,15 @@ public class MainController {
     loadAllAutons();
 
     autons.setEditable(true);
-  }
 
-  private void loadAllAutons() {
+    autons.setOnEditCommit(new EventHandler() {
+      @Override
+      public void handle(Event event) {
+        System.out.println("onEditCommit");
+      }
+    });
+  }
+    private void loadAllAutons() {
     for (TreeItem<String> item : autonRoot.getChildren()) {
       MainIOUtil.loadAuton(autonDirectory, item.getValue(), item);
     }
