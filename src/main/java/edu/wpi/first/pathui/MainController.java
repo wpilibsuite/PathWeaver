@@ -51,11 +51,10 @@ public class MainController {
 
     autons.setEditable(true);
 
-    autons.setOnEditCommit(new EventHandler() {
-      @Override
-      public void handle(Event event) {
-        System.out.println("onEditCommit");
-      }
+    autons.setOnEditCommit((EventHandler) event -> {
+      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
+      MainIOUtil.rename(autonDirectory,edit.getTreeItem(),edit.getNewValue());
+      edit.getTreeItem().setValue(edit.getNewValue());
     });
   }
     private void loadAllAutons() {

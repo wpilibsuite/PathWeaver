@@ -6,6 +6,7 @@ import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.util.converter.DefaultStringConverter;
 
 /**
  * TreeItem with support for dragging.
@@ -33,7 +34,7 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragOver();
       setupDragDrop();
     }
-    this.setConverter(new PathCellConverter());
+    this.setConverter(new DefaultStringConverter());
   }
 
   /*@Override

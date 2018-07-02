@@ -49,6 +49,19 @@ public final class MainIOUtil {
     return file.getName();
   }
 
+  public static void rename(String directory, TreeItem<String> item, String newName){
+    File oldFile = new File(directory,item.getValue());
+    File newFile = new File(directory,newName);
+
+    if(oldFile.exists() && !newFile.exists()){
+      oldFile.renameTo(newFile);
+    }else{
+      LOGGER.log(Level.WARNING, "Could not rename "
+          + oldFile.getAbsolutePath() + " to "
+          + newFile.getAbsolutePath());
+    }
+  }
+
   /**
    * Create new tree item and add it as child to root.
    *
