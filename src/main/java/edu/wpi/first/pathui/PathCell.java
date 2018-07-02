@@ -2,6 +2,7 @@ package edu.wpi.first.pathui;
 
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -9,7 +10,7 @@ import javafx.scene.input.TransferMode;
 /**
  * TreeItem with support for dragging.
  */
-public class PathCell extends TreeCell<String> {
+public class PathCell extends TextFieldTreeCell<String> {
   private final TreeCell cell;
 
   //having a single EMPTY_ITEM you use for all dragging
@@ -34,11 +35,11 @@ public class PathCell extends TreeCell<String> {
     }
   }
 
-  @Override
+  /*@Override
   protected void updateItem(String item, boolean empty) {
     super.updateItem(item, empty);
     setText(item);
-  }
+  }*/
 
   private void setupDragDrop() {
     this.setOnDragDropped(event -> {

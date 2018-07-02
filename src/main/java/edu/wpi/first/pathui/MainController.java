@@ -45,6 +45,8 @@ public class MainController {
 
     setupClickablePaths();
     loadAllAutons();
+
+    autons.setEditable(true);
   }
 
   private void loadAllAutons() {
