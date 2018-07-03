@@ -51,21 +51,27 @@ public final class MainIOUtil {
     return file.getName();
   }
 
-
+  /**
+   * Rename file belonging to a TreeItem with new name.
+   *
+   * @param directory The directory the file is in
+   * @param item      The treeitem that the file belongs to
+   * @param newName   The new name of the file
+   */
   public static void rename(String directory, TreeItem<String> item, String newName) {
     File oldFile = new File(directory, item.getValue());
     File newFile = new File(directory, newName);
 
     if (oldFile.renameTo(newFile)) {
-
-    } else if (!oldFile.exists()) {
-      LOGGER.log(Level.WARNING, "Could not rename "
-          + oldFile.getAbsolutePath() + " doesnt exist");
+      //success
     } else if (newFile.exists()) {
       LOGGER.log(Level.WARNING, "Could not rename "
           + newFile.getAbsolutePath() + " already exists");
-    } else {
+    } else if (oldFile.exists()) {
       LOGGER.log(Level.WARNING, "Could not rename , unknown error");
+    } else {
+      LOGGER.log(Level.WARNING, "Could not rename "
+          + oldFile.getAbsolutePath() + " doesnt exist");
     }
   }
 

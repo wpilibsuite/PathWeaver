@@ -1,11 +1,10 @@
 package edu.wpi.first.pathui;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -51,17 +50,18 @@ public class MainController {
 
     autons.setEditable(true);
     paths.setEditable(true);
+    setupEditable();
+  }
 
+  private void setupEditable() {
     autons.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-      if(edit.getTreeItem().getParent() != autonRoot){
-        System.out.println("renaming instances");
-
-        MainIOUtil.rename(pathDirectory,edit.getTreeItem(),edit.getNewValue());
-        renameAllPathInstances(edit.getTreeItem(),edit.getNewValue());
-      }else{
-        MainIOUtil.rename(autonDirectory,edit.getTreeItem(),edit.getNewValue());
+      if (edit.getTreeItem().getParent() == autonRoot) {
+        MainIOUtil.rename(autonDirectory, edit.getTreeItem(), edit.getNewValue());
         edit.getTreeItem().setValue(edit.getNewValue());
+      } else {
+        MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
+        renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
       }
       saveAllAutons();
       loadAllAutons();
@@ -69,8 +69,8 @@ public class MainController {
     paths.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
 
-      MainIOUtil.rename(pathDirectory,edit.getTreeItem(),edit.getNewValue());
-      renameAllPathInstances(edit.getTreeItem(),edit.getNewValue());
+      MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
+      renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
 
       saveAllAutons();
       loadAllAutons();
@@ -78,10 +78,10 @@ public class MainController {
       pathDisplayController.addPath(pathDirectory, edit.getNewValue());
 
     });
+
   }
 
-
-  private void renameAllPathInstances(TreeItem<String> path, String newName){
+  private void renameAllPathInstances(TreeItem<String> path, String newName) {
     String oldName = path.getValue();
 
     for (TreeItem<String> instance : getAllInstances(path)) {
@@ -93,7 +93,6 @@ public class MainController {
       }
     }
   }
-
 
 
   private void loadAllAutons() {
@@ -143,7 +142,7 @@ public class MainController {
     }
   }
 
-  private ArrayList<TreeItem<String>> getAllInstances(TreeItem<String> chosenPath) {
+  private List<TreeItem<String>> getAllInstances(TreeItem<String> chosenPath) {
     ArrayList<TreeItem<String>> list = new ArrayList<>();
     for (TreeItem<String> auton : autonRoot.getChildren()) {
       for (TreeItem<String> path : auton.getChildren()) {
