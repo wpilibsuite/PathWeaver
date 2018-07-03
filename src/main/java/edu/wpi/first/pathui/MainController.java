@@ -53,6 +53,7 @@ public class MainController {
     setupEditable();
   }
 
+  @SuppressWarnings("PMD.NcssCount")
   private void setupEditable() {
     autons.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
@@ -65,6 +66,7 @@ public class MainController {
       }
       saveAllAutons();
       loadAllAutons();
+      paths.setEditable(true);
     });
     paths.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
@@ -76,9 +78,20 @@ public class MainController {
       loadAllAutons();
       pathDisplayController.removeAllPath();
       pathDisplayController.addPath(pathDirectory, edit.getNewValue());
-
+      autons.setEditable(true);
     });
-
+    paths.setOnEditStart((EventHandler) event -> {
+      autons.setEditable(false);
+    });
+    autons.setOnEditStart((EventHandler) event -> {
+      paths.setEditable(false);
+    });
+    paths.setOnEditCancel((EventHandler) event -> {
+      autons.setEditable(true);
+    });
+    autons.setOnEditStart((EventHandler) event -> {
+      paths.setEditable(true);
+    });
   }
 
   private void renameAllPathInstances(TreeItem<String> path, String newName) {
