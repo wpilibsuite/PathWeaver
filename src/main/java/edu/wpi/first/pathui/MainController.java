@@ -89,7 +89,7 @@ public class MainController {
     paths.setOnEditCancel((EventHandler) event -> {
       autons.setEditable(true);
     });
-    autons.setOnEditStart((EventHandler) event -> {
+    autons.setOnEditCancel((EventHandler) event -> {
       paths.setEditable(true);
     });
   }
