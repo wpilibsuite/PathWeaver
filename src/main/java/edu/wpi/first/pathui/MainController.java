@@ -50,14 +50,50 @@ public class MainController {
     loadAllAutons();
 
     autons.setEditable(true);
+    paths.setEditable(true);
 
     autons.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-      MainIOUtil.rename(autonDirectory,edit.getTreeItem(),edit.getNewValue());
-      edit.getTreeItem().setValue(edit.getNewValue());
+      if(edit.getTreeItem().getParent() != autonRoot){
+        System.out.println("renaming instances");
+
+        MainIOUtil.rename(pathDirectory,edit.getTreeItem(),edit.getNewValue());
+        renameAllPathInstances(edit.getTreeItem(),edit.getNewValue());
+      }else{
+        MainIOUtil.rename(autonDirectory,edit.getTreeItem(),edit.getNewValue());
+        edit.getTreeItem().setValue(edit.getNewValue());
+      }
+      saveAllAutons();
+      loadAllAutons();
+    });
+    paths.setOnEditCommit((EventHandler) event -> {
+      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
+
+      MainIOUtil.rename(pathDirectory,edit.getTreeItem(),edit.getNewValue());
+      renameAllPathInstances(edit.getTreeItem(),edit.getNewValue());
+
+      saveAllAutons();
+      loadAllAutons();
     });
   }
-    private void loadAllAutons() {
+
+
+  private void renameAllPathInstances(TreeItem<String> path, String newName){
+    String oldName = path.getValue();
+
+    for (TreeItem<String> instance : getAllInstances(path)) {
+      instance.setValue(newName);
+    }
+    for (TreeItem<String> potential : pathRoot.getChildren()) {
+      if (oldName.equals(potential.getValue())) {
+        potential.setValue(newName);
+      }
+    }
+  }
+
+
+
+  private void loadAllAutons() {
     for (TreeItem<String> item : autonRoot.getChildren()) {
       MainIOUtil.loadAuton(autonDirectory, item.getValue(), item);
     }
@@ -81,13 +117,16 @@ public class MainController {
       return;
     }
     if (autonRoot == root) {
-      if (selected.getParent().getParent() == null) {
+      if (selected.getParent() == autonRoot) {
         MainIOUtil.deleteItem(autonDirectory, selected);
       } else {
         removePath(selected);
       }
     } else if (pathRoot == root) {
-      deletePath(selected);
+      for (TreeItem<String> path : getAllInstances(selected)) {
+        removePath(path);
+      }
+      MainIOUtil.deleteItem(pathDirectory, selected);
       saveAllAutons();
       loadAllAutons();
     }
@@ -101,19 +140,16 @@ public class MainController {
     }
   }
 
-  private void deletePath(TreeItem<String> pathDelete) {
-    ArrayList<TreeItem<String>> deleteList = new ArrayList<>();
+  private ArrayList<TreeItem<String>> getAllInstances(TreeItem<String> chosenPath) {
+    ArrayList<TreeItem<String>> list = new ArrayList<>();
     for (TreeItem<String> auton : autonRoot.getChildren()) {
       for (TreeItem<String> path : auton.getChildren()) {
-        if (path.getValue().equals(pathDelete.getValue())) {
-          deleteList.add(path);
+        if (path.getValue().equals(chosenPath.getValue())) {
+          list.add(path);
         }
       }
     }
-    for (TreeItem<String> path : deleteList) {
-      removePath(path);
-    }
-    MainIOUtil.deleteItem(pathDirectory, pathDelete);
+    return list;
   }
 
   private void removePath(TreeItem<String> path) {

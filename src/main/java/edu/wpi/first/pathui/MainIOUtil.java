@@ -34,11 +34,13 @@ public final class MainIOUtil {
     }
   }
 
-  /** Checks if a file exists with filename if so appends incremental value.
+  /**
+   * Checks if a file exists with filename if so appends incremental value.
    *
    * @param directory The directory the file will be saved to
-   * @param filename The preferred filename
+   * @param filename  The preferred filename
    * @param extension The file extension
+   *
    * @return
    */
   public static String getValidFileName(String directory, String filename, String extension) {
@@ -49,16 +51,21 @@ public final class MainIOUtil {
     return file.getName();
   }
 
-  public static void rename(String directory, TreeItem<String> item, String newName){
-    File oldFile = new File(directory,item.getValue());
-    File newFile = new File(directory,newName);
 
-    if(oldFile.exists() && !newFile.exists()){
-      oldFile.renameTo(newFile);
-    }else{
+  public static void rename(String directory, TreeItem<String> item, String newName) {
+    File oldFile = new File(directory, item.getValue());
+    File newFile = new File(directory, newName);
+
+    if (oldFile.renameTo(newFile)) {
+
+    } else if (!oldFile.exists()) {
       LOGGER.log(Level.WARNING, "Could not rename "
-          + oldFile.getAbsolutePath() + " to "
-          + newFile.getAbsolutePath());
+          + oldFile.getAbsolutePath() + " doesnt exist");
+    } else if (newFile.exists()) {
+      LOGGER.log(Level.WARNING, "Could not rename "
+          + newFile.getAbsolutePath() + " already exists");
+    } else {
+      LOGGER.log(Level.WARNING, "Could not rename , unknown error");
     }
   }
 
