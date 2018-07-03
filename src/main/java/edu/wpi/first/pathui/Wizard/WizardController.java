@@ -49,7 +49,8 @@ public class WizardController {
     FieldCreator,
     FieldEditor,
     FieldLoader,
-    ImageSelector
+    ImageSelector,
+    RobotLoader
   }
 
 
