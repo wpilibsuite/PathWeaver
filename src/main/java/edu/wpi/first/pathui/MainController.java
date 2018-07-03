@@ -74,6 +74,9 @@ public class MainController {
 
       saveAllAutons();
       loadAllAutons();
+      pathDisplayController.removeAllPath();
+      pathDisplayController.addPath(pathDirectory, edit.getNewValue());
+
     });
   }
 
