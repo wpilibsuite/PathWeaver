@@ -64,7 +64,8 @@ public class PathCell extends TextFieldTreeCell<String> {
   @Override
   public void cancelEdit() {
     //super.cancelEdit();
-    //Let me handle canceling instead
+    //Let KeyPress trigger super.cancelEdit() directly instead.
+    //Allows different reasons for calling cancelEdit to trigger different behavior
   }
 
   private void setupDragDrop() {
