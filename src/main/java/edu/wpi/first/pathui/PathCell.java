@@ -1,10 +1,13 @@
 package edu.wpi.first.pathui;
 
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.util.converter.DefaultStringConverter;
 
@@ -13,7 +16,7 @@ import javafx.util.converter.DefaultStringConverter;
  */
 public class PathCell extends TextFieldTreeCell<String> {
   private final TreeCell cell;
-
+  private boolean editing = false;
   //having a single EMPTY_ITEM you use for all dragging
   //means that any dragover call is able to remove the temporary
   //item from past locations
@@ -37,11 +40,32 @@ public class PathCell extends TextFieldTreeCell<String> {
     this.setConverter(new DefaultStringConverter());
   }
 
-  /*@Override
-  protected void updateItem(String item, boolean empty) {
-    super.updateItem(item, empty);
-    setText(item);
-  }*/
+  @Override
+  public void startEdit() {
+    editing = true;
+    super.startEdit();
+    Node node = getGraphic();
+    if (node instanceof TextField) {
+      TextField text = (TextField) node;
+      text.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        if (!newValue && editing) {
+          this.commitEdit(text.getText());
+        }
+      });
+      text.setOnKeyPressed(e -> {
+        if (e.getCode().equals(KeyCode.ESCAPE)) {
+          editing = false;
+          super.cancelEdit();
+        }
+      });
+    }
+  }
+
+  @Override
+  public void cancelEdit() {
+    //super.cancelEdit();
+    //Let me handle canceling instead
+  }
 
   private void setupDragDrop() {
     this.setOnDragDropped(event -> {
