@@ -142,7 +142,7 @@ public class MainController {
   }
 
   private List<TreeItem<String>> getAllInstances(TreeItem<String> chosenPath) {
-    ArrayList<TreeItem<String>> list = new ArrayList<>();
+    List<TreeItem<String>> list = new ArrayList<>();
     for (TreeItem<String> auton : autonRoot.getChildren()) {
       for (TreeItem<String> path : auton.getChildren()) {
         if (path.getValue().equals(chosenPath.getValue())) {
