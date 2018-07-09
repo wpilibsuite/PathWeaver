@@ -1,5 +1,8 @@
 package edu.wpi.first.pathui;
 
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -22,17 +25,19 @@ public class PathCell extends TextFieldTreeCell<String> {
   //item from past locations
   //each cell might have its own dragover call as you move around
   private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
+  private BiFunction<String, String, Boolean> renameIsValid;
+  private TextField text;
 
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
    *
    * @param validDropTarget If this item should allow drag over and drag drop.
    */
-  public PathCell(boolean validDropTarget) {
+  public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validationFunction) {
     super();
     cell = this;
     setupDragStart();
-
+    renameIsValid = validationFunction;
     if (validDropTarget) {
       setupDragOver();
       setupDragDrop();
@@ -46,7 +51,7 @@ public class PathCell extends TextFieldTreeCell<String> {
     super.startEdit();
     Node node = getGraphic();
     if (node instanceof TextField) {
-      TextField text = (TextField) node;
+      text = (TextField) node;
       text.focusedProperty().addListener((observable, oldValue, newValue) -> {
         if (!newValue && editing) {
           this.commitEdit(text.getText());
@@ -58,6 +63,15 @@ public class PathCell extends TextFieldTreeCell<String> {
           super.cancelEdit();
         }
       });
+    }
+  }
+  @Override
+  public void commitEdit(String newValue){
+    if(renameIsValid.apply(this.getTreeItem().getValue(),newValue)){
+      System.out.println("rename valid");
+      super.commitEdit(newValue);
+    }else {
+      System.out.println("wasnt valid");
     }
   }
 

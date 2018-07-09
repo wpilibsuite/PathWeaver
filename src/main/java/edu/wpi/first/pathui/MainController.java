@@ -31,8 +31,7 @@ public class MainController {
   private void initialize() {
     pathDirectory = directory + "Paths/";
     autonDirectory = directory + "Autons/";
-    setupDrag(paths, false);
-    setupDrag(autons, true);
+    setupDrag();
 
     autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
@@ -201,8 +200,19 @@ public class MainController {
 
   }
 
-  private void setupDrag(TreeView<String> tree, boolean validDropTarget) {
-    tree.setCellFactory(param -> new PathCell(validDropTarget));
+  private boolean validPathName(String oldName, String newName) {
+    return MainIOUtil.isValidName(pathDirectory,oldName,newName);
+  }
+  private boolean validAutonName(String oldName, String newName) {
+    return MainIOUtil.isValidName(autonDirectory,oldName,newName);
+  }
+
+
+  private void setupDrag() {
+
+    paths.setCellFactory(param -> new PathCell(false, this::validPathName));
+    autons.setCellFactory(param -> new PathCell(true, this::validAutonName));
+
     autons.setOnDragDropped(event -> {
       //simpler than communicating which was updated from the cells
       saveAllAutons();

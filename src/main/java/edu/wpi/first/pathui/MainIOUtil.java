@@ -51,6 +51,18 @@ public final class MainIOUtil {
     return file.getName();
   }
 
+  public static boolean isValidName(String directory, String oldName, String newName){
+    if(oldName.equals(newName)){ //no name change is always valid
+      System.out.println("same name");
+      return true;
+    }else {
+      //if newName is already a valid name return true
+      String validName = MainIOUtil.getValidFileName(directory, newName, "");
+      System.out.println("new " + newName + " valid " + validName);
+      return newName.equals(validName);
+    }
+  }
+
   /**
    * Rename file belonging to a TreeItem with new name.
    *
