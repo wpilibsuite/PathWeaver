@@ -1,9 +1,9 @@
 package edu.wpi.first.pathui;
 
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -25,7 +25,7 @@ public class PathCell extends TextFieldTreeCell<String> {
   //item from past locations
   //each cell might have its own dragover call as you move around
   private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
-  private BiFunction<String, String, Boolean> renameIsValid;
+  private final BiFunction<String, String, Boolean> renameIsValid;
   private TextField text;
 
   /**
@@ -33,11 +33,11 @@ public class PathCell extends TextFieldTreeCell<String> {
    *
    * @param validDropTarget If this item should allow drag over and drag drop.
    */
-  public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validationFunction) {
+  public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validation) {
     super();
     cell = this;
     setupDragStart();
-    renameIsValid = validationFunction;
+    renameIsValid = validation;
     if (validDropTarget) {
       setupDragOver();
       setupDragDrop();
@@ -55,6 +55,7 @@ public class PathCell extends TextFieldTreeCell<String> {
       text.focusedProperty().addListener((observable, oldValue, newValue) -> {
         if (!newValue && editing) {
           this.commitEdit(text.getText());
+
         }
       });
       text.setOnKeyPressed(e -> {
@@ -65,13 +66,23 @@ public class PathCell extends TextFieldTreeCell<String> {
       });
     }
   }
+
   @Override
-  public void commitEdit(String newValue){
-    if(renameIsValid.apply(this.getTreeItem().getValue(),newValue)){
-      System.out.println("rename valid");
+  public void commitEdit(String newValue) {
+    if (!editing) {
+      return;
+    }
+    if (renameIsValid.apply(this.getTreeItem().getValue(), newValue)) {
       super.commitEdit(newValue);
-    }else {
-      System.out.println("wasnt valid");
+    } else {
+      editing = false;
+      Alert a = new Alert(Alert.AlertType.INFORMATION);
+      a.setTitle("");
+      a.setHeaderText("The item could not be renamed.");
+      String content = String.format("The name “%s” is already used in this location. Use a different name.", newValue);
+      a.setContentText(content);
+      a.showAndWait();
+      super.cancelEdit();
     }
   }
 

@@ -201,10 +201,11 @@ public class MainController {
   }
 
   private boolean validPathName(String oldName, String newName) {
-    return MainIOUtil.isValidName(pathDirectory,oldName,newName);
+    return MainIOUtil.isValidRename(pathDirectory, oldName, newName);
   }
+
   private boolean validAutonName(String oldName, String newName) {
-    return MainIOUtil.isValidName(autonDirectory,oldName,newName);
+    return MainIOUtil.isValidRename(autonDirectory, oldName, newName);
   }
 
 

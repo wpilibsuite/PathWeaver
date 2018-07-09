@@ -51,14 +51,19 @@ public final class MainIOUtil {
     return file.getName();
   }
 
-  public static boolean isValidName(String directory, String oldName, String newName){
-    if(oldName.equals(newName)){ //no name change is always valid
-      System.out.println("same name");
+  /**
+   * Checks if the rename is valid.
+   * @param directory The directory the file will be saved
+   * @param oldName The old name of the file
+   * @param newName The desired new name of the file
+   * @return true if the rename is allowed
+   */
+  public static boolean isValidRename(String directory, String oldName, String newName) {
+    if (oldName.equals(newName)) { //no name change is always valid
       return true;
-    }else {
+    } else {
       //if newName is already a valid name return true
       String validName = MainIOUtil.getValidFileName(directory, newName, "");
-      System.out.println("new " + newName + " valid " + validName);
       return newName.equals(validName);
     }
   }
