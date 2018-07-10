@@ -1,8 +1,8 @@
 # pathui
 
-PathUI is an under development front end motion planning program. It is primarily designed for FRC teams using Pathfinder.
+PathUI is an under-development front end motion planning program. It is primarily designed for FRC teams using Pathfinder.
 
-The 2 primary design criteria are
+The two primary design criteria are
 1. Creating and modifying paths should be as natural as possible.
 2. Stored files should all be human readable and version controllable.
 
