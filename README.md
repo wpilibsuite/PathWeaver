@@ -7,7 +7,7 @@ The two primary design criteria are
 2. Stored files should all be human readable and version controllable.
 
 ## Commenting
-For bugs or feature suggestions make a github issue.
+For bugs or feature suggestions, make a github issue.
 
 ## Building
 
