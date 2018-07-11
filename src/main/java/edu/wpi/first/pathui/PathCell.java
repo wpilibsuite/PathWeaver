@@ -1,43 +1,97 @@
 package edu.wpi.first.pathui;
 
+import java.util.function.BiFunction;
+
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
+import javafx.util.converter.DefaultStringConverter;
 
 /**
  * TreeItem with support for dragging.
  */
-public class PathCell extends TreeCell<String> {
+public class PathCell extends TextFieldTreeCell<String> {
   private final TreeCell cell;
-
+  private boolean editing = false;
   //having a single EMPTY_ITEM you use for all dragging
   //means that any dragover call is able to remove the temporary
   //item from past locations
   //each cell might have its own dragover call as you move around
   private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
+  private final BiFunction<String, String, Boolean> renameIsValid;
+  private TextField text;
 
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
    *
    * @param validDropTarget If this item should allow drag over and drag drop.
    */
-  public PathCell(boolean validDropTarget) {
+  public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validation) {
     super();
     cell = this;
     setupDragStart();
-
+    renameIsValid = validation;
     if (validDropTarget) {
       setupDragOver();
       setupDragDrop();
     }
+    this.setConverter(new DefaultStringConverter());
   }
 
   @Override
-  protected void updateItem(String item, boolean empty) {
-    super.updateItem(item, empty);
-    setText(item);
+  public void startEdit() {
+    editing = true;
+    super.startEdit();
+    Node node = getGraphic();
+    if (node instanceof TextField) {
+      text = (TextField) node;
+      text.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        if (!newValue && editing) {
+          this.commitEdit(text.getText());
+
+        }
+      });
+      text.setOnKeyPressed(e -> {
+        if (e.getCode().equals(KeyCode.ESCAPE)) {
+          editing = false;
+          super.cancelEdit();
+        }
+      });
+    }
+  }
+
+  @Override
+  public void commitEdit(String newValue) {
+    if (!editing) {
+      return;
+    }
+    if (renameIsValid.apply(this.getTreeItem().getValue(), newValue)) {
+      super.commitEdit(newValue);
+    } else {
+      editing = false;
+      Alert a = new Alert(Alert.AlertType.INFORMATION);
+      a.setTitle("");
+      a.setHeaderText("The item could not be renamed.");
+      String content = String.format("The name \"%s\" is already used in this location. \nPlease use a different name.", newValue);
+      a.setContentText(content);
+
+      a.showAndWait();
+      super.cancelEdit();
+    }
+  }
+
+  @Override
+  public void cancelEdit() {
+    //super.cancelEdit();
+    //Let KeyPress trigger super.cancelEdit() directly instead.
+    //Allows different reasons for calling cancelEdit to trigger different behavior
   }
 
   private void setupDragDrop() {
