@@ -34,11 +34,13 @@ public final class MainIOUtil {
     }
   }
 
-  /** Checks if a file exists with filename if so appends incremental value.
+  /**
+   * Checks if a file exists with filename if so appends incremental value.
    *
    * @param directory The directory the file will be saved to
-   * @param filename The preferred filename
+   * @param filename  The preferred filename
    * @param extension The file extension
+   *
    * @return
    */
   public static String getValidFileName(String directory, String filename, String extension) {
@@ -47,6 +49,47 @@ public final class MainIOUtil {
       file = new File(directory, filename + num + extension);
     }
     return file.getName();
+  }
+
+  /**
+   * Checks if the rename is valid.
+   * @param directory The directory the file will be saved
+   * @param oldName The old name of the file
+   * @param newName The desired new name of the file
+   * @return true if the rename is allowed
+   */
+  public static boolean isValidRename(String directory, String oldName, String newName) {
+    if (oldName.equals(newName)) { //no name change is always valid
+      return true;
+    } else {
+      //if newName is already a valid name return true
+      String validName = MainIOUtil.getValidFileName(directory, newName, "");
+      return newName.equals(validName);
+    }
+  }
+
+  /**
+   * Rename file belonging to a TreeItem with new name.
+   *
+   * @param directory The directory the file is in
+   * @param item      The treeitem that the file belongs to
+   * @param newName   The new name of the file
+   */
+  public static void rename(String directory, TreeItem<String> item, String newName) {
+    File oldFile = new File(directory, item.getValue());
+    File newFile = new File(directory, newName);
+
+    if (oldFile.renameTo(newFile)) {
+      //success
+    } else if (newFile.exists()) {
+      LOGGER.log(Level.WARNING, "Could not rename "
+          + newFile.getAbsolutePath() + " already exists");
+    } else if (oldFile.exists()) {
+      LOGGER.log(Level.WARNING, "Could not rename , unknown error");
+    } else {
+      LOGGER.log(Level.WARNING, "Could not rename "
+          + oldFile.getAbsolutePath() + " doesnt exist");
+    }
   }
 
   /**
