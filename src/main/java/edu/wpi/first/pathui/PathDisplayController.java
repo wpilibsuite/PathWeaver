@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
@@ -139,7 +140,6 @@ public class PathDisplayController {
     }
   }
 
-
   private void setupDrawPaneSizing() {
     drawPane.setMaxWidth(image.getWidth());
     drawPane.setMaxHeight(image.getHeight());
@@ -172,13 +172,14 @@ public class PathDisplayController {
     });
   }
 
-  private void makeDeletable(Waypoint newPoint) {
-    newPoint.getDot().setOnKeyPressed(event -> {
-      if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) && isDeletable(newPoint)) {
-        delete(newPoint);
-      }
-    });
+  @FXML
+  private void keyPressed(KeyEvent event) {
+    if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
+        && isDeletable(selectedWaypoint)) {
+      delete(selectedWaypoint);
+    }
   }
+
 
   private boolean isDeletable(Waypoint waypoint) {
     return waypoint.getPreviousWaypoint() != null
@@ -272,7 +273,6 @@ public class PathDisplayController {
       Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
       addPathStuff(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
-      makeDeletable(newPoint);
       setupWaypoint(newPoint);
       selectWaypoint(newPoint);
       Spline.currentSpline = null;
