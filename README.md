@@ -6,6 +6,9 @@ The two primary design criteria are
 1. Creating and modifying paths should be as natural as possible.
 2. Stored files should all be human readable and version controllable.
 
+## Commenting
+For bugs or feature suggestions, make a github issue.
+
 ## Building
 
 To run PathUI use the command `./gradlew run`
