@@ -224,6 +224,7 @@ public class PathDisplayController {
       selectedWaypoint = waypoint;
       waypoint.getDot().pseudoClassStateChanged(selected, true);
       waypoint.getDot().requestFocus();
+      waypoint.getDot().toFront();
     }
   }
 
