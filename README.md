@@ -14,6 +14,9 @@ For bugs or feature suggestions, make a github issue.
 
 To run PathUI use the command `./gradlew run`
 
+## Testing
+
+To run PathUI use the command `./gradlew check`
 
 ### Requirements
 - [JDK 10](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html)
