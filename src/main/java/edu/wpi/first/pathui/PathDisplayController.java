@@ -39,9 +39,12 @@ public class PathDisplayController {
   private final double splineScale = 6; //NOPMD should be static, will be modified later
   private final double lineScale = 2; //NOPMD should be static, will be modified later
 
-  private Group splineGroup = new Group();
-  private Group waypointGroup = new Group();
-  private Group vectorGroup = new Group();
+  @FXML
+  private Group splineGroup;
+  @FXML
+  private Group waypointGroup;
+  @FXML
+  private Group vectorGroup;
 
   @FXML
   private void initialize() {
@@ -61,9 +64,6 @@ public class PathDisplayController {
     setupDrag();
     setupPress();
     setupPathList();
-    drawPane.getChildren().add(splineGroup);
-    drawPane.getChildren().add(vectorGroup);
-    drawPane.getChildren().add(waypointGroup);
   }
 
   private void setupPathList() {
