@@ -125,6 +125,9 @@ public class PathDisplayController {
       current.getPreviousSpline().getCubic().toBack();
       current.getPreviousSpline().getCubic().setStrokeWidth(splineScale / field.getScale());
     }
+    if (current != null && current.getNextSpline() != null) {
+      current.getNextSpline().getCubic().toBack();
+    }
   }
 
   private void removePathFromPane(Path newPath) {
