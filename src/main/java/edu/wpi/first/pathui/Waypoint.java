@@ -196,7 +196,7 @@ public class Waypoint {
 
   /**
    * Convenience function for math purposes.
-   * @param other
+   * @param other The other Waypoint.
    * @return The coordinates of this Waypoint relative to the coordinates of another Waypoint.
    */
   public Point2D relativeTo(Waypoint other) {

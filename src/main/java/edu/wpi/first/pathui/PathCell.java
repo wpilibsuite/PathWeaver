@@ -1,15 +1,18 @@
 package edu.wpi.first.pathui;
 
 import java.util.function.BiFunction;
-
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.util.converter.DefaultStringConverter;
+
 
 /**
  * TreeItem with support for dragging.

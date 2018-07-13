@@ -135,13 +135,13 @@ public class Path {
   }
 
   /**
-   *
+   * Convenience function for debugging purposes.
    * @return A nicely formatted String representing some of the data stored in the Waypoint class.
    */
   public String getPointString() {
     StringBuilder sb = new StringBuilder();
     Waypoint current = start;
-    while(current != null) {
+    while (current != null) {
       sb.append(String.format("X: %s\tY:%s\n", current.getX(), current.getY()));
       current = current.getNextWaypoint();
     }
