@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -8,9 +9,10 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane onKeyPressed="#keyPressed" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.MainController">
     <right>
         <SplitPane fx:id="sidePane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <items>
@@ -67,4 +69,20 @@
     <center>
         <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
     </center>
+   <bottom>
+      <HBox fx:id="bottomPane" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="flipHorizontal" mnemonicParsing="false" onAction="#flipHorizontal" text="Flip Horizontally">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="flipVertical" mnemonicParsing="false" onAction="#flipVertical" text="Flip Vertically">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

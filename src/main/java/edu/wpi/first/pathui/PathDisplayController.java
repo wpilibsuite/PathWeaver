@@ -282,6 +282,21 @@ public class PathDisplayController {
     }
   }
 
+  /**
+   * Retrieves a named Path.
+   * @param name The name of the Path to retrieve
+   * @return The appropriate Path from the Path List
+   */
+  public Path getPath(String name) {
+    for (Path p : pathList) {
+      if (p.getPathName().equals(name)) {
+        return p;
+      }
+    }
+    // TODO: Return a default path
+    return null;
+  }
+
   public void setPathDirectory(String pathDirectory) {
     this.pathDirectory = pathDirectory;
   }

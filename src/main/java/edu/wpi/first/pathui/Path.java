@@ -110,6 +110,44 @@ public class Path {
     return newPoint;
   }
 
+  /**
+   * Reflects the Path across the X-axis.
+   * The coordinate system's origin is the starting point of the Path.
+   */
+  public void flipHorizontal() {
+    Waypoint current = start;
+    while (current != null) {
+      current.setY(current.getY() - (current.relativeTo(start).getY() * 2));
+      current = current.getNextWaypoint();
+    }
+  }
+
+  /**
+   * Reflects the Path across the X-axis.
+   * The coordinate system's origin is the starting point of the Path.
+   */
+  public void flipVertical() {
+    Waypoint current = start;
+    while (current != null) {
+      current.setX(current.getX() - (current.relativeTo(start).getX() * 2));
+      current = current.getNextWaypoint();
+    }
+  }
+
+  /**
+   *
+   * @return A nicely formatted String representing some of the data stored in the Waypoint class.
+   */
+  public String getPointString() {
+    StringBuilder sb = new StringBuilder();
+    Waypoint current = start;
+    while(current != null) {
+      sb.append(String.format("X: %s\tY:%s\n", current.getX(), current.getY()));
+      current = current.getNextWaypoint();
+    }
+    return sb.toString();
+  }
+
   public String getPathName() {
     return pathName;
   }

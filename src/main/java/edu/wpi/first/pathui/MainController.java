@@ -222,6 +222,22 @@ public class MainController {
   }
 
   @FXML
+  private void flipHorizontal() {
+    paths.getSelectionModel().getSelectedItems().forEach(pathCell -> {
+      Path path = pathDisplayController.getPath(pathCell.getValue());
+      path.flipHorizontal();
+    });
+  }
+
+  @FXML
+  private void flipVertical() {
+    paths.getSelectionModel().getSelectedItems().forEach(pathCell -> {
+      Path path = pathDisplayController.getPath(pathCell.getValue());
+      path.flipVertical();
+    });
+  }
+
+  @FXML
   private void createPath() {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);

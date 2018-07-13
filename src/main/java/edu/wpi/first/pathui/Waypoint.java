@@ -194,6 +194,15 @@ public class Waypoint {
     }
   }
 
+  /**
+   * Convenience function for math purposes.
+   * @param other
+   * @return The coordinates of this Waypoint relative to the coordinates of another Waypoint.
+   */
+  public Point2D relativeTo(Waypoint other) {
+    return new Point2D(this.getX() - other.getX(), this.getY() - other.getY());
+  }
+
   public boolean isLockTangent() {
     return lockTangent;
   }
