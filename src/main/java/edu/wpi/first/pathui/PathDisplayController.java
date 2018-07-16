@@ -262,6 +262,7 @@ public class PathDisplayController {
       } else if (dragboard.hasContent(DataFormats.SPLINE)) {
         handleSplineDrag(event, wp);
       }
+      event.consume();
     });
   }
 
@@ -270,7 +271,6 @@ public class PathDisplayController {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;
-        currentPath.set(null);
       }
     });
   }
