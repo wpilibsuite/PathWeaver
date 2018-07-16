@@ -53,9 +53,11 @@ public final class MainIOUtil {
 
   /**
    * Checks if the rename is valid.
+   *
    * @param directory The directory the file will be saved
-   * @param oldName The old name of the file
-   * @param newName The desired new name of the file
+   * @param oldName   The old name of the file
+   * @param newName   The desired new name of the file
+   *
    * @return true if the rename is allowed
    */
   public static boolean isValidRename(String directory, String oldName, String newName) {
