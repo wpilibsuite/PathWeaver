@@ -3,7 +3,7 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<Pane fx:id="topPane" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.PathDisplayController">
+<Pane fx:id="topPane" onKeyPressed="#keyPressed" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.PathDisplayController">
     <children>
         <Group fx:id="group">
             <children>
