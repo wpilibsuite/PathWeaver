@@ -191,9 +191,12 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
-                for (TreeItem<String> item : newValue.getChildren()) {
-                  pathDisplayController.addPath(pathDirectory, item.getValue());
-
+                if (newValue.isLeaf()) { //has no children so try to display path
+                  pathDisplayController.addPath(pathDirectory, newValue.getValue());
+                } else { //is an auton with children
+                  for (TreeItem<String> item : newValue.getChildren()) {
+                    pathDisplayController.addPath(pathDirectory, item.getValue());
+                  }
                 }
               }
             });

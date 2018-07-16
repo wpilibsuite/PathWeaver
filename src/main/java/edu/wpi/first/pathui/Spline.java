@@ -48,6 +48,10 @@ public class Spline {
     cubic.setControlY2(points.getValue().getY());
   }
 
+  // Bezier curve to hermite curve
+  // p1 p2 p3 p4 for bezier curve
+  // heading 1 = 3 * (p2 - p1)
+  // heading 4 = 3 * (p4 - p3)
   private Pair<Point2D, Point2D> computeControlPoints() {
     Point2D control1 = new Point2D(start.getX() + (start.getTangent().getX()) / 3,
         start.getY() + (start.getTangent().getY()) / 3);
