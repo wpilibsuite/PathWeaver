@@ -132,7 +132,7 @@ public class WizardController {
         topPane.getChildren().setAll(loadField);
         loadField.visibleProperty().setValue(true);
         currentController = new LoadFieldController();
-        previous.disableProperty().setValue(true);
+        previous.disableProperty().setValue(false);
 
     }
 
