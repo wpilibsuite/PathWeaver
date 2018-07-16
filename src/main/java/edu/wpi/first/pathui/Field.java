@@ -28,25 +28,40 @@ public class Field {
 
   /**
    * Creates a new Field Object.
-   * @param image image of the field
-   * @param unit unit which the field is measured
-   * @param realWidth width of field in real units
-   * @param realLength length of field in real units
-   * @param xPixel x pixel top left x pixels
-   * @param yPixel y pixel top left y pixels
-   * @param pixelWidth width of drawable area in pixels
+   *
+   * @param image       image of the field
+   * @param unit        unit which the field is measured
+   * @param realWidth   width of field in real units
+   * @param realLength  length of field in real units
+   * @param xPixel      x pixel top left x pixels
+   * @param yPixel      y pixel top left y pixels
+   * @param pixelWidth  width of drawable area in pixels
    * @param pixelLength length of drawable area in pixels
    */
   public Field(Image image,
-               Unit<Length> unit,
-               double realWidth, double realLength,
-               double xPixel, double yPixel,
-               double pixelWidth, double pixelLength) {
+                  Unit<Length> unit,
+                  double realWidth, double realLength,
+                  double xPixel, double yPixel,
+                  double pixelWidth, double pixelLength) {
     setImage(image);
     setRealWidth(Quantities.getQuantity(realWidth, unit));
     setRealLength(Quantities.getQuantity(realLength, unit));
     setCoord(new Point2D.Double(xPixel + pixelWidth / 2, yPixel + pixelLength / 2));
     setScale(((pixelWidth / realWidth) + (pixelLength / realLength)) / 2); //NOPMD Useless Parentheses
+    setUnit(unit);
+    pixel = PathUnits.addUnit(unit.multiply(scale), "Pixel", "px");
+  }
+
+  public Field(Image image,
+               Unit<Length> unit,
+               double realWidth, double realLength,
+               double xPixel, double yPixel,
+               double scale) {
+    setImage(image);
+    setRealWidth(Quantities.getQuantity(realWidth, unit));
+    setRealLength(Quantities.getQuantity(realLength, unit));
+    setCoord(new Point2D.Double(xPixel,yPixel));
+    setScale(scale);
     setUnit(unit);
     pixel = PathUnits.addUnit(unit.multiply(scale), "Pixel", "px");
   }

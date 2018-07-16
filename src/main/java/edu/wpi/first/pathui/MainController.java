@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 import edu.wpi.first.pathui.wizard.Wizard;
@@ -24,13 +26,13 @@ public class MainController {
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
-  private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
-
   private String directory = "pathUI/";
   private String pathDirectory;
   private String autonDirectory;
   private final TreeItem<String> autonRoot = new TreeItem<String>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
+
+  private TreeItem<String> selected = null;
 
   @FXML
   private void initialize() {
@@ -45,33 +47,96 @@ public class MainController {
     paths.setRoot(pathRoot);
     pathRoot.setExpanded(true);
 
-    setupItemsInDirectory(pathDirectory, pathRoot);
-    setupItemsInDirectory(autonDirectory, autonRoot);
+    MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
+    MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
 
     pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
     loadAllAutons();
-
   }
 
   private void loadAllAutons() {
     for (TreeItem<String> item : autonRoot.getChildren()) {
-      loadAuton(autonDirectory, item.getValue(), item);
+      MainIOUtil.loadAuton(autonDirectory, item.getValue(), item);
     }
   }
 
   private void saveAllAutons() {
     for (TreeItem<String> item : autonRoot.getChildren()) {
-      saveAuton(autonDirectory, item.getValue(), item);
+      MainIOUtil.saveAuton(autonDirectory, item.getValue(), item);
     }
   }
+
+  @FXML
+  private void delete() {
+    if (selected == null) {
+      // have nothing selected
+      return;
+    }
+    TreeItem<String> root = getRoot(selected);
+    if (selected == root) {
+      // clicked impossible thing to delete
+      return;
+    }
+    if (autonRoot == root) {
+      if (selected.getParent().getParent() == null) {
+        MainIOUtil.deleteItem(autonDirectory, selected);
+      } else {
+        removePath(selected);
+      }
+    } else if (pathRoot == root) {
+      deletePath(selected);
+      saveAllAutons();
+      loadAllAutons();
+    }
+  }
+
+  @FXML
+  private void keyPressed(KeyEvent event) {
+    if (event.getCode() == KeyCode.DELETE
+        || event.getCode() == KeyCode.BACK_SPACE) {
+      delete();
+    }
+  }
+
+  private void deletePath(TreeItem<String> pathDelete) {
+    ArrayList<TreeItem<String>> deleteList = new ArrayList<>();
+    for (TreeItem<String> auton : autonRoot.getChildren()) {
+      for (TreeItem<String> path : auton.getChildren()) {
+        if (path.getValue().equals(pathDelete.getValue())) {
+          deleteList.add(path);
+        }
+      }
+    }
+    for (TreeItem<String> path : deleteList) {
+      removePath(path);
+    }
+    MainIOUtil.deleteItem(pathDirectory, pathDelete);
+  }
+
+  private void removePath(TreeItem<String> path) {
+    TreeItem<String> auton = path.getParent();
+    auton.getChildren().remove(path);
+    MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
+  }
+
+
+  private TreeItem<String> getRoot(TreeItem<String> item) {
+    TreeItem<String> root = item;
+    while (root.getParent() != null) {
+      root = root.getParent();
+    }
+    return root;
+  }
+
 
   private void setupClickablePaths() {
     paths.getSelectionModel()
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              selected = newValue;
               if (newValue == pathRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
@@ -84,6 +149,7 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              selected = newValue;
               if (newValue == autonRoot) {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
@@ -106,53 +172,19 @@ public class MainController {
     });
   }
 
-
-  private void setupItemsInDirectory(String directory, TreeItem<String> root) {
-    File folder = new File(directory);
-    if (!folder.exists()) {
-      folder.mkdir();
-    }
-    String[] listOfFiles = folder.list();
-    for (String name : listOfFiles) {
-      addChild(root, name);
-    }
+  @FXML
+  private void createPath() {
+    String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
+    MainIOUtil.addChild(pathRoot, name);
+    Path newPath = new Path(name);
+    PathIOUtil.export(pathDirectory, newPath);
   }
 
-  private void addChild(TreeItem<String> root, String name) {
-    TreeItem<String> item = new TreeItem<>(name);
-    root.getChildren().add(item);
-  }
-
-  private void loadAuton(String location, String filename, TreeItem<String> root) {
-    BufferedReader reader;
-    root.getChildren().clear();
-    try {
-      reader = new BufferedReader(new FileReader(location + filename));
-      String line = reader.readLine();
-      while (line != null) {
-        addChild(root, line);
-        line = reader.readLine();
-      }
-      reader.close();
-    } catch (IOException e) {
-      LOGGER.log(Level.WARNING, "Could not load auton file", e);
-
-    }
-  }
-
-  private void saveAuton(String location, String filename, TreeItem<String> root) {
-    BufferedWriter writer;
-    try {
-      writer = new BufferedWriter(new FileWriter(location + filename));
-      for (TreeItem<String> item : root.getChildren()) {
-        writer.write(item.getValue());
-        writer.newLine();
-      }
-
-      writer.close();
-    } catch (IOException e) {
-      LOGGER.log(Level.WARNING, "Could not save auton file", e);
-    }
+  @FXML
+  private void createAuton() {
+    String name = MainIOUtil.getValidFileName(autonDirectory, "Unnamed", "");
+    TreeItem<String> auton = MainIOUtil.addChild(autonRoot, name);
+    MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
   }
 
   public void setDirectory(String directory) {

@@ -1,7 +1,6 @@
 package edu.wpi.first.pathui;
 
 import systems.uom.common.USCustomary;
-
 import tec.units.ri.AbstractSystemOfUnits;
 import tec.units.ri.AbstractUnit;
 import tec.units.ri.format.SimpleUnitFormat;

@@ -10,6 +10,7 @@
         <exclude name="AccessorClassGeneration"/>
         <exclude name="AccessorMethodGeneration"/>
         <exclude name="UseVarargs"/>
+        <exclude name="GuardLogStatement"/>
     </rule>
     <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
         <properties>
