@@ -1,6 +1,7 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -8,6 +9,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +19,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 import javafx.scene.transform.Scale;
+
+import javax.naming.event.ObjectChangeListener;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("PMD.TooManyMethods") //Griffin will fix it 
 public class PathDisplayController {
@@ -31,6 +37,7 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
+  private ObjectProperty<Path> currentPath = null;
   private Image image;
   private final Field field = new Field();
 
@@ -78,6 +85,14 @@ public class PathDisplayController {
           Path path = (Path) o;
           addPathToPane(path);
         }
+      }
+    });
+    currentPath.addListener((change, oldValue, newValue) ->{
+      vectorGroup.getChildren().clear();
+      Waypoint nextPoint = newValue.getStart();
+      while(nextPoint != null){
+        vectorGroup.getChildren().add(nextPoint.getTangentLine());
+        nextPoint = nextPoint.getNextWaypoint();
       }
     });
   }
@@ -137,6 +152,8 @@ public class PathDisplayController {
       current.getNextSpline().getCubic().toBack();
     }
   }
+
+
 
   private void removePathFromPane(Path newPath) {
     Waypoint current = newPath.getStart();
