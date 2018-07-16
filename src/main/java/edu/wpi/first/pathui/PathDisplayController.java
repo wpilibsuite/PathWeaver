@@ -178,7 +178,7 @@ public class PathDisplayController {
   private void setupWaypoint(Waypoint waypoint) {
     waypoint.getDot().setOnMousePressed(e -> {
       if (e.getClickCount() == 1) {
-        selectWaypoint(waypoint);
+        selectWaypoint(waypoint, false);
         e.consume();
       }
     });
@@ -228,8 +228,8 @@ public class PathDisplayController {
     PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
-  private void selectWaypoint(Waypoint waypoint) {
-    if (selectedWaypoint == waypoint) {
+  private void selectWaypoint(Waypoint waypoint, boolean toggle) {
+    if (selectedWaypoint == waypoint && toggle) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
       selectedWaypoint = null;
@@ -303,7 +303,7 @@ public class PathDisplayController {
       addWaypointToPane(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
       setupWaypoint(newPoint);
-      selectWaypoint(newPoint);
+      selectWaypoint(newPoint, false);
       Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
     } else {
