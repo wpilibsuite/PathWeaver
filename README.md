@@ -1,6 +1,7 @@
+[![Build Status](https://travis-ci.org/wpilibsuite/PathUI.svg?branch=master)](https://travis-ci.org/wpilibsuite/PathUI)
 # pathui
 
-PathUI is an under-development front end motion planning program. It is primarily designed for FRC teams using Pathfinder. PathUI will be available for the 2019 FRC game with support for the 2019 version of Pathfinder. Currently Pathfinder is not used as a dependency and splines are generated using native JavaFX functionality.
+PathUI is an under-development front end motion planning program. It is primarily designed for FRC teams using Pathfinder. PathUI will be available for the 2019 FIRST Robotics Competition game with support for the 2019 version of Pathfinder. Currently Pathfinder is not used as a dependency and splines are generated using native JavaFX functionality.
 
 The two primary design criteria are
 1. Creating and modifying paths should be as natural as possible.
