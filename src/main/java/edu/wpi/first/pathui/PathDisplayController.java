@@ -115,13 +115,13 @@ public class PathDisplayController {
     Waypoint current = newPath.getStart();
     while (current != null) {
       setupWaypoint(current);
-      addPathStuff(current);
+      addWaypointToPane(current);
       current = current.getNextWaypoint();
 
     }
   }
 
-  private void addPathStuff(Waypoint current) {
+  private void addWaypointToPane(Waypoint current) {
     waypointGroup.getChildren().add(current.getDot());
     vectorGroup.getChildren().add(current.getTangentLine());
     current.getDot().setScaleX(circleScale / field.getScale());
@@ -283,7 +283,7 @@ public class PathDisplayController {
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
       Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      addPathStuff(newPoint);
+      addWaypointToPane(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
       setupWaypoint(newPoint);
       selectWaypoint(newPoint);
