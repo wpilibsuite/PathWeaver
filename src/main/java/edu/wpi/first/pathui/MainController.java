@@ -1,5 +1,7 @@
 package edu.wpi.first.pathui;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -38,8 +41,7 @@ public class MainController {
   private void initialize() {
     pathDirectory = directory + "Paths/";
     autonDirectory = directory + "Autons/";
-    setupDrag(paths, false);
-    setupDrag(autons, true);
+    setupDrag();
 
     autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
@@ -54,7 +56,52 @@ public class MainController {
 
     setupClickablePaths();
     loadAllAutons();
+
+    autons.setEditable(true);
+    paths.setEditable(true);
+    setupEditable();
   }
+
+  @SuppressWarnings("PMD.NcssCount")
+  private void setupEditable() {
+    autons.setOnEditCommit((EventHandler) event -> {
+      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
+      if (edit.getTreeItem().getParent() == autonRoot) {
+        MainIOUtil.rename(autonDirectory, edit.getTreeItem(), edit.getNewValue());
+        edit.getTreeItem().setValue(edit.getNewValue());
+      } else {
+        MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
+        renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+      }
+      saveAllAutons();
+      loadAllAutons();
+    });
+    paths.setOnEditCommit((EventHandler) event -> {
+      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
+
+      MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
+      renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+
+      saveAllAutons();
+      loadAllAutons();
+      pathDisplayController.removeAllPath();
+      pathDisplayController.addPath(pathDirectory, edit.getNewValue());
+    });
+  }
+
+  private void renameAllPathInstances(TreeItem<String> path, String newName) {
+    String oldName = path.getValue();
+
+    for (TreeItem<String> instance : getAllInstances(path)) {
+      instance.setValue(newName);
+    }
+    for (TreeItem<String> potential : pathRoot.getChildren()) {
+      if (oldName.equals(potential.getValue())) {
+        potential.setValue(newName);
+      }
+    }
+  }
+
 
   private void loadAllAutons() {
     for (TreeItem<String> item : autonRoot.getChildren()) {
@@ -80,13 +127,16 @@ public class MainController {
       return;
     }
     if (autonRoot == root) {
-      if (selected.getParent().getParent() == null) {
+      if (selected.getParent() == autonRoot) {
         MainIOUtil.deleteItem(autonDirectory, selected);
       } else {
         removePath(selected);
       }
     } else if (pathRoot == root) {
-      deletePath(selected);
+      for (TreeItem<String> path : getAllInstances(selected)) {
+        removePath(path);
+      }
+      MainIOUtil.deleteItem(pathDirectory, selected);
       saveAllAutons();
       loadAllAutons();
     }
@@ -100,19 +150,16 @@ public class MainController {
     }
   }
 
-  private void deletePath(TreeItem<String> pathDelete) {
-    ArrayList<TreeItem<String>> deleteList = new ArrayList<>();
+  private List<TreeItem<String>> getAllInstances(TreeItem<String> chosenPath) {
+    List<TreeItem<String>> list = new ArrayList<>();
     for (TreeItem<String> auton : autonRoot.getChildren()) {
       for (TreeItem<String> path : auton.getChildren()) {
-        if (path.getValue().equals(pathDelete.getValue())) {
-          deleteList.add(path);
+        if (path.getValue().equals(chosenPath.getValue())) {
+          list.add(path);
         }
       }
     }
-    for (TreeItem<String> path : deleteList) {
-      removePath(path);
-    }
-    MainIOUtil.deleteItem(pathDirectory, pathDelete);
+    return list;
   }
 
   private void removePath(TreeItem<String> path) {
@@ -163,8 +210,20 @@ public class MainController {
 
   }
 
-  private void setupDrag(TreeView<String> tree, boolean validDropTarget) {
-    tree.setCellFactory(param -> new PathCell(validDropTarget));
+  private boolean validPathName(String oldName, String newName) {
+    return MainIOUtil.isValidRename(pathDirectory, oldName, newName);
+  }
+
+  private boolean validAutonName(String oldName, String newName) {
+    return MainIOUtil.isValidRename(autonDirectory, oldName, newName);
+  }
+
+
+  private void setupDrag() {
+
+    paths.setCellFactory(param -> new PathCell(false, this::validPathName));
+    autons.setCellFactory(param -> new PathCell(true, this::validAutonName));
+
     autons.setOnDragDropped(event -> {
       //simpler than communicating which was updated from the cells
       saveAllAutons();
