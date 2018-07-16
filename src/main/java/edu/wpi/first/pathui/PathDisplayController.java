@@ -201,6 +201,7 @@ public class PathDisplayController {
     newCurve.getCubic().toBack();
     previousWaypoint.update();
     nextWaypoint.update();
+    PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
   private void selectWaypoint(Waypoint waypoint) {
