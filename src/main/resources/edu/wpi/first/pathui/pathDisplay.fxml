@@ -7,8 +7,13 @@
     <children>
         <Group fx:id="group">
             <children>
-                <ImageView fx:id="backgroundImage" preserveRatio="true"/>
-                <Pane fx:id="drawPane"/>
+                <ImageView fx:id="backgroundImage" preserveRatio="true" />
+                <Pane fx:id="drawPane">
+               <children>
+                  <Group fx:id="splineGroup" />
+                  <Group fx:id="vectorGroup" />
+                  <Group fx:id="waypointGroup" />
+               </children></Pane>
             </children>
         </Group>
     </children>
