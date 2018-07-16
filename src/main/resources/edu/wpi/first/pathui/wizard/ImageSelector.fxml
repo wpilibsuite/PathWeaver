@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="528.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.wizard.LoadFieldController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="528.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.wizard.ImageSelectorController">
    <children>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -46,7 +46,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <ImageView fx:id="Image" fitHeight="492.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imageView" fitHeight="492.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

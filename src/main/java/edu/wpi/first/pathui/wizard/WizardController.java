@@ -42,6 +42,9 @@ public class WizardController {
   @FXML
   private Pane loadField;
 
+  @FXML
+  private Pane imageSelector;
+
   public enum Panes {
     StartScene,
     LoadProject,
@@ -54,13 +57,11 @@ public class WizardController {
   }
 
 
-
   private Panes currentPane = StartScene;
 
   private Stack<Panes> previousPanes = new Stack<Panes>();
 
   private Controllers currentController;
-
 
 
   @FXML
@@ -92,13 +93,13 @@ public class WizardController {
 
   @FXML
   void previousScene(ActionEvent event) {
-    currentPane=previousPanes.pop();
+    currentPane = previousPanes.pop();
     setupPanes();
     goToPane(currentPane);
   }
 
   void goToPane(Panes pane) {
-    System.out.println("going to " +pane);
+    System.out.println("going to " + pane);
     switch (pane) {
       case StartScene:
         topPane.getChildren().setAll(startScreen);
@@ -110,7 +111,7 @@ public class WizardController {
       case LoadProject:
         topPane.getChildren().setAll(loadProject);
         loadProject.visibleProperty().setValue(true);
-        currentController=new LoadProjectController();
+        currentController = new LoadProjectController();
         previous.disableProperty().setValue(false);
         break;
 
@@ -133,18 +134,24 @@ public class WizardController {
         loadField.visibleProperty().setValue(true);
         currentController = new LoadFieldController();
         previous.disableProperty().setValue(false);
+        break;
 
+      case ImageSelector:
+        topPane.getChildren().setAll(imageSelector);
+        imageSelector.visibleProperty().setValue(true);
+        currentController=new ImageSelectorController();
+        previous.disableProperty().setValue(false);
     }
 
   }
 
-  void setupPanes(){
+  void setupPanes() {
     startScreen.visibleProperty().setValue(false);
     loadProject.visibleProperty().setValue(false);
     newProjectSave.visibleProperty().setValue(false);
     fieldCreator.visibleProperty().setValue(false);
     loadField.visibleProperty().setValue(false);
-
+    imageSelector.visibleProperty().setValue(false);
     next.disableProperty().setValue(false);
   }
 }
