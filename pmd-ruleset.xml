@@ -30,6 +30,11 @@
             <property name="maxmethods" value="11"></property>
         </properties>
     </rule>
+    <rule ref="category/java/design.xml/TooManyFields">
+        <properties>
+            <property name="maxfields" value="16"></property>
+        </properties>
+    </rule>
     <rule ref="category/java/codestyle.xml/ShortClassName">
         <properties>
             <property name="minimum" value="4"></property>
