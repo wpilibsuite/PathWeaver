@@ -49,6 +49,7 @@ public class PathDisplayController {
   @FXML
   private Group vectorGroup;
 
+  private boolean justSwitched = false;
   @FXML
   private void initialize() {
 
@@ -176,12 +177,16 @@ public class PathDisplayController {
   }
 
   private void setupWaypoint(Waypoint waypoint) {
-    waypoint.getDot().setOnMousePressed(e -> {
-      if (e.getClickCount() == 1) {
-        selectWaypoint(waypoint, false);
-        e.consume();
-      }
-    });
+    waypoint.getDot().setOnMouseClicked(e -> {
+          System.out.println("clicked");
+          waypoint.resetOnDoubleClick(e);
+          if (e.getClickCount() == 1) {
+            selectWaypoint(waypoint, true);
+          }
+          e.consume();
+        }
+    );
+
     waypoint.getDot().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
@@ -229,7 +234,12 @@ public class PathDisplayController {
   }
 
   private void selectWaypoint(Waypoint waypoint, boolean toggle) {
+    System.out.println("select");
+    System.out.println(toggle);
+    System.out.println(selectedWaypoint);
+    System.out.println(waypoint);
     if (selectedWaypoint == waypoint && toggle) {
+      System.out.println("toggle");
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
       selectedWaypoint = null;
@@ -238,7 +248,9 @@ public class PathDisplayController {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
       }
+      System.out.println("not toggle");
       selectedWaypoint = waypoint;
+      System.out.println("wp is now "+selectedWaypoint);
       waypoint.getDot().pseudoClassStateChanged(selected, true);
       waypoint.getDot().requestFocus();
       waypoint.getDot().toFront();
@@ -267,7 +279,8 @@ public class PathDisplayController {
   }
 
   private void setupPress() {
-    drawPane.setOnMousePressed(e -> {
+    drawPane.setOnMouseClicked(e -> {
+      System.out.println("off");
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;

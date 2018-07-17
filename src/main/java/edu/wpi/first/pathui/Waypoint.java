@@ -7,7 +7,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -30,12 +29,7 @@ public class Waypoint {
 
   private final Line tangentLine;
   private final Circle dot;
-  private final EventHandler<MouseEvent> resetOnDoubleClick = event -> { //NOPMD
-    if (event.getClickCount() == 2 && lockTangent) {
-      lockTangent = false;
-      update();
-    }
-  };
+
 
   public Path getPath() {
     return path;
@@ -76,13 +70,21 @@ public class Waypoint {
       dot.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.WAYPOINT, "point"));
     });
-    dot.setOnMouseClicked(resetOnDoubleClick);
     tangentLine.setOnDragDetected(event -> {
       currentWaypoint = this;
       tangentLine.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
     });
-    tangentLine.setOnMouseClicked(resetOnDoubleClick);
+    tangentLine.setOnMouseClicked(event -> {
+      resetOnDoubleClick(event);
+    });
+  }
+
+  public void resetOnDoubleClick(MouseEvent event) {
+    if (event.getClickCount() == 2 && lockTangent) {
+      lockTangent = false;
+      update();
+    }
   }
 
   public void lockTangent() {
