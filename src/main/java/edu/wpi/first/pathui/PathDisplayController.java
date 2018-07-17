@@ -1,6 +1,8 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -15,7 +17,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
@@ -31,11 +32,12 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
-  private Image image;
+  private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
+
   private final double circleScale = .75; //NOPMD should be static, will be modified later
   private final double splineScale = 6; //NOPMD should be static, will be modified later
   private final double lineScale = 2; //NOPMD should be static, will be modified later
@@ -50,7 +52,7 @@ public class PathDisplayController {
   @FXML
   private void initialize() {
 
-    image = field.getImage();
+    Image image = field.getImage();
     backgroundImage.setImage(image);
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
@@ -61,13 +63,13 @@ public class PathDisplayController {
         topPane.widthProperty(), topPane.heightProperty()));
 
     group.getTransforms().add(scale);
-    setupDrawPaneSizing();
+    setupDrawPaneSizing(image);
     setupDrag();
     setupPress();
-    setupPathList();
+    setupPathListeners();
   }
 
-  private void setupPathList() {
+  private void setupPathListeners() {
     pathList.addListener((ListChangeListener<Path>) change -> {
       while (change.next()) {
         for (Object o : change.getRemoved()) {
@@ -78,6 +80,17 @@ public class PathDisplayController {
           Path path = (Path) o;
           addPathToPane(path);
         }
+      }
+    });
+    currentPath.addListener((change, oldValue, newValue) -> {
+      vectorGroup.getChildren().clear();
+      if (newValue == null) {
+        return;
+      }
+      Waypoint nextPoint = newValue.getStart();
+      while (nextPoint != null) {
+        vectorGroup.getChildren().add(nextPoint.getTangentLine());
+        nextPoint = nextPoint.getNextWaypoint();
       }
     });
   }
@@ -117,8 +130,8 @@ public class PathDisplayController {
       setupWaypoint(current);
       addWaypointToPane(current);
       current = current.getNextWaypoint();
-
     }
+    currentPath.set(newPath);
   }
 
   private void addWaypointToPane(Waypoint current) {
@@ -138,6 +151,7 @@ public class PathDisplayController {
     }
   }
 
+
   private void removePathFromPane(Path newPath) {
     Waypoint current = newPath.getStart();
     while (current != null) {
@@ -150,7 +164,7 @@ public class PathDisplayController {
     }
   }
 
-  private void setupDrawPaneSizing() {
+  private void setupDrawPaneSizing(Image image) {
     drawPane.setMaxWidth(image.getWidth());
     drawPane.setMaxHeight(image.getHeight());
     drawPane.setPrefHeight(field.getRealLength().getValue().doubleValue());
@@ -162,12 +176,15 @@ public class PathDisplayController {
   }
 
   private void setupWaypoint(Waypoint waypoint) {
-    waypoint.getDot().setOnMousePressed(e -> {
-      if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
-        selectWaypoint(waypoint);
-        e.consume();
-      }
-    });
+    waypoint.getDot().setOnMouseClicked(e -> {
+          waypoint.resetOnDoubleClick(e);
+          if (e.getClickCount() == 1) {
+            selectWaypoint(waypoint, true);
+          }
+          e.consume();
+        }
+    );
+
     waypoint.getDot().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
@@ -214,11 +231,13 @@ public class PathDisplayController {
     PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
-  private void selectWaypoint(Waypoint waypoint) {
-    if (selectedWaypoint == waypoint) {
+  private void selectWaypoint(Waypoint waypoint, boolean toggle) {
+
+    if (selectedWaypoint == waypoint && toggle) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
       selectedWaypoint = null;
+      currentPath.set(null);
     } else {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
@@ -227,6 +246,7 @@ public class PathDisplayController {
       waypoint.getDot().pseudoClassStateChanged(selected, true);
       waypoint.getDot().requestFocus();
       waypoint.getDot().toFront();
+      currentPath.set(selectedWaypoint.getPath());
     }
   }
 
@@ -246,11 +266,12 @@ public class PathDisplayController {
       } else if (dragboard.hasContent(DataFormats.SPLINE)) {
         handleSplineDrag(event, wp);
       }
+      event.consume();
     });
   }
 
   private void setupPress() {
-    drawPane.setOnMousePressed(e -> {
+    drawPane.setOnMouseClicked(e -> {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;
@@ -263,6 +284,7 @@ public class PathDisplayController {
       wp.setX(event.getX());
       wp.setY(event.getY());
     }
+    selectWaypoint(wp, false);
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
@@ -286,7 +308,7 @@ public class PathDisplayController {
       addWaypointToPane(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
       setupWaypoint(newPoint);
-      selectWaypoint(newPoint);
+      selectWaypoint(newPoint, false);
       Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
     } else {
