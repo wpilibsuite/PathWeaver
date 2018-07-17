@@ -80,6 +80,10 @@ public class Waypoint {
     });
   }
 
+  /** Handles reseting point depending on the mouse event.
+   *
+   * @param event The mouse event that was triggered
+   */
   public void resetOnDoubleClick(MouseEvent event) {
     if (event.getClickCount() == 2 && lockTangent) {
       lockTangent = false;
