@@ -114,7 +114,7 @@ public class Path {
    * Reflects the Path across the X-axis.
    * The coordinate system's origin is the starting point of the Path.
    */
-  public void flipHorizontal() {
+  public void flipVertical() {
     Waypoint current = start;
     while (current != null) {
       Point2D reflectedPos = current.getCoords().subtract(
@@ -131,7 +131,7 @@ public class Path {
    * Reflects the Path across the X-axis.
    * The coordinate system's origin is the starting point of the Path.
    */
-  public void flipVertical() {
+  public void flipHorizontal() {
     Waypoint current = start;
     while (current != null) {
       Point2D reflectedPos = current.getCoords().subtract(
