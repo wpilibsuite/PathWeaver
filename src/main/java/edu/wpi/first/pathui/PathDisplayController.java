@@ -66,10 +66,10 @@ public class PathDisplayController {
     setupDrawPaneSizing(image);
     setupDrag();
     setupPress();
-    setupPathList();
+    setupPathListeners();
   }
 
-  private void setupPathList() {
+  private void setupPathListeners() {
     pathList.addListener((ListChangeListener<Path>) change -> {
       while (change.next()) {
         for (Object o : change.getRemoved()) {
@@ -84,7 +84,7 @@ public class PathDisplayController {
     });
     currentPath.addListener((change, oldValue, newValue) -> {
       vectorGroup.getChildren().clear();
-      if (newValue == null || newValue == oldValue) {
+      if (newValue == null) {
         return;
       }
       Waypoint nextPoint = newValue.getStart();
