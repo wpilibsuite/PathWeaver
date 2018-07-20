@@ -80,7 +80,8 @@ public class Waypoint {
     });
   }
 
-  /** Handles reseting point depending on the mouse event.
+  /**
+   * Handles reseting point depending on the mouse event.
    *
    * @param event The mouse event that was triggered
    */
