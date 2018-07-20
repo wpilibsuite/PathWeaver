@@ -139,7 +139,6 @@ public class PathCell extends TextFieldTreeCell<String> {
         TreeItem<String> parent = item.getParent();
 
         if (parent != null
-            && event.getGestureSource() != cell //dont drag on top of itself
             && event.getDragboard().hasString()) {
           Dragboard db = event.getDragboard();
           String source = db.getString();
