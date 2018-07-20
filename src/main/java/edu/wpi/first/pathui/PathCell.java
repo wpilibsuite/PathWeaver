@@ -18,13 +18,17 @@ import javafx.util.converter.DefaultStringConverter;
  * TreeItem with support for dragging.
  */
 public class PathCell extends TextFieldTreeCell<String> {
-  private final TreeCell cell;
+  private final TreeCell<String> cell;
   private boolean editing = false;
-  //having a single EMPTY_ITEM you use for all dragging
+  //having a single tempItem you use for all dragging
   //means that any dragover call is able to remove the temporary
   //item from past locations
   //each cell might have its own dragover call as you move around
-  private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
+  private static final TreeItem<String> tempItem = new TreeItem<>("");
+  private static TreeItem<String> dragSource = null;
+  private static int dragOriginalIndex = 0;
+
+
   private final BiFunction<String, String, Boolean> renameIsValid;
   private TextField text;
 
@@ -97,13 +101,17 @@ public class PathCell extends TextFieldTreeCell<String> {
 
   private void setupDragDrop() {
     this.setOnDragDropped(event -> {
-      TreeItem<String> newItem = new TreeItem<>(EMPTY_ITEM.getValue()); //make new item
+      if(tempItem.getValue().equals("")) {
 
-      int index = EMPTY_ITEM.getParent().getChildren().indexOf(EMPTY_ITEM); //get location of old item
-      EMPTY_ITEM.getParent().getChildren().add(index, newItem); // add new item to temp item location
+      }else{
+        TreeItem<String> newItem = new TreeItem<>(tempItem.getValue()); //make new item
 
-      EMPTY_ITEM.getParent().getChildren().remove(EMPTY_ITEM); //reset EMPTY_ITEM
-      EMPTY_ITEM.setValue("");
+        int index = tempItem.getParent().getChildren().indexOf(tempItem); //get location of old item
+        tempItem.getParent().getChildren().add(index, newItem); // add new item to temp item location
+
+        tempItem.getParent().getChildren().remove(tempItem); //reset tempItem
+        tempItem.setValue("");
+      }
     });
   }
 
@@ -116,6 +124,8 @@ public class PathCell extends TextFieldTreeCell<String> {
         content.putString(item.getValue());
         db.setContent(content);
         event.consume();
+        dragSource = item;
+        dragOriginalIndex = item.getParent().getChildren().indexOf(item);
       }
     });
   }
@@ -129,7 +139,7 @@ public class PathCell extends TextFieldTreeCell<String> {
         TreeItem<String> parent = item.getParent();
 
         if (parent != null
-            && event.getGestureSource() != cell
+            && event.getGestureSource() != cell //dont drag on top of itself
             && event.getDragboard().hasString()) {
           Dragboard db = event.getDragboard();
           String source = db.getString();
@@ -156,15 +166,31 @@ public class PathCell extends TextFieldTreeCell<String> {
   private void setTemp(String source, TreeItem<String> parent, int currentIndex) {
     removeTemp();
     if (currentIndex >= 0) {
-      parent.getChildren().add(currentIndex, EMPTY_ITEM);
-      EMPTY_ITEM.setValue(source);
+      if (parent == dragSource.getParent()) {
+        //drag same place
+        parent.getChildren().remove(dragSource);
+        parent.getChildren().add(currentIndex, dragSource);
+        cell.getTreeView().getSelectionModel().select(dragSource);
+
+      } else {
+        parent.getChildren().add(currentIndex, tempItem);
+
+        if (dragSource.getParent().getChildren().indexOf(dragSource) != dragOriginalIndex) {
+          System.out.println("put it back " + dragOriginalIndex + " " + parent);
+          TreeItem<String> sourceParent = dragSource.getParent();
+          sourceParent.getChildren().remove(dragSource);
+          sourceParent.getChildren().add(dragOriginalIndex, dragSource);
+          //put it back
+        }
+        tempItem.setValue(source);
+      }
     }
   }
 
   private void removeTemp() {
-    TreeItem<String> tempParent = EMPTY_ITEM.getParent();
+    TreeItem<String> tempParent = tempItem.getParent();
     if (tempParent != null) {
-      tempParent.getChildren().remove(EMPTY_ITEM);
+      tempParent.getChildren().remove(tempItem);
     }
   }
 
