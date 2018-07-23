@@ -45,7 +45,7 @@ public class LoadProjectController implements Controllers {
 
   @Override
   public WizardController.Panes getNextPane() {
-    return WizardController.Panes.RobotLoader;
+    return WizardController.Panes.RobotChooser;
   }
 
   @Override

@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class LoadFieldController implements Controllers{
+public class RobotLoaderController implements Controllers{
   @FXML
   private TextField fileLocation;
 
@@ -38,7 +38,7 @@ public class LoadFieldController implements Controllers{
 
   }
 
-  public LoadFieldController() {
+  public RobotLoaderController() {
   }
 
   @Override
@@ -48,15 +48,15 @@ public class LoadFieldController implements Controllers{
 
   @Override
   public WizardController.Panes getNextPane() {
-    return WizardController.Panes.RobotChooser;
+    return WizardController.Panes.StartScene;
   }
 
   @Override
   public void storeInfo() {
-    try {
-      SaveUtils.importField(saveFile.toURI().toString());
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      SaveUtils.importRobot(saveFile.toURI().toString());
+//    } catch (FileNotFoundException e) {
+//      e.printStackTrace();
+//    }
   }
 }

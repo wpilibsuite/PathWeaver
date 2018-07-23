@@ -35,5 +35,8 @@
        <fx:include source="FieldCreator.fxml" fx:id="fieldCreator"/>
        <fx:include source="LoadField.fxml" fx:id="loadField"/>
        <fx:include source="ImageSelector.fxml" fx:id="imageSelector"/>
+       <fx:include source="RobotChooser.fxml" fx:id="robotChooser"/>
+       <fx:include source="RobotCreator.fxml" fx:id="robotCreator"/>
+       <fx:include source="RobotLoader.fxml" fx:id="robotLoader"/>
    </children>
 </AnchorPane>

@@ -12,6 +12,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import static edu.wpi.first.pathui.wizard.WizardController.Panes.RobotChooser;
+
 public class ImageSelectorController implements Controllers {
 
   Image image;
@@ -58,7 +60,7 @@ public class ImageSelectorController implements Controllers {
 
   @Override
   public WizardController.Panes getNextPane() {
-    return null;
+    return RobotChooser;
   }
 
   @Override

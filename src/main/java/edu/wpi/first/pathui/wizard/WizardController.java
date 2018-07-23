@@ -45,6 +45,16 @@ public class WizardController {
   @FXML
   private Pane imageSelector;
 
+  @FXML
+  private Pane robotChooser;
+
+  @FXML
+  private Pane robotCreator;
+
+  @FXML
+  private Pane robotLoader;
+
+
   public enum Panes {
     StartScene,
     LoadProject,
@@ -53,7 +63,10 @@ public class WizardController {
     FieldEditor,
     FieldLoader,
     ImageSelector,
-    RobotLoader
+    RobotChooser,
+    RobotLoader,
+    RobotCreator,
+    RobotEditor
   }
 
 
@@ -141,6 +154,28 @@ public class WizardController {
         imageSelector.visibleProperty().setValue(true);
         currentController=new ImageSelectorController();
         previous.disableProperty().setValue(false);
+        break;
+
+      case RobotCreator:
+        topPane.getChildren().setAll(robotCreator);
+        robotCreator.visibleProperty().setValue(true);
+        currentController=new RobotCreatorController();
+        previous.disableProperty().setValue(false);
+        break;
+
+      case RobotChooser:
+        topPane.getChildren().setAll(robotChooser);
+        robotChooser.visibleProperty().setValue(true);
+        currentController=new RobotChooserController();
+        previous.disableProperty().setValue(false);
+        break;
+
+      case RobotLoader:
+        topPane.getChildren().setAll(robotLoader);
+        robotLoader.visibleProperty().setValue(true);
+        currentController=new RobotLoaderController();
+        previous.disableProperty().setValue(false);
+        break;
     }
 
   }
@@ -152,6 +187,9 @@ public class WizardController {
     fieldCreator.visibleProperty().setValue(false);
     loadField.visibleProperty().setValue(false);
     imageSelector.visibleProperty().setValue(false);
+    robotChooser.visibleProperty().setValue(false);
+    robotLoader.visibleProperty().setValue(false);
+    robotCreator.visibleProperty().setValue(false);
     next.disableProperty().setValue(false);
   }
 }
