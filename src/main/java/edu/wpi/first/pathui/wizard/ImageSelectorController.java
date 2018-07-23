@@ -1,19 +1,20 @@
 package edu.wpi.first.pathui.wizard;
 
-import java.io.File;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class ImageSelectorController implements Controllers {
 
-  Image field;
+  Image image;
 
   FileChooser fileChooser;
 
@@ -23,12 +24,15 @@ public class ImageSelectorController implements Controllers {
   @FXML
   private ImageView imageView;
 
+  @FXML
+  private Pane drawPane;
+
   public ImageSelectorController() {
   }
 
   @FXML
   private void initialize() {
-    field = null;
+    image = null;
     FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg");
     fileChooser = new FileChooser();
     fileChooser.setSelectedExtensionFilter(filter);
@@ -37,9 +41,14 @@ public class ImageSelectorController implements Controllers {
 
   @FXML
   void filePicker(ActionEvent event) {
-    field = new Image(fileChooser.showOpenDialog(new Stage()).toURI().toString());
-    fileLocation.setText(field.getUrl());
-    imageView.setImage(field);
+    image = new Image(fileChooser.showOpenDialog(new Stage()).toURI().toString());
+    fileLocation.setText(image.getUrl());
+    imageView.setImage(image);
+    generateAreaSelector();
+  }
+
+  void generateAreaSelector(){
+
   }
 
   @Override

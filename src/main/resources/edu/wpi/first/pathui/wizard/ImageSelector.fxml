@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -8,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="528.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.wizard.ImageSelectorController">
@@ -51,7 +53,15 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ImageView fx:id="imageView" fitHeight="492.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+                  <Group fx:id="group">
+                     <children>
+                        <Pane fx:id="drawPane" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="imageView" fitHeight="492.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </Group>
                </children>
             </AnchorPane>
         </items>

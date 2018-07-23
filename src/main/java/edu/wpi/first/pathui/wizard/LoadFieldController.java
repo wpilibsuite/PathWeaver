@@ -1,6 +1,9 @@
 package edu.wpi.first.pathui.wizard;
 
+import edu.wpi.first.pathui.SaveUtils;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -32,6 +35,7 @@ public class LoadFieldController implements Controllers{
   void filePicker(ActionEvent event) {
     saveFile = fileChooser.showOpenDialog(new Stage());
     fileLocation.setText(saveFile.getPath());
+
   }
 
   public LoadFieldController() {
@@ -49,6 +53,10 @@ public class LoadFieldController implements Controllers{
 
   @Override
   public void storeInfo() {
-    //need to save location of files
+    try {
+      SaveUtils.importField(saveFile.toURI().toString());
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 }
