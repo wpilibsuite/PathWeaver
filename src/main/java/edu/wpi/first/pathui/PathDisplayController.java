@@ -1,6 +1,8 @@
 package edu.wpi.first.pathui;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -14,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
@@ -30,19 +32,27 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
-  private Image image;
+  private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
+
   private final double circleScale = .75; //NOPMD should be static, will be modified later
   private final double splineScale = 6; //NOPMD should be static, will be modified later
   private final double lineScale = 2; //NOPMD should be static, will be modified later
 
   @FXML
+  private Group splineGroup;
+  @FXML
+  private Group waypointGroup;
+  @FXML
+  private Group vectorGroup;
+
+  @FXML
   private void initialize() {
 
-    image = field.getImage();
+    Image image = field.getImage();
     backgroundImage.setImage(image);
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
@@ -53,13 +63,13 @@ public class PathDisplayController {
         topPane.widthProperty(), topPane.heightProperty()));
 
     group.getTransforms().add(scale);
-    setupDrawPaneSizing();
+    setupDrawPaneSizing(image);
     setupDrag();
     setupPress();
-    setupPathList();
+    setupPathListeners();
   }
 
-  private void setupPathList() {
+  private void setupPathListeners() {
     pathList.addListener((ListChangeListener<Path>) change -> {
       while (change.next()) {
         for (Object o : change.getRemoved()) {
@@ -70,6 +80,17 @@ public class PathDisplayController {
           Path path = (Path) o;
           addPathToPane(path);
         }
+      }
+    });
+    currentPath.addListener((change, oldValue, newValue) -> {
+      vectorGroup.getChildren().clear();
+      if (newValue == null) {
+        return;
+      }
+      Waypoint nextPoint = newValue.getStart();
+      while (nextPoint != null) {
+        vectorGroup.getChildren().add(nextPoint.getTangentLine());
+        nextPoint = nextPoint.getNextWaypoint();
       }
     });
   }
@@ -107,40 +128,43 @@ public class PathDisplayController {
     Waypoint current = newPath.getStart();
     while (current != null) {
       setupWaypoint(current);
-      addPathStuff(current);
+      addWaypointToPane(current);
       current = current.getNextWaypoint();
-
     }
+    currentPath.set(newPath);
   }
 
-  private void addPathStuff(Waypoint current) {
-    drawPane.getChildren().add(current.getDot());
-    drawPane.getChildren().add(current.getTangentLine());
+  private void addWaypointToPane(Waypoint current) {
+    waypointGroup.getChildren().add(current.getDot());
+    vectorGroup.getChildren().add(current.getTangentLine());
     current.getDot().setScaleX(circleScale / field.getScale());
     current.getDot().setScaleY(circleScale / field.getScale());
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().toBack();
     if (current != null && current.getPreviousWaypoint() != null) {
-      drawPane.getChildren().add(current.getPreviousSpline().getCubic());
+      splineGroup.getChildren().add(current.getPreviousSpline().getCubic());
       current.getPreviousSpline().getCubic().toBack();
       current.getPreviousSpline().getCubic().setStrokeWidth(splineScale / field.getScale());
     }
+    if (current != null && current.getNextSpline() != null) {
+      current.getNextSpline().getCubic().toBack();
+    }
   }
+
 
   private void removePathFromPane(Path newPath) {
     Waypoint current = newPath.getStart();
     while (current != null) {
-      drawPane.getChildren().remove(current.getDot());
-      drawPane.getChildren().remove(current.getTangentLine());
+      waypointGroup.getChildren().remove(current.getDot());
+      vectorGroup.getChildren().remove(current.getTangentLine());
       current = current.getNextWaypoint();
       if (current != null) {
-        drawPane.getChildren().remove(current.getPreviousSpline().getCubic());
+        splineGroup.getChildren().remove(current.getPreviousSpline().getCubic());
       }
     }
   }
 
-
-  private void setupDrawPaneSizing() {
+  private void setupDrawPaneSizing(Image image) {
     drawPane.setMaxWidth(image.getWidth());
     drawPane.setMaxHeight(image.getHeight());
     drawPane.setPrefHeight(field.getRealLength().getValue().doubleValue());
@@ -152,12 +176,15 @@ public class PathDisplayController {
   }
 
   private void setupWaypoint(Waypoint waypoint) {
-    waypoint.getDot().setOnMousePressed(e -> {
-      if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
-        selectWaypoint(waypoint);
-        e.consume();
-      }
-    });
+    waypoint.getDot().setOnMouseClicked(e -> {
+          waypoint.resetOnDoubleClick(e);
+          if (e.getClickCount() == 1) {
+            selectWaypoint(waypoint, true);
+          }
+          e.consume();
+        }
+    );
+
     waypoint.getDot().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
@@ -172,13 +199,14 @@ public class PathDisplayController {
     });
   }
 
-  private void makeDeletable(Waypoint newPoint) {
-    newPoint.getDot().setOnKeyPressed(event -> {
-      if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) && isDeletable(newPoint)) {
-        delete(newPoint);
-      }
-    });
+  @FXML
+  private void keyPressed(KeyEvent event) {
+    if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
+        && isDeletable(selectedWaypoint)) {
+      delete(selectedWaypoint);
+    }
   }
+
 
   private boolean isDeletable(Waypoint waypoint) {
     return waypoint.getPreviousWaypoint() != null
@@ -188,25 +216,28 @@ public class PathDisplayController {
   private void delete(Waypoint waypoint) {
     Waypoint previousWaypoint = waypoint.getPreviousWaypoint();
     Waypoint nextWaypoint = waypoint.getNextWaypoint();
-    drawPane.getChildren().remove(waypoint.getDot());
-    drawPane.getChildren().remove(waypoint.getTangentLine());
-    drawPane.getChildren().remove(waypoint.getPreviousSpline().getCubic());
-    drawPane.getChildren().remove(waypoint.getNextSpline().getCubic());
+    waypointGroup.getChildren().remove(waypoint.getDot());
+    vectorGroup.getChildren().remove(waypoint.getTangentLine());
+    splineGroup.getChildren().remove(waypoint.getPreviousSpline().getCubic());
+    splineGroup.getChildren().remove(waypoint.getNextSpline().getCubic());
     previousWaypoint.setNextWaypoint(nextWaypoint);
     nextWaypoint.setPreviousWaypoint(previousWaypoint);
     Spline newCurve = previousWaypoint.getPath().createCurve(previousWaypoint, nextWaypoint);
     newCurve.getCubic().setStrokeWidth(splineScale / field.getScale());
-    drawPane.getChildren().add(newCurve.getCubic());
+    splineGroup.getChildren().add(newCurve.getCubic());
     newCurve.getCubic().toBack();
     previousWaypoint.update();
     nextWaypoint.update();
+    PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
-  private void selectWaypoint(Waypoint waypoint) {
-    if (selectedWaypoint == waypoint) {
+  private void selectWaypoint(Waypoint waypoint, boolean toggle) {
+
+    if (selectedWaypoint == waypoint && toggle) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
       selectedWaypoint = null;
+      currentPath.set(null);
     } else {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
@@ -214,6 +245,8 @@ public class PathDisplayController {
       selectedWaypoint = waypoint;
       waypoint.getDot().pseudoClassStateChanged(selected, true);
       waypoint.getDot().requestFocus();
+      waypoint.getDot().toFront();
+      currentPath.set(selectedWaypoint.getPath());
     }
   }
 
@@ -233,11 +266,12 @@ public class PathDisplayController {
       } else if (dragboard.hasContent(DataFormats.SPLINE)) {
         handleSplineDrag(event, wp);
       }
+      event.consume();
     });
   }
 
   private void setupPress() {
-    drawPane.setOnMousePressed(e -> {
+    drawPane.setOnMouseClicked(e -> {
       if (selectedWaypoint != null) {
         selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;
@@ -250,6 +284,7 @@ public class PathDisplayController {
       wp.setX(event.getX());
       wp.setY(event.getY());
     }
+    selectWaypoint(wp, false);
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
@@ -270,11 +305,10 @@ public class PathDisplayController {
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
       Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      addPathStuff(newPoint);
+      addWaypointToPane(newPoint);
       newPoint.getPreviousSpline().getCubic().toBack();
-      makeDeletable(newPoint);
       setupWaypoint(newPoint);
-      selectWaypoint(newPoint);
+      selectWaypoint(newPoint, false);
       Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
     } else {
