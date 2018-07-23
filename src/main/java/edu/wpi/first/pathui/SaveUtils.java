@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import javafx.scene.image.Image;
 
+import javax.measure.quantity.Length;
+
 import static edu.wpi.first.pathui.PathUnits.FOOT;
 
 public class SaveUtils {
@@ -20,10 +22,10 @@ public class SaveUtils {
     file.write(generateFieldJson(field).toString(2));
   }
 
-//  public static void exportRobot(JSONObject object, String savePath) throws IOException {
-//    FileWriter file = new FileWriter(savePath + "/Robot/robot.json");
-//    file.write(object.toString(2));
-//  }
+  public static void exportRobot(Robot robot, String savePath) throws IOException {
+    FileWriter file = new FileWriter(savePath + "/Robot/robot.json");
+    file.write(generateRobotJson(robot).toString(2));
+  }
 
   public static Field importField(String savePath) throws FileNotFoundException {
     FileReader reader = new FileReader(savePath + "/Field/field.json");
@@ -38,13 +40,22 @@ public class SaveUtils {
         temp.getDouble("Scale"));
   }
 
-/*
-public static void importRobot(String savePath) throws FileNotFoundException {
+
+public static Robot importRobot(String savePath) throws FileNotFoundException {
 FileReader reader = new FileReader(savePath + "/Robot/robot.json");
 String str = reader.toString();
-robot = new JSONObject(str);
-}
-*/
+JSONObject temp = new JSONObject(str);
+  return new Robot(
+      temp.getDouble("WheelBaseWidth"),
+      temp.getDouble("ChassisWidth"),
+      temp.getDouble("ChassisLength"),
+      temp.getDouble("MaxVelocity"),
+      temp.getDouble("MaxAcceleration"),
+      temp.getDouble("MaxJerk"),
+      temp.getDouble("TimeStep"),
+      FOOT);
+  }
+
 
   private static JSONObject generateFieldJson(Field newField) {
     JSONObject field = new JSONObject();
@@ -57,4 +68,18 @@ robot = new JSONObject(str);
     field.put("Scale", newField.getScale());
     return field;
   }
+
+  private static JSONObject generateRobotJson(Robot newRobot) {
+    JSONObject robot = new JSONObject();
+    robot.put("WheelBaseWidth", newRobot.getWheelBaseWidth());
+    robot.put("ChassisWidth", newRobot.getChassisWidth());
+    robot.put("ChassisLength", newRobot.getChassisLength());
+    robot.put("MaxVelocity", newRobot.getMaxVelocity());
+    robot.put("MaxAcceleration", newRobot.getMaxAcceleration());
+    robot.put("MaxJerk", newRobot.getMaxJerk());
+    robot.put("TimeStep", newRobot.getTimeStep());
+    robot.put("Unit",newRobot.getUnit().getName());
+    return robot;
+  }
+
 }

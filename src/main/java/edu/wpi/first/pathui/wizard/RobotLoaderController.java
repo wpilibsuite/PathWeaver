@@ -53,10 +53,10 @@ public class RobotLoaderController implements Controllers{
 
   @Override
   public void storeInfo() {
-//    try {
-//      SaveUtils.importRobot(saveFile.toURI().toString());
-//    } catch (FileNotFoundException e) {
-//      e.printStackTrace();
-//    }
+    try {
+      SaveUtils.importRobot(saveFile.toURI().toString());
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 }

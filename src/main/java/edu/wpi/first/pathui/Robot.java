@@ -13,9 +13,16 @@ public class Robot {
   private double timeStep;
   public Unit<Length> unit;
 
-
-
-
+  public Robot(double wheelBaseWidth, double chassisWidth, double chassisLength, double maxVelocity, double maxAcceleration, double maxJerk, double timeStep, Unit<Length> unit) {
+    this.wheelBaseWidth = wheelBaseWidth;
+    this.chassisWidth = chassisWidth;
+    this.chassisLength = chassisLength;
+    this.maxVelocity = maxVelocity;
+    this.maxAcceleration = maxAcceleration;
+    this.maxJerk = maxJerk;
+    this.timeStep = timeStep;
+    this.unit = unit;
+  }
 
   public double getWheelBaseWidth() {
     return wheelBaseWidth;
