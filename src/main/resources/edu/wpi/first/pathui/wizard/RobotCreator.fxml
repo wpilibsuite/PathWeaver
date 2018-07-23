@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathui.wizard.RobotCreatorController">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="150.0" spacing="18.5">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wheel Base Width:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chassis Width:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chassis Length:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Max Velocity:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Max Acceleration:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Max Jerk:" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time Steps:" wrappingWidth="60.556640625" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
+               </padding>
+            </VBox>
+            <VBox prefHeight="400.0" prefWidth="450.0" spacing="10.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <children>
+                  <TextField fx:id="wheelBaseWidth" prefHeight="19.0" />
+                  <TextField fx:id="chassisWidth" />
+                  <TextField fx:id="chassisLength" />
+                  <TextField fx:id="maxVelocity" />
+                  <TextField fx:id="maxAcceleration" />
+                  <TextField fx:id="maxJerk" />
+                  <TextField fx:id="timeSteps" />
+               </children>
+            </VBox>
+            <VBox prefHeight="400.0" prefWidth="204.0" spacing="10.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <children>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                    </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <SplitMenuButton mnemonicParsing="false" text="SplitMenuButton">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

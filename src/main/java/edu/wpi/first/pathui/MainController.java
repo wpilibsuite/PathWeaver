@@ -3,6 +3,15 @@ package edu.wpi.first.pathui;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -11,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
+import edu.wpi.first.pathui.wizard.Wizard;
 
 public class MainController {
   @FXML private TreeView<String> autons;
@@ -242,5 +252,16 @@ public class MainController {
   public void setDirectory(String directory) {
     this.directory = directory;
   }
-}
 
+  @FXML
+  void newProject() throws IOException {
+    Wizard wizard= new Wizard();
+
+    wizard.show();
+
+
+
+
+  }
+
+}
