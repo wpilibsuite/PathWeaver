@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
-@SuppressWarnings("PMD.TooManyMethods")
 public class MainController {
   @FXML private TreeView<String> autons;
   @FXML private TreeView<String> paths;
@@ -226,18 +225,12 @@ public class MainController {
 
   @FXML
   private void flipHorizontal() {
-    paths.getSelectionModel().getSelectedItems().forEach(pathCell -> {
-      Path path = pathDisplayController.getPath(pathCell.getValue());
-      path.flipHorizontal();
-    });
+    pathDisplayController.flip(true);
   }
 
   @FXML
   private void flipVertical() {
-    paths.getSelectionModel().getSelectedItems().forEach(pathCell -> {
-      Path path = pathDisplayController.getPath(pathCell.getValue());
-      path.flipVertical();
-    });
+    pathDisplayController.flip(false);
   }
 
   @FXML

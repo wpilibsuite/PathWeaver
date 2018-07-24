@@ -81,7 +81,8 @@ public class Waypoint {
     });
   }
 
-  /** Handles reseting point depending on the mouse event.
+  /**
+   * Handles reseting point depending on the mouse event.
    *
    * @param event The mouse event that was triggered
    */
@@ -203,7 +204,9 @@ public class Waypoint {
 
   /**
    * Convenience function for math purposes.
+   *
    * @param other The other Waypoint.
+   *
    * @return The coordinates of this Waypoint relative to the coordinates of another Waypoint.
    */
   public Point2D relativeTo(Waypoint other) {
@@ -212,7 +215,9 @@ public class Waypoint {
 
   /**
    * Convenience function allowing us to obtain the position of this Waypoint relative to a Point2S.
+   *
    * @param other The other Point2D.
+   *
    * @return A Point2D representing the distance between this Watpoint and a given Point2D.
    */
   public Point2D relativeTo(Point2D other) {

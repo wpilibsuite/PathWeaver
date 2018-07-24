@@ -1,6 +1,7 @@
 package edu.wpi.first.pathui;
 
 import java.util.function.BiFunction;
+
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;

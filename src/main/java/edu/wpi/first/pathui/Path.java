@@ -118,9 +118,9 @@ public class Path {
     Waypoint current = start;
     while (current != null) {
       Point2D reflectedPos = current.getCoords().subtract(
-              new Point2D(0.0, current.relativeTo(start).getY() * 2));
+          new Point2D(0.0, current.relativeTo(start).getY() * 2));
       Point2D reflectedTangent = current.getTangent().subtract(
-              new Point2D(0.0, current.getTangent().getY() * 2));
+          new Point2D(0.0, current.getTangent().getY() * 2));
       current.setCoords(reflectedPos);
       current.setTangent(reflectedTangent);
       current = current.getNextWaypoint();
@@ -135,9 +135,9 @@ public class Path {
     Waypoint current = start;
     while (current != null) {
       Point2D reflectedPos = current.getCoords().subtract(
-              new Point2D(current.relativeTo(start).getX() * 2, 0.0));
+          new Point2D(current.relativeTo(start).getX() * 2, 0.0));
       Point2D reflectedTangent = current.getTangent().subtract(
-              new Point2D(current.getTangent().getX() * 2, 0.0));
+          new Point2D(current.getTangent().getX() * 2, 0.0));
       current.setCoords(reflectedPos);
       current.setTangent(reflectedTangent);
       current = current.getNextWaypoint();
@@ -146,6 +146,7 @@ public class Path {
 
   /**
    * Convenience function for debugging purposes.
+   *
    * @return A nicely formatted String representing some of the data stored in the Waypoint class.
    */
   public String getPointString() {
