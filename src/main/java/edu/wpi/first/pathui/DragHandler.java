@@ -12,7 +12,12 @@ public class DragHandler {
 
   private boolean isShiftDown = false;
 
-  protected DragHandler(PathDisplayController parent, Pane drawPane) {
+  /**
+   * Creates the DragHandler, which sets up and manages all drag interactions for the given PathDisplayController.
+   * @param parent The PathDisplayController that this DragHandler manages
+   * @param drawPane The PathDisplayController's Pane.
+   */
+  public DragHandler(PathDisplayController parent, Pane drawPane) {
     this.controller = parent;
     this.drawPane = drawPane;
     this.setupDrag();

@@ -130,7 +130,11 @@ public class PathDisplayController {
     currentPath.set(newPath);
   }
 
-  protected void addWaypointToPane(Waypoint current) {
+  /**
+   * Adds a waypoint to the drawing pane.
+   * @param current The waypoint
+   */
+  public void addWaypointToPane(Waypoint current) {
     waypointGroup.getChildren().add(current.getDot());
     vectorGroup.getChildren().add(current.getTangentLine());
     current.getDot().setScaleX(circleScale / field.getScale());
@@ -171,7 +175,11 @@ public class PathDisplayController {
     drawPane.setScaleY(field.getScale());
   }
 
-  protected void setupWaypoint(Waypoint waypoint) {
+  /**
+   * Setup fx interactions for the given waypoint object.
+   * @param waypoint The waypoint
+   */
+  public void setupWaypoint(Waypoint waypoint) {
     waypoint.getDot().setOnMouseClicked(e -> {
           waypoint.resetOnDoubleClick(e);
           if (e.getClickCount() == 1) {
@@ -227,7 +235,13 @@ public class PathDisplayController {
     PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
-  protected void selectWaypoint(Waypoint waypoint, boolean toggle) {
+  /**
+   * Selects or deselects a waypoint and associated path for the purposes of drawing, dragging, and otherwise modifying
+   * If toggle is true, then deselect the waypoint if it is the same as the currently selected waypoint.
+   * @param waypoint The waypoint to be selected
+   * @param toggle Whether to toggle the selection if possible
+   */
+  public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
     if (selectedWaypoint == waypoint && toggle) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
