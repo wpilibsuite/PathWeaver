@@ -316,6 +316,36 @@ public class PathDisplayController {
     }
   }
 
+  /**
+   * Flip the current path.
+   *
+   * @param horizontal True if horizontal flip, false if vertical
+   */
+  public void flip(boolean horizontal) {
+    if (horizontal) {
+      currentPath.get().flipHorizontal();
+    } else {
+      currentPath.get().flipVertical();
+    }
+  }
+
+  /**
+   * Retrieves a named Path.
+   *
+   * @param name The name of the Path to retrieve
+   *
+   * @return The appropriate Path from the Path List
+   */
+  public Path getPath(String name) {
+    for (Path p : pathList) {
+      if (p.getPathName().equals(name)) {
+        return p;
+      }
+    }
+    // TODO: Return a default path
+    return null;
+  }
+
   public void setPathDirectory(String pathDirectory) {
     this.pathDirectory = pathDirectory;
   }
