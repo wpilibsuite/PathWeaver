@@ -8,19 +8,15 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
-@SuppressWarnings("PMD.TooManyMethods") //Griffin will fix it 
 public class PathDisplayController {
   @FXML
   private ImageView backgroundImage;
@@ -64,7 +60,7 @@ public class PathDisplayController {
 
     group.getTransforms().add(scale);
     setupDrawPaneSizing(image);
-    setupDrag();
+    new DragHandler(this, drawPane); // Handler doesn't need to be kept around by this, so just do setup
     setupPress();
     setupPathListeners();
   }
@@ -134,7 +130,11 @@ public class PathDisplayController {
     currentPath.set(newPath);
   }
 
-  private void addWaypointToPane(Waypoint current) {
+  /**
+   * Adds a waypoint to the drawing pane.
+   * @param current The waypoint
+   */
+  public void addWaypointToPane(Waypoint current) {
     waypointGroup.getChildren().add(current.getDot());
     vectorGroup.getChildren().add(current.getTangentLine());
     current.getDot().setScaleX(circleScale / field.getScale());
@@ -175,7 +175,11 @@ public class PathDisplayController {
     drawPane.setScaleY(field.getScale());
   }
 
-  private void setupWaypoint(Waypoint waypoint) {
+  /**
+   * Setup fx interactions for the given waypoint object.
+   * @param waypoint The waypoint
+   */
+  public void setupWaypoint(Waypoint waypoint) {
     waypoint.getDot().setOnMouseClicked(e -> {
           waypoint.resetOnDoubleClick(e);
           if (e.getClickCount() == 1) {
@@ -231,7 +235,13 @@ public class PathDisplayController {
     PathIOUtil.export(pathDirectory, previousWaypoint.getPath());
   }
 
-  private void selectWaypoint(Waypoint waypoint, boolean toggle) {
+  /**
+   * Selects or deselects a waypoint and associated path for the purposes of drawing, dragging, and otherwise modifying
+   * If toggle is true, then deselect the waypoint if it is the same as the currently selected waypoint.
+   * @param waypoint The waypoint to be selected
+   * @param toggle Whether to toggle the selection if possible
+   */
+  public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
     if (selectedWaypoint == waypoint && toggle) {
       selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
@@ -250,26 +260,6 @@ public class PathDisplayController {
     }
   }
 
-  private void setupDrag() {
-    drawPane.setOnDragDone(event -> {
-      PathIOUtil.export(pathDirectory, Waypoint.currentWaypoint.getPath());
-      Waypoint.currentWaypoint = null;
-      Spline.currentSpline = null;
-    });
-    drawPane.setOnDragOver(event -> {
-      Dragboard dragboard = event.getDragboard();
-      Waypoint wp = Waypoint.currentWaypoint;
-      if (dragboard.hasContent(DataFormats.WAYPOINT)) {
-        handleWaypointDrag(event, wp);
-      } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
-        handleVectorDrag(event, wp);
-      } else if (dragboard.hasContent(DataFormats.SPLINE)) {
-        handleSplineDrag(event, wp);
-      }
-      event.consume();
-    });
-  }
-
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
       if (selectedWaypoint != null) {
@@ -279,42 +269,7 @@ public class PathDisplayController {
     });
   }
 
-  private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    if (drawPane.getLayoutBounds().contains(event.getX(), event.getY())) {
-      wp.setX(event.getX());
-      wp.setY(event.getY());
-    }
-    selectWaypoint(wp, false);
-  }
 
-  private void handleVectorDrag(DragEvent event, Waypoint wp) {
-    Point2D pt = new Point2D(event.getX(), event.getY());
-    wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
-    wp.lockTangent();
-    if (wp.getPreviousSpline() != null) {
-      wp.getPreviousSpline().updateControlPoints();
-    }
-    if (wp.getNextSpline() != null) {
-      wp.getNextSpline().updateControlPoints();
-    }
-  }
-
-  private void handleSplineDrag(DragEvent event, Waypoint wp) {
-    if (Waypoint.currentWaypoint == null) {
-      Spline current = Spline.currentSpline;
-      Waypoint start = current.getStart();
-      Waypoint end = current.getEnd();
-      Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      addWaypointToPane(newPoint);
-      newPoint.getPreviousSpline().getCubic().toBack();
-      setupWaypoint(newPoint);
-      selectWaypoint(newPoint, false);
-      Spline.currentSpline = null;
-      Waypoint.currentWaypoint = newPoint;
-    } else {
-      handleWaypointDrag(event, wp);
-    }
-  }
 
   /**
    * Flip the current path.
@@ -348,5 +303,9 @@ public class PathDisplayController {
 
   public void setPathDirectory(String pathDirectory) {
     this.pathDirectory = pathDirectory;
+  }
+
+  public String getPathDirectory() {
+    return pathDirectory;
   }
 }
