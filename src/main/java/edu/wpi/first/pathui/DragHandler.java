@@ -18,12 +18,14 @@ public class DragHandler {
     this.setupDrag();
   }
 
+  private void finishDrag() {
+    PathIOUtil.export(controller.getPathDirectory(), Waypoint.currentWaypoint.getPath());
+    Waypoint.currentWaypoint = null;
+    Spline.currentSpline = null;
+  }
+
   private void setupDrag() {
-    drawPane.setOnDragDone(event -> {
-      PathIOUtil.export(controller.getPathDirectory(), Waypoint.currentWaypoint.getPath());
-      Waypoint.currentWaypoint = null;
-      Spline.currentSpline = null;
-    });
+    drawPane.setOnDragDone(event -> finishDrag());
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
@@ -88,12 +90,8 @@ public class DragHandler {
   }
 
   private void handlePathMoveDrag(DragEvent event, Waypoint wp) {
-    double beginX = wp.getX();
-    double beginY = wp.getY();
-    double endX = event.getX();
-    double endY = event.getY();
-    double offsetX = endX - beginX;
-    double offsetY = endY - beginY;
+    double offsetX = event.getX() - wp.getX();
+    double offsetY = event.getX() - wp.getY();
 
     // Make sure all waypoints will be within the bounds
     Waypoint next = wp.getPath().getStart();
