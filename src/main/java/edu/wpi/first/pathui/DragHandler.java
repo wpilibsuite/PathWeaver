@@ -91,7 +91,7 @@ public class DragHandler {
 
   private void handlePathMoveDrag(DragEvent event, Waypoint wp) {
     double offsetX = event.getX() - wp.getX();
-    double offsetY = event.getX() - wp.getY();
+    double offsetY = event.getY() - wp.getY();
 
     // Make sure all waypoints will be within the bounds
     Waypoint next = wp.getPath().getStart();
