@@ -8,7 +8,15 @@ import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
 
 public final class FxUtils { // NOPMD util class name
-  private static Color[] childColors = new Color[] {Color.ORANGE, Color.VIOLET, Color.FUCHSIA};
+  private static Color[] childColors = new Color[] {
+          Color.web("#fba71b"),
+          Color.web("#f3622d"),
+          Color.web("#57b757"),
+          Color.web("#41a9c9"),
+          Color.web("#4258c9"),
+          Color.web("#9a42c8"),
+          Color.web("#c84164"),
+          Color.web("#888888")};
 
   private FxUtils() {
     throw new UnsupportedOperationException("This is a utility class!");

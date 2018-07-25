@@ -50,19 +50,19 @@ public class PathCell extends TextFieldTreeCell<String> {
   @Override
   public void updateItem(String s, boolean b) {
     super.updateItem(s, b);
-    updateColor(this.getIndex());
+    updateColor();
   }
 
   @Override
   public void updateIndex(int i) {
     super.updateIndex(i);
-    updateColor(i);
+    updateColor();
   }
 
-  private void updateColor(int index) {
+  private void updateColor() {
     // Determine whether this is a child of an auton (child of a child)
     if (this.getTreeItem() != null && FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
-      Color color = FxUtils.getColorForSubChild(index);
+      Color color = FxUtils.getColorForSubChild(FxUtils.getItemIndex(this.getTreeItem()));
       int r = (int) (color.getRed() * 255);
       int g = (int) (color.getGreen() * 255);
       int b = (int) (color.getBlue() * 255);
