@@ -22,3 +22,27 @@ Line {
     -fx-stroke: cyan;
     -fx-cursor: hand;
 }
+:subchild0 {
+    -fx-background-color: #fba71b;
+}
+:subchild1 {
+    -fx-background-color: #f3622d;
+}
+:subchild2 {
+    -fx-background-color: #57b757;
+}
+:subchild3 {
+    -fx-background-color: #41a9c9;
+}
+:subchild4 {
+    -fx-background-color: #4258c9;
+}
+:subchild5 {
+    -fx-background-color: #9a42c8;
+}
+:subchild6 {
+    -fx-background-color: #c84164;
+}
+:subchild7 {
+    -fx-background-color: #888888;
+}

@@ -2,6 +2,7 @@ package edu.wpi.first.pathui;
 
 import java.util.function.BiFunction;
 
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -12,7 +13,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import javafx.util.converter.DefaultStringConverter;
 
 
@@ -29,6 +29,13 @@ public class PathCell extends TextFieldTreeCell<String> {
   private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
   private final BiFunction<String, String, Boolean> renameIsValid;
   private TextField text;
+  private static PseudoClass[] subchildClasses = new PseudoClass[8];
+
+  static {
+    for (int i = 0; i < subchildClasses.length; i++) {
+      subchildClasses[i] = PseudoClass.getPseudoClass("subchild" + i);
+    }
+  }
 
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
@@ -45,6 +52,9 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragDrop();
     }
     this.setConverter(new DefaultStringConverter());
+    for (PseudoClass pc : subchildClasses) {
+      this.getStyleClass().add(pc.getPseudoClassName());
+    }
   }
 
   @Override
@@ -60,16 +70,14 @@ public class PathCell extends TextFieldTreeCell<String> {
   }
 
   private void updateColor() {
-    // Determine whether this is a child of an auton (child of a child)
+    int idx;
     if (this.getTreeItem() != null && FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
-      Color color = FxUtils.getColorForSubChild(FxUtils.getItemIndex(this.getTreeItem()));
-      int r = (int) (color.getRed() * 255);
-      int g = (int) (color.getGreen() * 255);
-      int b = (int) (color.getBlue() * 255);
-      String rgbStr = r + ", " + g + ", " + b;
-      this.setStyle("-fx-background-color: rgb(" + rgbStr + ");");
+      idx = FxUtils.getItemIndex(this.getTreeItem()) % subchildClasses.length;
     } else {
-      this.setStyle("");
+      idx = subchildClasses.length;
+    }
+    for (int i = 0; i < subchildClasses.length; i++) {
+      this.pseudoClassStateChanged(subchildClasses[i], i == idx);
     }
   }
 
