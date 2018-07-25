@@ -5,6 +5,7 @@ import java.util.Map;
 import javafx.geometry.Point2D;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
@@ -25,6 +26,7 @@ public class Spline {
     start = first;
     end = last;
     cubic = new CubicCurve();
+    updateColor();
     start.addSpline(this, true);
     end.addSpline(this, false);
     updateControlPoints();
@@ -37,6 +39,11 @@ public class Spline {
     });
   }
 
+  private void updateColor() {
+    // -25% brightness, same as derive()
+    cubic.setStroke(start.getPath().getColor().deriveColor(0.0, 1.0, 0.75, 1.0));
+  }
+
   /**
    * Forces Spline to recompute and update its bezier curve control points.
    */
@@ -46,6 +53,7 @@ public class Spline {
     cubic.setControlY1(points.getKey().getY());
     cubic.setControlX2(points.getValue().getX());
     cubic.setControlY2(points.getValue().getY());
+    updateColor();
   }
 
   // Bezier curve to hermite curve

@@ -3,7 +3,6 @@
 }
 
 Circle {
-    -fx-fill: orange;
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
     -fx-cursor: hand;
@@ -14,7 +13,6 @@ Circle:selected {
 }
 
 CubicCurve {
-    -fx-stroke: derive(orange, -25%);
     -fx-stroke-line-cap: round;
     -fx-fill: null;
     -fx-cursor: hand;

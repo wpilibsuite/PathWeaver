@@ -1,5 +1,8 @@
 package edu.wpi.first.pathui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -10,11 +13,13 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 public class PathDisplayController {
@@ -91,16 +96,11 @@ public class PathDisplayController {
     });
   }
 
-  /**
-   * Add path to Controller.
-   *
-   * @param fileLocations Current working directory
-   * @param fileName      Name of path file inside directory
-   */
-  public void addPath(String fileLocations, String fileName) {
+  public Path addPath(String fileLocations, TreeItem<String> newValue) {
+    String fileName = newValue.getValue();
     for (Path path : pathList) {
       if (fileName.equals(path.getPathName())) {
-        return;
+        return path;
       }
     }
     Path newPath = PathIOUtil.importPath(fileLocations, fileName);
@@ -109,6 +109,7 @@ public class PathDisplayController {
       PathIOUtil.export(fileLocations, newPath);
     }
     pathList.add(newPath);
+    return newPath;
   }
 
   /**

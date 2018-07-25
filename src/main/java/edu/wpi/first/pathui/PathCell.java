@@ -12,6 +12,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.util.converter.DefaultStringConverter;
 
 
@@ -44,6 +45,34 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragDrop();
     }
     this.setConverter(new DefaultStringConverter());
+  }
+
+  @Override
+  public void updateItem(String s, boolean b) {
+    super.updateItem(s, b);
+    updateColor(this.getIndex());
+  }
+
+  @Override
+  public void updateIndex(int i) {
+    super.updateIndex(i);
+    updateColor(i);
+  }
+
+  private void updateColor(int index) {
+    // Determine whether this is a child of an auton (child of a child)
+    if (this.getTreeItem() != null &&
+            this.getTreeView().getTreeItemLevel(this.getTreeItem()) == 2) {
+      Color color = FxUtils.getColorForSubChild(index);
+      int r = (int) (color.getRed() * 255);
+      int g = (int) (color.getGreen() * 255);
+      int b = (int) (color.getBlue() * 255);
+      String rgbStr = r + ", " + g + ", " + b;
+      this.setStyle("-fx-text-fill: rgb(" + rgbStr + ");");
+    }
+    else {
+      this.setStyle("-fx-text-fill: black;");
+    }
   }
 
   @Override

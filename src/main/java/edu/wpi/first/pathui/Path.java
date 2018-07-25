@@ -1,11 +1,14 @@
 package edu.wpi.first.pathui;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Path {
   private Waypoint start;
   private Waypoint end;
   private String pathName = "default";
+  private Color color = Color.ORANGE;
 
   public Path(String name) {
     pathName = name;
@@ -177,5 +180,19 @@ public class Path {
 
   public void setEnd(Waypoint end) {
     this.end = end;
+  }
+
+  public Color getColor() {
+    return color;
+  }
+
+  public void setColor(Color pathColor) {
+    color = pathColor;
+    // Update all the waypoints so they change their color, along with their curves
+    Waypoint next = getStart();
+    while (next != null) {
+      next.update();
+      next = next.getNextWaypoint();
+    }
   }
 }

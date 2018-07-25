@@ -3,6 +3,8 @@ package edu.wpi.first.pathui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -10,6 +12,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 @SuppressWarnings("PMD.TooManyMethods")
 //With the creation of a project many of these functions should be moved out of here
@@ -78,7 +81,7 @@ public class MainController {
       saveAllAutons();
       loadAllAutons();
       pathDisplayController.removeAllPath();
-      pathDisplayController.addPath(pathDirectory, edit.getNewValue());
+      pathDisplayController.addPath(pathDirectory, edit.getTreeItem());
     });
   }
 
@@ -181,7 +184,7 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
-                pathDisplayController.addPath(pathDirectory, newValue.getValue());
+                pathDisplayController.addPath(pathDirectory, newValue);
               }
 
             });
@@ -195,10 +198,15 @@ public class MainController {
               } else {
                 pathDisplayController.removeAllPath();
                 if (newValue.isLeaf()) { //has no children so try to display path
-                  pathDisplayController.addPath(pathDirectory, newValue.getValue());
+
+                  Path added = pathDisplayController.addPath(pathDirectory, newValue);
+                  if (FxUtils.isSubChild(autons, newValue)) {
+                    added.setColor(FxUtils.getColorForSubChild(FxUtils.getItemIndex(newValue)));
+                  }
                 } else { //is an auton with children
-                  for (TreeItem<String> item : newValue.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, item.getValue());
+                  for (TreeItem<String> child : selected.getChildren()) {
+                    Path added = pathDisplayController.addPath(pathDirectory, child);
+                    added.setColor(FxUtils.getColorForSubChild(FxUtils.getItemIndex(child)));
                   }
                 }
               }

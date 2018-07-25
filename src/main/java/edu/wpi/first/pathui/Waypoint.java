@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -51,6 +52,7 @@ public class Waypoint {
     dot = new Circle(10);
     dot.centerXProperty().bind(x);
     dot.centerYProperty().bind(y);
+    dot.setFill(path.getColor());
     x.addListener(__ -> update());
     y.addListener(__ -> update());
     tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
@@ -101,6 +103,7 @@ public class Waypoint {
    * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
    */
   public void update() {
+    dot.setFill(path.getColor());
     updateTheta();
     if (previousWaypoint != null) {
       previousWaypoint.updateTheta();
