@@ -10,8 +10,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 
 public class Waypoint {
   private Waypoint previousWaypoint = null;
@@ -28,7 +28,9 @@ public class Waypoint {
 
 
   private final Line tangentLine;
-  private final Circle dot;
+  private Polygon dot;
+
+  private static final double SIZE = 30.0;
 
 
   public Path getPath() {
@@ -48,10 +50,8 @@ public class Waypoint {
     lockTangent = fixedAngle;
     setX(position.getX());
     setY(position.getY());
-    dot = new Circle(10);
-    dot.centerXProperty().bind(x);
-    dot.centerYProperty().bind(y);
-    dot.setFill(path.getColor());
+    dot = new Polygon();
+    setupDot();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
     tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
@@ -64,6 +64,21 @@ public class Waypoint {
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
     setupDnd();
+  }
+
+  private void setupDot() {
+    dot = new Polygon(
+            0.0, SIZE / 3,
+            SIZE, 0.0,
+            0.0, -SIZE / 3);
+    double xOffset = (SIZE * 3D / 5D) / 16.5;
+    dot.setLayoutX(-(dot.getLayoutBounds().getMaxX() + dot.getLayoutBounds().getMinX()) / 2 - xOffset);
+    dot.setLayoutY(-(dot.getLayoutBounds().getMaxY() + dot.getLayoutBounds().getMinY()) / 2);
+
+    dot.translateXProperty().bind(x);
+    dot.translateYProperty().bind(y);
+    dot.setFill(path.getColor());
+
   }
 
   private void setupDnd() {
@@ -118,6 +133,7 @@ public class Waypoint {
         nextWaypoint.getNextSpline().updateControlPoints();
       }
     }
+    this.dot.setRotate(Math.toDegrees(Math.atan2(this.getTangent().getY(), this.getTangent().getX())));
   }
 
   /**
@@ -254,7 +270,7 @@ public class Waypoint {
     return nextSpline;
   }
 
-  public Circle getDot() {
+  public Polygon getDot() {
     return dot;
   }
 

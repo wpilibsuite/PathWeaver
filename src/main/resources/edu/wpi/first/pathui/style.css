@@ -2,13 +2,13 @@
     -fx-background-color: #101824;
 }
 
-Circle {
+Polygon {
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
     -fx-cursor: hand;
 }
 
-Circle:selected {
+Polygon:selected {
     -fx-fill: rgb(255, 241, 173);
 }
 
