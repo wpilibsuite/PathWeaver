@@ -3,8 +3,6 @@ package edu.wpi.first.pathui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.beans.Observable;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
@@ -12,7 +10,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 @SuppressWarnings("PMD.TooManyMethods")
 //With the creation of a project many of these functions should be moved out of here
@@ -193,25 +190,21 @@ public class MainController {
         .addListener(
             (observable, oldValue, newValue) -> {
               selected = newValue;
-              if (newValue == autonRoot) {
-                //pathRoot.setExpanded(!pathRoot.isExpanded());
-              } else {
+              if (newValue != autonRoot) {
                 pathDisplayController.removeAllPath();
                 if (newValue.isLeaf()) { //has no children so try to display path
-
                   Path added = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
                     added.setColor(FxUtils.getColorForSubChild(FxUtils.getItemIndex(newValue)));
                   }
                 } else { //is an auton with children
                   for (TreeItem<String> child : selected.getChildren()) {
-                    Path added = pathDisplayController.addPath(pathDirectory, child);
-                    added.setColor(FxUtils.getColorForSubChild(FxUtils.getItemIndex(child)));
+                    pathDisplayController.addPath(pathDirectory, child).setColor(
+                            FxUtils.getColorForSubChild(FxUtils.getItemIndex(child)));
                   }
                 }
               }
             });
-
   }
 
   private boolean validPathName(String oldName, String newName) {

@@ -1,8 +1,5 @@
 package edu.wpi.first.pathui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 public class PathDisplayController {
@@ -96,6 +92,12 @@ public class PathDisplayController {
     });
   }
 
+  /**
+   * Add a path to the controller.
+   * @param fileLocations The folder containing the path file
+   * @param newValue The TreeItem holding the name of this path
+   * @return The new path, or if duplicate, the old path matching the file name
+   */
   public Path addPath(String fileLocations, TreeItem<String> newValue) {
     String fileName = newValue.getValue();
     for (Path path : pathList) {

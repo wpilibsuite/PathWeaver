@@ -61,16 +61,14 @@ public class PathCell extends TextFieldTreeCell<String> {
 
   private void updateColor(int index) {
     // Determine whether this is a child of an auton (child of a child)
-    if (this.getTreeItem() != null &&
-            this.getTreeView().getTreeItemLevel(this.getTreeItem()) == 2) {
+    if (this.getTreeItem() != null && FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
       Color color = FxUtils.getColorForSubChild(index);
       int r = (int) (color.getRed() * 255);
       int g = (int) (color.getGreen() * 255);
       int b = (int) (color.getBlue() * 255);
       String rgbStr = r + ", " + g + ", " + b;
       this.setStyle("-fx-text-fill: rgb(" + rgbStr + ");");
-    }
-    else {
+    } else {
       this.setStyle("-fx-text-fill: black;");
     }
   }

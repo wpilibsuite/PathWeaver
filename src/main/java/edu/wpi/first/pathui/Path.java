@@ -2,7 +2,6 @@ package edu.wpi.first.pathui;
 
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class Path {
   private Waypoint start;
@@ -186,6 +185,10 @@ public class Path {
     return color;
   }
 
+  /**
+   * Set the draw color of the spline and waypoints.
+   * @param pathColor The new color
+   */
   public void setColor(Color pathColor) {
     color = pathColor;
     // Update all the waypoints so they change their color, along with their curves

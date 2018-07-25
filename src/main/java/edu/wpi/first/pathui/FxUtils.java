@@ -26,19 +26,30 @@ public final class FxUtils { // NOPMD util class name
   }
 
   /**
-   *
-   * @param i
-   * @return
+   * Get the color according to sub-child order.
+   * @param i The index of the child relative to the parent
+   * @return The color to draw the thing as
    */
   public static Color getColorForSubChild(int i) {
-    Color[] colors = new Color[] {Color.ORANGE, Color.VIOLET, Color.DARKRED};
+    Color[] colors = new Color[]{Color.ORANGE, Color.VIOLET, Color.DARKRED};
     return colors[i % colors.length];
   }
 
+  /**
+   * Check whether the item is a child of a child (exactly the child of a child of the root.)
+   * @param view The treeview to check against
+   * @param item The item to check
+   * @return Whether this is a sub child
+   */
   public static boolean isSubChild(TreeView view, TreeItem item) {
     return view.getTreeItemLevel(item) == 2;
   }
 
+  /**
+   * Get the index of this item relative to its siblings.
+   * @param item The item to check
+   * @return The child index of this item, 0 if it has no parent.
+   */
   public static int getItemIndex(TreeItem item) {
     TreeItem parent = item.getParent();
     if (parent != null) {

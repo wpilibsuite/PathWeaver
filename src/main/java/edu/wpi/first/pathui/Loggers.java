@@ -39,7 +39,6 @@ final class Loggers {
     }
 
     String directory = System.getProperty("user.home") + "/PathUI";
-    ;
     File folder = new File(directory);
     if (!folder.exists()) {
       folder.mkdir();
