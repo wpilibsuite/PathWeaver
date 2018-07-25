@@ -93,7 +93,7 @@ public class PathDisplayController {
   }
 
   /**
-   * Add a path to the controller.
+   * Adds a path to the controller.
    * @param fileLocations The folder containing the path file
    * @param newValue The TreeItem holding the name of this path
    * @return The new path, or if duplicate, the old path matching the file name
