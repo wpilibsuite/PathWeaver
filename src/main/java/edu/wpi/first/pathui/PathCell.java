@@ -67,9 +67,9 @@ public class PathCell extends TextFieldTreeCell<String> {
       int g = (int) (color.getGreen() * 255);
       int b = (int) (color.getBlue() * 255);
       String rgbStr = r + ", " + g + ", " + b;
-      this.setStyle("-fx-text-fill: rgb(" + rgbStr + ");");
+      this.setStyle("-fx-background-color: rgb(" + rgbStr + ");");
     } else {
-      this.setStyle("-fx-text-fill: black;");
+      this.setStyle("");
     }
   }
 

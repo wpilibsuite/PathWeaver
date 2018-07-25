@@ -31,7 +31,7 @@ public final class FxUtils { // NOPMD util class name
    * @return The color to draw the thing as
    */
   public static Color getColorForSubChild(int i) {
-    Color[] colors = new Color[]{Color.ORANGE, Color.VIOLET, Color.DARKRED};
+    Color[] colors = new Color[]{Color.ORANGE, Color.VIOLET, Color.FUCHSIA};
     return colors[i % colors.length];
   }
 
