@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.css.PseudoClass;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
@@ -22,6 +23,8 @@ public class Waypoint {
   private Spline previousSpline = null;
   private Spline nextSpline = null;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
+  private static final PseudoClass PSEUDO_BEGIN = PseudoClass.getPseudoClass("begin");
+  private static final PseudoClass PSEUDO_END = PseudoClass.getPseudoClass("end");
 
   private final Path path;
   public static Waypoint currentWaypoint = null;
@@ -51,7 +54,7 @@ public class Waypoint {
     dot = new Circle(10);
     dot.centerXProperty().bind(x);
     dot.centerYProperty().bind(y);
-    dot.setFill(path.getColor());
+    setupStyle();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
     tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
@@ -64,6 +67,11 @@ public class Waypoint {
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
     setupDnd();
+  }
+
+  private void setupStyle() {
+    dot.setFill(path.getColor());
+    dot.getStyleClass().addAll(PSEUDO_BEGIN.getPseudoClassName(), PSEUDO_END.getPseudoClassName());
   }
 
   private void setupDnd() {
@@ -104,6 +112,7 @@ public class Waypoint {
   public void update() {
     dot.setFill(path.getColor());
     updateTheta();
+    updatePseudoclasses();
     if (previousWaypoint != null) {
       previousWaypoint.updateTheta();
       getPreviousSpline().updateControlPoints();
@@ -118,6 +127,11 @@ public class Waypoint {
         nextWaypoint.getNextSpline().updateControlPoints();
       }
     }
+  }
+
+  private void updatePseudoclasses() {
+    dot.pseudoClassStateChanged(PSEUDO_BEGIN, this.previousWaypoint == null);
+    dot.pseudoClassStateChanged(PSEUDO_END, this.nextWaypoint == null);
   }
 
   /**
