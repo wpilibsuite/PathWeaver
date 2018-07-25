@@ -8,7 +8,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
 
 public final class FxUtils { // NOPMD util class name
-  private static Color[] childColors = new Color[] {
+  private static final Color[] CHILD_COLORS = new Color[] {
           Color.web("#fba71b"),
           Color.web("#f3622d"),
           Color.web("#57b757"),
@@ -40,7 +40,7 @@ public final class FxUtils { // NOPMD util class name
    * @return The color to draw the thing as
    */
   public static Color getColorForSubChild(int i) {
-    return childColors[i % childColors.length];
+    return CHILD_COLORS[i % CHILD_COLORS.length];
   }
 
   /**
