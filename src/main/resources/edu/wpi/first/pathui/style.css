@@ -12,15 +12,6 @@ Circle:selected {
     -fx-fill: rgb(255, 241, 173);
 }
 
-Circle:begin {
-    -fx-stroke-width: 4px;
-    -fx-stroke: #2abf3b;
-}
-Circle:end {
-    -fx-stroke-width: 4px;
-    -fx-stroke: red;
-}
-
 CubicCurve {
     -fx-stroke-line-cap: round;
     -fx-fill: null;
