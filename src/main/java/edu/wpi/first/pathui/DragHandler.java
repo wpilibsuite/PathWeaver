@@ -11,10 +11,12 @@ public class DragHandler {
   private final Pane drawPane;
 
   private boolean isShiftDown = false;
+  private boolean splineDragStarted = false;
 
   /**
    * Creates the DragHandler, which sets up and manages all drag interactions for the given PathDisplayController.
-   * @param parent The PathDisplayController that this DragHandler manages
+   *
+   * @param parent   The PathDisplayController that this DragHandler manages
    * @param drawPane The PathDisplayController's Pane.
    */
   public DragHandler(PathDisplayController parent, Pane drawPane) {
@@ -25,8 +27,7 @@ public class DragHandler {
 
   private void finishDrag() {
     PathIOUtil.export(controller.getPathDirectory(), Waypoint.currentWaypoint.getPath());
-    Waypoint.currentWaypoint = null;
-    Spline.currentSpline = null;
+    splineDragStarted = false;
   }
 
   private void setupDrag() {
@@ -78,7 +79,9 @@ public class DragHandler {
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
-    if (Waypoint.currentWaypoint == null) {
+    if (splineDragStarted) {
+      handleWaypointDrag(event, wp);
+    } else {
       Spline current = Spline.currentSpline;
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
@@ -89,8 +92,7 @@ public class DragHandler {
       controller.selectWaypoint(newPoint, false);
       Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
-    } else {
-      handleWaypointDrag(event, wp);
+      splineDragStarted = true;
     }
   }
 
