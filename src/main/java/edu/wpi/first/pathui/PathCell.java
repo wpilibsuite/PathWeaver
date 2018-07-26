@@ -62,8 +62,7 @@ public class PathCell extends TextFieldTreeCell<String> {
   private void updateColor() {
     if (FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
       FxUtils.enableSubchildSelector(this, FxUtils.getItemIndex(this.getTreeItem()));
-    }
-    else {
+    } else {
       FxUtils.enableSubchildSelector(this, -1);
     }
   }

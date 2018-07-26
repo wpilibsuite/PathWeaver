@@ -5,7 +5,6 @@ import java.util.Map;
 import javafx.geometry.Point2D;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 

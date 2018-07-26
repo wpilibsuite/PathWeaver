@@ -198,8 +198,8 @@ public class MainController {
                     path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
                   }
                 } else { //is an auton with children
-                  for (TreeItem<String> item : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, item).enableSubchildSelector(FxUtils.getItemIndex(item));
+                  for (TreeItem<String> it : selected.getChildren()) {
+                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
                   }
                 }
               }

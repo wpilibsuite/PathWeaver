@@ -9,7 +9,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 public final class FxUtils { // NOPMD util class name
-  public static final PseudoClass[] SUBCHILD_SELECTORS = new PseudoClass[8];
+  private static final PseudoClass[] SUBCHILD_SELECTORS = new PseudoClass[8]; // NOPMD
 
   static {
     for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
@@ -50,7 +50,7 @@ public final class FxUtils { // NOPMD util class name
    */
   public static void enableSubchildSelector(Node node, int idx) {
     for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
-      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == (idx % SUBCHILD_SELECTORS.length));
+      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == idx % SUBCHILD_SELECTORS.length);
     }
   }
 
