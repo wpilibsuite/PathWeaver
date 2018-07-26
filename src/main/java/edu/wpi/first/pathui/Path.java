@@ -185,17 +185,12 @@ public class Path {
     return color;
   }
 
-  /**
-   * Set the draw color of the spline and waypoints.
-   * @param pathColor The new color
-   */
-  public void setColor(Color pathColor) {
-    color = pathColor;
-    // Update all the waypoints so they change their color, along with their curves
+  public void enableSubchildClass(int i) {
     Waypoint next = getStart();
     while (next != null) {
-      next.update();
+      next.enableSubchildClass(i);
       next = next.getNextWaypoint();
+      if (next != null) next.getPreviousSpline().updateControlPoints();
     }
   }
 }

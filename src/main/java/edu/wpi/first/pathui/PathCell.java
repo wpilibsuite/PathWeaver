@@ -29,13 +29,6 @@ public class PathCell extends TextFieldTreeCell<String> {
   private static final TreeItem<String> EMPTY_ITEM = new TreeItem<>("");
   private final BiFunction<String, String, Boolean> renameIsValid;
   private TextField text;
-  private static PseudoClass[] subchildClasses = new PseudoClass[8];
-
-  static {
-    for (int i = 0; i < subchildClasses.length; i++) {
-      subchildClasses[i] = PseudoClass.getPseudoClass("subchild" + i);
-    }
-  }
 
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
@@ -52,9 +45,7 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragDrop();
     }
     this.setConverter(new DefaultStringConverter());
-    for (PseudoClass pc : subchildClasses) {
-      this.getStyleClass().add(pc.getPseudoClassName());
-    }
+    FxUtils.applySubchildClasses(this);
   }
 
   @Override
@@ -70,14 +61,8 @@ public class PathCell extends TextFieldTreeCell<String> {
   }
 
   private void updateColor() {
-    int idx;
-    if (this.getTreeItem() != null && FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
-      idx = FxUtils.getItemIndex(this.getTreeItem()) % subchildClasses.length;
-    } else {
-      idx = subchildClasses.length;
-    }
-    for (int i = 0; i < subchildClasses.length; i++) {
-      this.pseudoClassStateChanged(subchildClasses[i], i == idx);
+    if (FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
+      FxUtils.enableSubchildClass(this, FxUtils.getItemIndex(this.getTreeItem()));
     }
   }
 

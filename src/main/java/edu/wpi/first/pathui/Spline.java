@@ -5,6 +5,7 @@ import java.util.Map;
 import javafx.geometry.Point2D;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
@@ -40,7 +41,7 @@ public class Spline {
 
   private void updateColor() {
     // -25% brightness, same as derive()
-    cubic.setStroke(start.getPath().getColor().deriveColor(0.0, 1.0, 0.75, 1.0));
+    cubic.setStroke(((Color) start.getIcon().getFill()).deriveColor(0.0, 1.0, 0.75, 1.0));
   }
 
   /**

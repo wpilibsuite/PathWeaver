@@ -193,14 +193,14 @@ public class MainController {
               if (newValue != autonRoot) {
                 pathDisplayController.removeAllPath();
                 if (newValue.isLeaf()) { //has no children so try to display path
-                  Path added = pathDisplayController.addPath(pathDirectory, newValue);
+                  Path path = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
-                    added.setColor(FxUtils.getColorForSubChild(FxUtils.getItemIndex(newValue)));
+                    path.enableSubchildClass(FxUtils.getItemIndex(newValue));
                   }
                 } else { //is an auton with children
                   for (TreeItem<String> child : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, child).setColor(
-                            FxUtils.getColorForSubChild(FxUtils.getItemIndex(child)));
+                    Path path = pathDisplayController.addPath(pathDirectory, child);
+                    path.enableSubchildClass(FxUtils.getItemIndex(child));
                   }
                 }
               }

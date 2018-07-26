@@ -63,6 +63,12 @@ public class Waypoint {
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
     setupDnd();
+    FxUtils.applySubchildClasses(this.icon);
+  }
+
+  public void enableSubchildClass(int i) {
+    FxUtils.enableSubchildClass(this.icon, i);
+    getIcon().applyCss();
   }
 
   private void setupDot() {
@@ -116,7 +122,6 @@ public class Waypoint {
    * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
    */
   public void update() {
-    icon.setFill(path.getColor());
     updateTheta();
     if (previousWaypoint != null) {
       previousWaypoint.updateTheta();

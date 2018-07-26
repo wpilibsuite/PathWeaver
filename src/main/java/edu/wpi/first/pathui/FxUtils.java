@@ -1,22 +1,22 @@
 package edu.wpi.first.pathui;
 
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.paint.Color;
 
 public final class FxUtils { // NOPMD util class name
-  private static final Color[] CHILD_COLORS = new Color[] {
-          Color.web("#fba71b"),
-          Color.web("#f3622d"),
-          Color.web("#57b757"),
-          Color.web("#41a9c9"),
-          Color.web("#4258c9"),
-          Color.web("#9a42c8"),
-          Color.web("#c84164"),
-          Color.web("#888888")};
+  public static final PseudoClass[] SUBCHILD_CLASSES = new PseudoClass[8];
+
+  static {
+    for (int i = 0; i < SUBCHILD_CLASSES.length; i++) {
+      SUBCHILD_CLASSES[i] = PseudoClass.getPseudoClass("subchild" + i);
+    }
+  }
 
   private FxUtils() {
     throw new UnsupportedOperationException("This is a utility class!");
@@ -39,8 +39,22 @@ public final class FxUtils { // NOPMD util class name
    * @param i The index of the child relative to the parent
    * @return The color to draw the thing as
    */
-  public static Color getColorForSubChild(int i) {
-    return CHILD_COLORS[i % CHILD_COLORS.length];
+  public static PseudoClass getClassForSubChild(int i) {
+    return SUBCHILD_CLASSES[i % SUBCHILD_CLASSES.length];
+  }
+
+  // todo javadoc
+  public static void applySubchildClasses(Node node) {
+    for (PseudoClass pc : FxUtils.SUBCHILD_CLASSES) {
+      node.getStyleClass().add(pc.getPseudoClassName());
+    }
+    node.getStyleClass().add("subchild");
+  }
+
+  public static void enableSubchildClass(Node node, int idx) {
+    for (int i = 0; i < SUBCHILD_CLASSES.length; i++) {
+      node.pseudoClassStateChanged(SUBCHILD_CLASSES[i], i == idx);
+    }
   }
 
   /**

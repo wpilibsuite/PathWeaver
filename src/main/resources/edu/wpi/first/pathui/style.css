@@ -2,6 +2,39 @@
     -fx-background-color: #101824;
 }
 
+:subchild0 {
+    -fx-background-color: CHART_COLOR_2;
+    -fx-fill: CHART_COLOR_2;
+}
+:subchild1 {
+    -fx-background-color: CHART_COLOR_1;
+    -fx-fill: CHART_COLOR_1;
+}
+:subchild2 {
+    -fx-background-color: CHART_COLOR_3;
+    -fx-fill: CHART_COLOR_3;
+}
+:subchild3 {
+    -fx-background-color: CHART_COLOR_4;
+    -fx-fill: CHART_COLOR_4;
+}
+:subchild4 {
+    -fx-background-color: CHART_COLOR_5;
+    -fx-fill: CHART_COLOR_5;
+}
+:subchild5 {
+    -fx-background-color: CHART_COLOR_6;
+    -fx-fill: CHART_COLOR_6;
+}
+:subchild6 {
+    -fx-background-color: CHART_COLOR_7;
+    -fx-fill: CHART_COLOR_7;
+}
+:subchild7 {
+    -fx-background-color: CHART_COLOR_8;
+    -fx-fill: CHART_COLOR_8;
+}
+
 Polygon {
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
@@ -9,7 +42,7 @@ Polygon {
 }
 
 Polygon:selected {
-    -fx-fill: rgb(255, 241, 173);
+    -fx-stroke: rgb(255, 241, 173);
 }
 
 CubicCurve {
@@ -22,27 +55,4 @@ Line {
     -fx-stroke: cyan;
     -fx-cursor: hand;
 }
-:subchild0 {
-    -fx-background-color: #fba71b;
-}
-:subchild1 {
-    -fx-background-color: #f3622d;
-}
-:subchild2 {
-    -fx-background-color: #57b757;
-}
-:subchild3 {
-    -fx-background-color: #41a9c9;
-}
-:subchild4 {
-    -fx-background-color: #4258c9;
-}
-:subchild5 {
-    -fx-background-color: #9a42c8;
-}
-:subchild6 {
-    -fx-background-color: #c84164;
-}
-:subchild7 {
-    -fx-background-color: #888888;
-}
+
