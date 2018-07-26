@@ -51,7 +51,7 @@ public class Waypoint {
     setX(position.getX());
     setY(position.getY());
     icon = new Polygon();
-    setupDot();
+    setupIcon();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
 
@@ -63,7 +63,6 @@ public class Waypoint {
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
     setupDnd();
-    FxUtils.applySubchildClasses(this.icon);
   }
 
   public void enableSubchildClass(int i) {
@@ -71,7 +70,7 @@ public class Waypoint {
     getIcon().applyCss();
   }
 
-  private void setupDot() {
+  private void setupIcon() {
     icon = new Polygon(
             0.0, SIZE / 3,
             SIZE, 0.0,
@@ -82,8 +81,11 @@ public class Waypoint {
 
     icon.translateXProperty().bind(x);
     icon.translateYProperty().bind(y);
-    icon.setFill(path.getColor());
-
+    FxUtils.applySubchildClasses(this.icon);
+    this.icon.rotateProperty().bind(
+            Bindings.createObjectBinding(() ->
+                    getTangent() != null ? Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())) : 0.0,
+                    tangent));
   }
 
   private void setupDnd() {
@@ -137,7 +139,6 @@ public class Waypoint {
         nextWaypoint.getNextSpline().updateControlPoints();
       }
     }
-    this.icon.setRotate(Math.toDegrees(Math.atan2(this.getTangent().getY(), this.getTangent().getX())));
   }
 
   /**
