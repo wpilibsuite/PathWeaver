@@ -9,11 +9,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 public final class FxUtils { // NOPMD util class name
-  public static final PseudoClass[] SUBCHILD_CLASSES = new PseudoClass[8];
+  public static final PseudoClass[] SUBCHILD_SELECTORS = new PseudoClass[8];
 
   static {
-    for (int i = 0; i < SUBCHILD_CLASSES.length; i++) {
-      SUBCHILD_CLASSES[i] = PseudoClass.getPseudoClass("subchild" + i);
+    for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
+      SUBCHILD_SELECTORS[i] = PseudoClass.getPseudoClass("subchild" + i);
     }
   }
 
@@ -34,32 +34,23 @@ public final class FxUtils { // NOPMD util class name
   }
 
   /**
-   * Gets the color according to sub-child order.
-   * @param i The index of the child relative to the parent
-   * @return The color to draw the thing as
-   */
-  public static PseudoClass getClassForSubChild(int i) {
-    return SUBCHILD_CLASSES[i % SUBCHILD_CLASSES.length];
-  }
-
-  /**
-   * Applies SUBCHILD_CLASSES to the specified node.
+   * Applies SUBCHILD_SELECTORS to the specified node.
    * @param node The node to apply the classes to
    */
   public static void applySubchildClasses(Node node) {
-    for (PseudoClass pc : FxUtils.SUBCHILD_CLASSES) {
+    for (PseudoClass pc : FxUtils.SUBCHILD_SELECTORS) {
       node.getStyleClass().add(pc.getPseudoClassName());
     }
   }
 
   /**
-   * Updates all SUBCHILD_CLASSES for the given node to be enabled (if the correct index) or disabled.
+   * Updates all SUBCHILD_SELECTORS for the given node to be enabled (if the correct index) or disabled.
    * @param node The node to enable/disable subchild pseudoclasses on
-   * @param idx The index of SUBCHILD_CLASSES to set enabled. Use -1 to disable all.
+   * @param idx The index of SUBCHILD_SELECTORS to set enabled. Use -1 to disable all.
    */
-  public static void enableSubchildClass(Node node, int idx) {
-    for (int i = 0; i < SUBCHILD_CLASSES.length; i++) {
-      node.pseudoClassStateChanged(SUBCHILD_CLASSES[i], i == idx);
+  public static void enableSubchildSelector(Node node, int idx) {
+    for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
+      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == idx);
     }
   }
 

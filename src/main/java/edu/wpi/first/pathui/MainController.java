@@ -195,11 +195,11 @@ public class MainController {
                 if (newValue.isLeaf()) { //has no children so try to display path
                   Path path = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
-                    path.enableSubchildClass(FxUtils.getItemIndex(newValue));
+                    path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
                   }
                 } else { //is an auton with children
                   for (TreeItem<String> item : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, item).enableSubchildClass(FxUtils.getItemIndex(item));
+                    pathDisplayController.addPath(pathDirectory, item).enableSubchildSelector(FxUtils.getItemIndex(item));
                   }
                 }
               }

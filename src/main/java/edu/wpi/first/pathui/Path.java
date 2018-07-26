@@ -183,10 +183,10 @@ public class Path {
    * Enables a subchild class for all waypoints in this path.
    * @param i The index of subchild class to enable
    */
-  public void enableSubchildClass(int i) {
+  public void enableSubchildSelector(int i) {
     Waypoint next = getStart();
     while (next != null) {
-      next.enableSubchildClass(i);
+      next.enableSubchildSelector(i);
       next = next.getNextWaypoint();
       if (next != null) {
         next.getPreviousSpline().updateControlPoints();

@@ -65,8 +65,8 @@ public class Waypoint {
     setupDnd();
   }
 
-  public void enableSubchildClass(int i) {
-    FxUtils.enableSubchildClass(this.icon, i);
+  public void enableSubchildSelector(int i) {
+    FxUtils.enableSubchildSelector(this.icon, i);
     getIcon().applyCss();
   }
 
