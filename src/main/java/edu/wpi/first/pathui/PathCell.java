@@ -63,6 +63,9 @@ public class PathCell extends TextFieldTreeCell<String> {
     if (FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
       FxUtils.enableSubchildClass(this, FxUtils.getItemIndex(this.getTreeItem()));
     }
+    else {
+      FxUtils.enableSubchildClass(this, -1);
+    }
   }
 
   @Override
