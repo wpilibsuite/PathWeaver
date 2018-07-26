@@ -190,18 +190,15 @@ public class MainController {
         .addListener(
             (observable, oldValue, newValue) -> {
               selected = newValue;
-              if (newValue == autonRoot) {
-                //pathRoot.setExpanded(!pathRoot.isExpanded());
-              } else {
-                pathDisplayController.removeAllPath();
-                if (newValue.isLeaf()) { //has no children so try to display path
-                  pathDisplayController.addPath(pathDirectory, newValue.getValue());
-                } else { //is an auton with children
-                  for (TreeItem<String> item : newValue.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, item.getValue());
-                  }
+              pathDisplayController.removeAllPath();
+              if (autons.getTreeItemLevel(newValue) == 2) { //has no children so try to display path
+                pathDisplayController.addPath(pathDirectory, newValue.getValue());
+              } else { //is an auton with children
+                for (TreeItem<String> item : newValue.getChildren()) {
+                  pathDisplayController.addPath(pathDirectory, item.getValue());
                 }
               }
+
             });
 
   }
