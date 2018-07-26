@@ -54,7 +54,6 @@ public class Waypoint {
     setupDot();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
-    tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
 
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
