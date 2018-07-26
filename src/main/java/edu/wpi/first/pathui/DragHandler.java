@@ -36,7 +36,7 @@ public class DragHandler {
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
-      event.acceptTransferModes(TransferMode.COPY);
+      event.acceptTransferModes(TransferMode.MOVE);
 
       if (dragboard.hasContent(DataFormats.WAYPOINT)) {
         if (isShiftDown) {
