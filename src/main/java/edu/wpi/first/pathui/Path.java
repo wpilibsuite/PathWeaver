@@ -189,7 +189,7 @@ public class Path {
       next.enableSubchildSelector(i);
       next = next.getNextWaypoint();
       if (next != null) {
-        next.getPreviousSpline().updateControlPoints();
+        next.getPreviousSpline().enableSubchildSelector(i);
       }
     }
   }

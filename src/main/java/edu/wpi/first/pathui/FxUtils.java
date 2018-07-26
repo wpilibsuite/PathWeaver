@@ -50,7 +50,7 @@ public final class FxUtils { // NOPMD util class name
    */
   public static void enableSubchildSelector(Node node, int idx) {
     for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
-      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == idx);
+      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == (idx % SUBCHILD_SELECTORS.length));
     }
   }
 

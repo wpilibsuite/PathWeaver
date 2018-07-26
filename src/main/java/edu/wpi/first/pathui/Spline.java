@@ -26,7 +26,8 @@ public class Spline {
     start = first;
     end = last;
     cubic = new CubicCurve();
-    updateColor();
+    cubic.getStyleClass().add("path");
+    FxUtils.applySubchildClasses(cubic);
     start.addSpline(this, true);
     end.addSpline(this, false);
     updateControlPoints();
@@ -39,9 +40,9 @@ public class Spline {
     });
   }
 
-  private void updateColor() {
-    // -25% brightness, same as derive()
-    cubic.setStroke(((Color) start.getIcon().getFill()).deriveColor(0.0, 1.0, 0.75, 1.0));
+  public void enableSubchildSelector(int i) {
+    FxUtils.enableSubchildSelector(cubic, i);
+    cubic.applyCss();
   }
 
   /**
@@ -53,7 +54,6 @@ public class Spline {
     cubic.setControlY1(points.getKey().getY());
     cubic.setControlX2(points.getValue().getX());
     cubic.setControlY2(points.getValue().getY());
-    updateColor();
   }
 
   // Bezier curve to hermite curve

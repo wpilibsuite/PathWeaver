@@ -56,6 +56,7 @@ public class Waypoint {
     y.addListener(__ -> update());
 
     tangentLine = new Line();
+    tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
     tangent.set(tangentVector);
@@ -64,6 +65,7 @@ public class Waypoint {
 
     setupDnd();
   }
+
 
   public void enableSubchildSelector(int i) {
     FxUtils.enableSubchildSelector(this.icon, i);
@@ -86,6 +88,7 @@ public class Waypoint {
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
                     tangent));
+    icon.getStyleClass().add("waypoint");
   }
 
   private void setupDnd() {

@@ -2,56 +2,103 @@
     -fx-background-color: #101824;
 }
 
-:subchild0 {
+.tree-cell:filled:subchild0 {
     -fx-background-color: CHART_COLOR_2;
+}
+.waypoint:subchild0 {
     -fx-fill: CHART_COLOR_2;
 }
-:subchild1 {
-    -fx-background-color: CHART_COLOR_1;
-    -fx-fill: CHART_COLOR_1;
-}
-:subchild2 {
-    -fx-background-color: CHART_COLOR_3;
-    -fx-fill: CHART_COLOR_3;
-}
-:subchild3 {
-    -fx-background-color: CHART_COLOR_4;
-    -fx-fill: CHART_COLOR_4;
-}
-:subchild4 {
-    -fx-background-color: CHART_COLOR_5;
-    -fx-fill: CHART_COLOR_5;
-}
-:subchild5 {
-    -fx-background-color: CHART_COLOR_6;
-    -fx-fill: CHART_COLOR_6;
-}
-:subchild6 {
-    -fx-background-color: CHART_COLOR_7;
-    -fx-fill: CHART_COLOR_7;
-}
-:subchild7 {
-    -fx-background-color: CHART_COLOR_8;
-    -fx-fill: CHART_COLOR_8;
+.path:subchild0 {
+    -fx-stroke: derive(CHART_COLOR_2, -25%);
 }
 
-Polygon {
+.tree-cell:filled:subchild1 {
+    -fx-background-color: CHART_COLOR_1;
+}
+.waypoint:subchild1 {
+    -fx-fill: CHART_COLOR_1;
+}
+.path:subchild1 {
+    -fx-stroke: derive(CHART_COLOR_1, -25%);
+}
+
+.tree-cell:filled:subchild2{
+    -fx-background-color: CHART_COLOR_3;
+}
+.waypoint:subchild2 {
+    -fx-fill: CHART_COLOR_3;
+}
+.path:subchild2 {
+    -fx-stroke: derive(CHART_COLOR_3, -25%);
+}
+
+.tree-cell:filled:subchild3 {
+    -fx-background-color: CHART_COLOR_4;
+}
+.waypoint:subchild3 {
+    -fx-fill: CHART_COLOR_4;
+}
+.path:subchild3 {
+    -fx-stroke: derive(CHART_COLOR_4, -25%);
+}
+
+.tree-cell:filled:subchild4 {
+    -fx-background-color: CHART_COLOR_5;
+}
+.waypoint:subchild4 {
+    -fx-fill: CHART_COLOR_5;
+}
+.path:subchild04{
+    -fx-stroke: derive(CHART_COLOR_5, -25%);
+}
+
+.tree-cell:filled:subchild5 {
+    -fx-background-color: CHART_COLOR_6;
+}
+.waypoint:subchild5 {
+    -fx-fill: CHART_COLOR_6;
+}
+.path:subchild5 {
+    -fx-stroke: derive(CHART_COLOR_6, -25%);
+}
+
+.tree-cell:filled:subchild6 {
+    -fx-background-color: CHART_COLOR_7;
+}
+.waypoint:subchild6 {
+    -fx-fill: CHART_COLOR_7;
+}
+.path:subchild6 {
+    -fx-stroke: derive(CHART_COLOR_7, -25%);
+}
+
+.tree-cell:filled:subchild7 {
+    -fx-background-color: CHART_COLOR_8;
+}
+.waypoint:subchild7 {
+    -fx-fill: CHART_COLOR_8;
+}
+.path:subchild7 {
+    -fx-stroke: derive(CHART_COLOR_8, -25%);
+}
+
+.waypoint {
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
     -fx-cursor: hand;
 }
 
-Polygon:selected {
+.waypoint:selected {
     -fx-stroke: rgb(255, 241, 173);
 }
 
-CubicCurve {
+.path {
     -fx-stroke-line-cap: round;
     -fx-fill: null;
     -fx-cursor: hand;
 }
 
-Line {
+.tangent {
     -fx-stroke: cyan;
     -fx-cursor: hand;
 }
