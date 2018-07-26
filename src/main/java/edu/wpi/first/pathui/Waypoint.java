@@ -28,7 +28,7 @@ public class Waypoint {
 
 
   private final Line tangentLine;
-  private Polygon dot;
+  private Polygon icon;
 
   private static final double SIZE = 30.0;
 
@@ -50,7 +50,7 @@ public class Waypoint {
     lockTangent = fixedAngle;
     setX(position.getX());
     setY(position.getY());
-    dot = new Polygon();
+    icon = new Polygon();
     setupDot();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
@@ -67,24 +67,24 @@ public class Waypoint {
   }
 
   private void setupDot() {
-    dot = new Polygon(
+    icon = new Polygon(
             0.0, SIZE / 3,
             SIZE, 0.0,
             0.0, -SIZE / 3);
     double xOffset = (SIZE * 3D / 5D) / 16.5;
-    dot.setLayoutX(-(dot.getLayoutBounds().getMaxX() + dot.getLayoutBounds().getMinX()) / 2 - xOffset);
-    dot.setLayoutY(-(dot.getLayoutBounds().getMaxY() + dot.getLayoutBounds().getMinY()) / 2);
+    icon.setLayoutX(-(icon.getLayoutBounds().getMaxX() + icon.getLayoutBounds().getMinX()) / 2 - xOffset);
+    icon.setLayoutY(-(icon.getLayoutBounds().getMaxY() + icon.getLayoutBounds().getMinY()) / 2);
 
-    dot.translateXProperty().bind(x);
-    dot.translateYProperty().bind(y);
-    dot.setFill(path.getColor());
+    icon.translateXProperty().bind(x);
+    icon.translateYProperty().bind(y);
+    icon.setFill(path.getColor());
 
   }
 
   private void setupDnd() {
-    dot.setOnDragDetected(event -> {
+    icon.setOnDragDetected(event -> {
       currentWaypoint = this;
-      dot.startDragAndDrop(TransferMode.MOVE)
+      icon.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.WAYPOINT, "point"));
     });
     tangentLine.setOnDragDetected(event -> {
@@ -117,7 +117,7 @@ public class Waypoint {
    * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
    */
   public void update() {
-    dot.setFill(path.getColor());
+    icon.setFill(path.getColor());
     updateTheta();
     if (previousWaypoint != null) {
       previousWaypoint.updateTheta();
@@ -133,7 +133,7 @@ public class Waypoint {
         nextWaypoint.getNextSpline().updateControlPoints();
       }
     }
-    this.dot.setRotate(Math.toDegrees(Math.atan2(this.getTangent().getY(), this.getTangent().getX())));
+    this.icon.setRotate(Math.toDegrees(Math.atan2(this.getTangent().getY(), this.getTangent().getX())));
   }
 
   /**
@@ -270,8 +270,8 @@ public class Waypoint {
     return nextSpline;
   }
 
-  public Polygon getDot() {
-    return dot;
+  public Polygon getIcon() {
+    return icon;
   }
 
   public double getX() {
