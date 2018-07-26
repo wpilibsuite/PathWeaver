@@ -31,26 +31,27 @@ public class DragHandler {
     splineDragStarted = false;
   }
 
+  private void handleDrag(DragEvent event) {
+    Dragboard dragboard = event.getDragboard();
+    Waypoint wp = Waypoint.currentWaypoint;
+    event.acceptTransferModes(TransferMode.MOVE);
+    if (dragboard.hasContent(DataFormats.WAYPOINT)) {
+      if (isShiftDown) {
+        handlePathMoveDrag(event, wp);
+      } else {
+        handleWaypointDrag(event, wp);
+      }
+    } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
+      handleVectorDrag(event, wp);
+    } else if (dragboard.hasContent(DataFormats.SPLINE)) {
+      handleSplineDrag(event, wp);
+    }
+    event.consume();
+  }
+
   private void setupDrag() {
     drawPane.setOnDragDone(event -> finishDrag());
-    drawPane.setOnDragOver(event -> {
-      Dragboard dragboard = event.getDragboard();
-      Waypoint wp = Waypoint.currentWaypoint;
-      event.acceptTransferModes(TransferMode.MOVE);
-
-      if (dragboard.hasContent(DataFormats.WAYPOINT)) {
-        if (isShiftDown) {
-          handlePathMoveDrag(event, wp);
-        } else {
-          handleWaypointDrag(event, wp);
-        }
-      } else if (dragboard.hasContent(DataFormats.CONTROL_VECTOR)) {
-        handleVectorDrag(event, wp);
-      } else if (dragboard.hasContent(DataFormats.SPLINE)) {
-        handleSplineDrag(event, wp);
-      }
-      event.consume();
-    });
+    drawPane.setOnDragOver(this::handleDrag);
     drawPane.setOnDragDetected(event -> {
       isShiftDown = event.isShiftDown();
     });
