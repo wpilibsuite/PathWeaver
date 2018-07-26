@@ -201,6 +201,28 @@ public class Waypoint {
     }
   }
 
+  /**
+   * Convenience function for math purposes.
+   *
+   * @param other The other Waypoint.
+   *
+   * @return The coordinates of this Waypoint relative to the coordinates of another Waypoint.
+   */
+  public Point2D relativeTo(Waypoint other) {
+    return relativeTo(other.getCoords());
+  }
+
+  /**
+   * Convenience function allowing us to obtain the position of this Waypoint relative to a Point2S.
+   *
+   * @param other The other Point2D.
+   *
+   * @return A Point2D representing the distance between this Watpoint and a given Point2D.
+   */
+  public Point2D relativeTo(Point2D other) {
+    return new Point2D(this.getX() - other.getX(), this.getY() - other.getY());
+  }
+
   public boolean isLockTangent() {
     return lockTangent;
   }
@@ -255,6 +277,15 @@ public class Waypoint {
 
   public void setY(double y) {
     this.y.set(y);
+  }
+
+  public Point2D getCoords() {
+    return new Point2D(getX(), getY());
+  }
+
+  public void setCoords(Point2D newCoords) {
+    setX(newCoords.getX());
+    setY(newCoords.getY());
   }
 
   public Waypoint getPreviousWaypoint() {

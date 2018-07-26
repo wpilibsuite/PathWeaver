@@ -32,6 +32,8 @@
                      <items>
                         <Button mnemonicParsing="false" onAction="#createPath" text="+" />
                         <Button mnemonicParsing="false" onAction="#delete" text="-" />
+                        <Button fx:id="flipHorizontal" mnemonicParsing="false" onAction="#flipHorizontal" text="Flip H" />
+                        <Button fx:id="flipVertical" mnemonicParsing="false" onAction="#flipVertical" text="Flip V" />
                      </items>
                   </ToolBar>
                </children>

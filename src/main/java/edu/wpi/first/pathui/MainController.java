@@ -11,6 +11,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
+@SuppressWarnings("PMD.TooManyMethods")
+//With the creation of a project many of these functions should be moved out of here
+//Anything to do with the directory should be part of a Project object
 
 public class MainController {
   @FXML private TreeView<String> autons;
@@ -22,7 +25,7 @@ public class MainController {
   private String directory = "pathUI/";
   private String pathDirectory;
   private String autonDirectory;
-  private final TreeItem<String> autonRoot = new TreeItem<String>("Autons");
+  private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   private TreeItem<String> selected = null;
@@ -222,6 +225,16 @@ public class MainController {
       saveAllAutons();
       loadAllAutons();
     });
+  }
+
+  @FXML
+  private void flipHorizontal() {
+    pathDisplayController.flip(true);
+  }
+
+  @FXML
+  private void flipVertical() {
+    pathDisplayController.flip(false);
   }
 
   @FXML
