@@ -104,6 +104,7 @@ public class PathCell extends TextFieldTreeCell<String> {
     this.setOnDragDropped(event -> {
       if (TEMP_ITEM.getValue().equals("")) {
         //Was dragging within auton
+        this.getTreeView().getSelectionModel().select(this.getTreeItem().getParent());
       } else {
         TreeItem<String> newItem = new TreeItem<>(TEMP_ITEM.getValue()); //make new item
 
