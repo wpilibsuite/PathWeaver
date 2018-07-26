@@ -1,8 +1,11 @@
 package edu.wpi.first.pathui;
 
+import java.util.Map;
+
 import javafx.geometry.Point2D;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 
 public class DragHandler {
@@ -11,6 +14,7 @@ public class DragHandler {
   private final Pane drawPane;
 
   private boolean isShiftDown = false;
+  private boolean splineDragStarted = false;
 
   /**
    * Creates the DragHandler, which sets up and manages all drag interactions for the given PathDisplayController.
@@ -24,9 +28,10 @@ public class DragHandler {
   }
 
   private void finishDrag() {
+    System.out.println(Waypoint.currentWaypoint);
+    System.out.println(Waypoint.currentWaypoint.getPath());
     PathIOUtil.export(controller.getPathDirectory(), Waypoint.currentWaypoint.getPath());
-    Waypoint.currentWaypoint = null;
-    Spline.currentSpline = null;
+    splineDragStarted = false;
   }
 
   private void setupDrag() {
@@ -78,7 +83,7 @@ public class DragHandler {
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
-    if (Waypoint.currentWaypoint == null) {
+    if (!splineDragStarted) {
       Spline current = Spline.currentSpline;
       Waypoint start = current.getStart();
       Waypoint end = current.getEnd();
@@ -89,6 +94,7 @@ public class DragHandler {
       controller.selectWaypoint(newPoint, false);
       Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
+      splineDragStarted = true;
     } else {
       handleWaypointDrag(event, wp);
     }

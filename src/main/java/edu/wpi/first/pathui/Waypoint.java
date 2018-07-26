@@ -53,7 +53,7 @@ public class Waypoint {
     dot.centerYProperty().bind(y);
     x.addListener(__ -> update());
     y.addListener(__ -> update());
-    tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
+ //   tangent.addListener(__ -> update()); // Otherwise the spline will not reflect tangent line changes
 
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
@@ -67,6 +67,7 @@ public class Waypoint {
 
   private void setupDnd() {
     dot.setOnDragDetected(event -> {
+      System.out.println("detected");
       currentWaypoint = this;
       dot.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.WAYPOINT, "point"));
