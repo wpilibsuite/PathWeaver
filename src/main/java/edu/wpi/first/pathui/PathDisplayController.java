@@ -279,11 +279,7 @@ public class PathDisplayController {
    * @param horizontal True if horizontal flip, false if vertical
    */
   public void flip(boolean horizontal) {
-    if (horizontal) {
-      currentPath.get().flipHorizontal();
-    } else {
-      currentPath.get().flipVertical();
-    }
+    currentPath.get().flip(horizontal, drawPane);
   }
 
   /**

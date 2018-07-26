@@ -1,6 +1,8 @@
 package edu.wpi.first.pathui;
 
 import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
 
 public class Path {
   private Waypoint start;
@@ -110,38 +112,69 @@ public class Path {
     return newPoint;
   }
 
+
   /**
-   * Reflects the Path across the X-axis.
+   * Reflects the Path across an axis.
    * The coordinate system's origin is the starting point of the Path.
+   * @param horizontal Flip over horizontal axis?
+   * @param drawPane Pane to check validity of new points.
    */
-  public void flipVertical() {
+  public void flip(boolean horizontal, Pane drawPane) {
+    // Check if any new points are outside drawPane
     Waypoint current = start;
     while (current != null) {
-      Point2D reflectedPos = current.getCoords().subtract(
-          new Point2D(0.0, current.relativeTo(start).getY() * 2));
-      Point2D reflectedTangent = current.getTangent().subtract(
-          new Point2D(0.0, current.getTangent().getY() * 2));
+      if (!drawPane.contains(reflectPoint(start, current, horizontal, false))) {
+        invalidFlipAlert();
+        return; // The new path is invalid
+      }
+      current = current.getNextWaypoint();
+    }
+    // New waypoints are valid, update all Waypoints
+    current = start;
+    while (current != null) {
+      Point2D reflectedPos = reflectPoint(start, current, horizontal, false);
+      Point2D reflectedTangent = reflectPoint(start, current, horizontal, true);
       current.setCoords(reflectedPos);
       current.setTangent(reflectedTangent);
+      current = current.getNextWaypoint();
+    }
+    // Loop through to update points
+    current = start;
+    while (current != null) {
+      current.update();
       current = current.getNextWaypoint();
     }
   }
 
-  /**
-   * Reflects the Path across the X-axis.
-   * The coordinate system's origin is the starting point of the Path.
-   */
-  public void flipHorizontal() {
-    Waypoint current = start;
-    while (current != null) {
-      Point2D reflectedPos = current.getCoords().subtract(
-          new Point2D(current.relativeTo(start).getX() * 2, 0.0));
-      Point2D reflectedTangent = current.getTangent().subtract(
-          new Point2D(current.getTangent().getX() * 2, 0.0));
-      current.setCoords(reflectedPos);
-      current.setTangent(reflectedTangent);
-      current = current.getNextWaypoint();
+  private Point2D reflectPoint(Waypoint start, Waypoint point, boolean horizontal, boolean tangent) {
+    Point2D coords;
+    Point2D minus;
+    if (tangent) {
+      coords = point.getTangent();
+      if (horizontal) {
+        minus = new Point2D(coords.getX() * 2.0, 0.0);
+      } else {
+        minus = new Point2D(0.0, coords.getY() * 2.0);
+      }
+      return coords.subtract(minus);
+    } else {
+      coords = point.getCoords();
+      if (horizontal) {
+        minus = new Point2D(point.relativeTo(start).getX() * 2.0, 0.0);
+      } else {
+        minus = new Point2D(0.0, point.relativeTo(start).getY() * 2.0);
+      }
+      return coords.subtract(minus);
     }
+  }
+
+  private void invalidFlipAlert() {
+    Alert a = new Alert(Alert.AlertType.INFORMATION);
+    a.setTitle("");
+    a.setHeaderText("The path could not be flipped.");
+    String content = "Flipping this path would cause it to go out of bounds";
+    a.setContentText(content);
+    a.showAndWait();
   }
 
   /**
