@@ -3,6 +3,7 @@ package edu.wpi.first.pathui;
 import javafx.geometry.Point2D;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 
 public class DragHandler {
@@ -35,6 +36,8 @@ public class DragHandler {
     drawPane.setOnDragOver(event -> {
       Dragboard dragboard = event.getDragboard();
       Waypoint wp = Waypoint.currentWaypoint;
+      event.acceptTransferModes(TransferMode.COPY);
+
       if (dragboard.hasContent(DataFormats.WAYPOINT)) {
         if (isShiftDown) {
           handlePathMoveDrag(event, wp);
