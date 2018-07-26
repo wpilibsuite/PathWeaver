@@ -235,6 +235,14 @@ public class MainController {
   }
 
   @FXML
+  private void duplicate() {
+    Path newPath = pathDisplayController.duplicate(pathDirectory);
+    TreeItem<String> stringTreeItem = MainIOUtil.addChild(pathRoot, newPath.getPathName());
+    PathIOUtil.export(pathDirectory, newPath);
+    paths.getSelectionModel().select(stringTreeItem);
+  }
+
+  @FXML
   private void createPath() {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);

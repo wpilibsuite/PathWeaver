@@ -104,6 +104,12 @@ public class Path {
   public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, Boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
     newPoint.setPreviousWaypoint(previous);
+    if (previous.getNextWaypoint() != null) {
+      newPoint.setNextWaypoint(previous.getNextWaypoint());
+      previous.getNextWaypoint().setPreviousWaypoint(newPoint);
+      previous.getNextWaypoint().getPreviousSpline().setStart(newPoint);
+      newPoint.addSpline(previous.getNextWaypoint().getPreviousSpline(), true);
+    }
     previous.setNextWaypoint(newPoint);
     createCurve(previous, newPoint); //new spline from new -> next
     if (previous == getEnd()) {
@@ -196,6 +202,19 @@ public class Path {
     return pathName;
   }
 
+  /**
+   * Removes extension from filename.
+   * @return Filename without ".path".
+   */
+  public String getPathNameNoExtension() {
+    String extension = ".path";
+    String filename = pathName;
+    if (pathName.endsWith(extension)) {
+      filename = filename.substring(0, filename.length() - extension.length());
+    }
+    return filename;
+  }
+
   public void setPathName(String pathName) {
     this.pathName = pathName;
   }
@@ -210,5 +229,22 @@ public class Path {
 
   public void setEnd(Waypoint end) {
     this.end = end;
+  }
+
+  /**
+   * Duplicates a path.
+   * @param newName Filename of new path.
+   * @return The new path.
+   */
+  public Path duplicate(String newName) {
+    Path copy = new Path(start.getCoords(), end.getCoords(), start.getTangent(), end.getTangent(), newName);
+    Waypoint oldPoint = start.getNextWaypoint();
+    Waypoint insertPoint = copy.start;
+    while (oldPoint != end) {
+      insertPoint = copy.addNewWaypoint(insertPoint, oldPoint.getCoords(),
+          oldPoint.getTangent(), oldPoint.isLockTangent());
+      oldPoint = oldPoint.getNextWaypoint();
+    }
+    return copy;
   }
 }
