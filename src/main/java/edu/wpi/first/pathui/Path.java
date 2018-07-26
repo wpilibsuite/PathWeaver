@@ -1,13 +1,11 @@
 package edu.wpi.first.pathui;
 
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 public class Path {
   private Waypoint start;
   private Waypoint end;
   private String pathName = "default";
-  private Color color = Color.ORANGE;
 
   public Path(String name) {
     pathName = name;
@@ -181,16 +179,18 @@ public class Path {
     this.end = end;
   }
 
-  public Color getColor() {
-    return color;
-  }
-
+  /**
+   * Enables a subchild class for all waypoints in this path.
+   * @param i The index of subchild class to enable
+   */
   public void enableSubchildClass(int i) {
     Waypoint next = getStart();
     while (next != null) {
       next.enableSubchildClass(i);
       next = next.getNextWaypoint();
-      if (next != null) next.getPreviousSpline().updateControlPoints();
+      if (next != null) {
+        next.getPreviousSpline().updateControlPoints();
+      }
     }
   }
 }

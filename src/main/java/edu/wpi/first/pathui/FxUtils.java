@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.paint.Color;
 
 public final class FxUtils { // NOPMD util class name
   public static final PseudoClass[] SUBCHILD_CLASSES = new PseudoClass[8];
@@ -43,14 +42,21 @@ public final class FxUtils { // NOPMD util class name
     return SUBCHILD_CLASSES[i % SUBCHILD_CLASSES.length];
   }
 
-  // todo javadoc
+  /**
+   * Applies SUBCHILD_CLASSES to the specified node.
+   * @param node The node to apply the classes to
+   */
   public static void applySubchildClasses(Node node) {
     for (PseudoClass pc : FxUtils.SUBCHILD_CLASSES) {
       node.getStyleClass().add(pc.getPseudoClassName());
     }
-    node.getStyleClass().add("subchild");
   }
 
+  /**
+   * Updates all SUBCHILD_CLASSES for the given node to be enabled (if the correct index) or disabled.
+   * @param node The node to enable/disable subchild pseudoclasses on
+   * @param idx The index of SUBCHILD_CLASSES to set enabled. Use -1 to disable all.
+   */
   public static void enableSubchildClass(Node node, int idx) {
     for (int i = 0; i < SUBCHILD_CLASSES.length; i++) {
       node.pseudoClassStateChanged(SUBCHILD_CLASSES[i], i == idx);

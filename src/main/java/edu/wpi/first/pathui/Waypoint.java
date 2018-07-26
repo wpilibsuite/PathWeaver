@@ -84,7 +84,7 @@ public class Waypoint {
     FxUtils.applySubchildClasses(this.icon);
     this.icon.rotateProperty().bind(
             Bindings.createObjectBinding(() ->
-                    getTangent() != null ? Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())) : 0.0,
+                    getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
                     tangent));
   }
 
