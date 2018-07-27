@@ -6,7 +6,7 @@ import javafx.scene.Group;
  * Representation of a connection between points. Adds a JavaFX node that shows the connection.
  */
 public interface Spline {
-  
+
   Path getPath();
 
   void update();

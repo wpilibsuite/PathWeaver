@@ -9,6 +9,10 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
+/**
+ * A QuickSpline is represented by a JavaFX CubicCurve. A slow spline will be implemented using
+ * Pathfinder V2.
+ */
 public class QuickSpline implements Spline {
   private final Waypoint start;
   private Waypoint end;
@@ -26,7 +30,7 @@ public class QuickSpline implements Spline {
   }
 
   /**
-   * Creates a Spline that is "Quick", i.e. a JavaFX CubicCurve.
+   * Constructs a QuickSpline.
    * @param start The waypoint at start of spline.
    * @param end The waypoint at the end of spline.
    */
@@ -41,11 +45,11 @@ public class QuickSpline implements Spline {
     });
   }
 
-  // Bezier curve to hermite curve
-  // p1 p2 p3 p4 for bezier curve
-  // heading 1 = 3 * (p2 - p1)
-  // heading 4 = 3 * (p4 - p3)
   private Pair<Point2D, Point2D> computeControlPoints() {
+    // Bezier curve to hermite curve
+    // p1 p2 p3 p4 for bezier curve
+    // heading 1 = 3 * (p2 - p1)
+    // heading 4 = 3 * (p4 - p3)
     Point2D control1 = new Point2D(start.getX() + (start.getTangent().getX()) / 3,
         start.getY() + (start.getTangent().getY()) / 3);
     Point2D control2 = new Point2D(end.getX() - 2 * (end.getTangent().getX()) / 3,
