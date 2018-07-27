@@ -286,4 +286,15 @@ public class PathDisplayController {
   public String getPathDirectory() {
     return pathDirectory;
   }
+
+  /**
+   * Duplicates the selected path.
+   * @param pathDirectory The directory to save the new path to.
+   * @return The new path.
+   */
+  public Path duplicate(String pathDirectory) {
+    Path path = currentPath.get();
+    String fileName = MainIOUtil.getValidFileName(pathDirectory, path.getPathNameNoExtension(), ".path");
+    return path.duplicate(fileName);
+  }
 }

@@ -15,45 +15,32 @@ public class Path {
   private final String pathName;
 
   public Path(String name) {
-    pathName = name;
-    createDefaultWaypoints();
+    this(new Point2D(0, 0), new Point2D(10, 10), new Point2D(10, 0),
+        new Point2D(0, 10), name);
   }
 
   /**
    * Path constructor based on known start and end points.
    *
-   * @param start        The starting waypoint of new path
-   * @param end          The ending waypoint of new path
+   * @param startPos        The starting waypoint of new path
+   * @param endPos          The ending waypoint of new path
    * @param startTangent The starting tangent vector of new path
    * @param endTangent   The ending tangent vector of new path
    * @param name         The string name to assign path, also used for naming exported files
    */
-  public Path(Point2D start, Point2D end, Point2D startTangent, Point2D endTangent, String name) {
+  public Path(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
-    createInitialWaypoints(start, end, startTangent, endTangent);
-  }
-
-  @Override
-  public String toString() {
-    return getPathName();
-  }
-
-  private void createDefaultWaypoints() {
-    Point2D startPos = new Point2D(0, 0);
-    Point2D endPos = new Point2D(10, 10);
-
-    Point2D startTangent = new Point2D(10, 0);
-    Point2D endTangent = new Point2D(0, 10);
-    createInitialWaypoints(startPos, endPos, startTangent, endTangent);
-  }
-
-  private void createInitialWaypoints(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent) {
     Waypoint start = new Waypoint(startPos, startTangent, false, this);
     Waypoint end = new Waypoint(endPos, endTangent, false, this);
     start.setSpline(new QuickSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
     updateSplines();
+  }
+
+  @Override
+  public String toString() {
+    return getPathName();
   }
 
   /**
@@ -165,6 +152,21 @@ public class Path {
     return pathName;
   }
 
+  /**
+   * Removes extension and version number from filename.
+   * @return Filename without ".path" and version number.
+   */
+  public String getPathNameNoExtension() {
+    String extension = ".path";
+    String filename = pathName;
+    if (pathName.endsWith(extension)) {
+      filename = filename.substring(0, filename.length() - extension.length());
+    }
+    // remove version number
+    filename = filename.replaceFirst("_[0-9]+", "");
+    return filename;
+  }
+
   public Waypoint getStart() {
     return waypoints.get(0);
   }
@@ -268,4 +270,22 @@ public class Path {
     }
   }
 
+
+  /**
+   * Duplicates a path.
+   * @param newName Filename of new path.
+   * @return The new path.
+   */
+  public Path duplicate(String newName) {
+    Waypoint start = getStart();
+    Waypoint end = getEnd();
+    Path copy = new Path(start.getCoords(), end.getCoords(), start.getTangent(),
+        end.getTangent(), newName);
+    Waypoint insertPoint = copy.getStart();
+    for (Waypoint wp : waypoints) {
+      insertPoint = copy.addNewWaypoint(insertPoint, wp.getCoords(),
+          wp.getTangent(), wp.isLockTangent());
+    }
+    return copy;
+  }
 }

@@ -46,7 +46,7 @@ public final class MainIOUtil {
   public static String getValidFileName(String directory, String filename, String extension) {
     File file = new File(directory, filename + extension);
     for (int num = 0; file.exists(); num++) {
-      file = new File(directory, filename + num + extension);
+      file = new File(directory, filename + "_" + num + extension);
     }
     return file.getName();
   }
