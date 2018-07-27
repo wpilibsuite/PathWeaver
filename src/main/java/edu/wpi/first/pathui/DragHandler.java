@@ -10,6 +10,7 @@ public class DragHandler {
 
   private final PathDisplayController controller;
   private final Pane drawPane;
+  public static ISpline currentSpline = new NullSpline(null);
 
   private boolean isShiftDown = false;
   private boolean splineDragStarted = false;
@@ -74,28 +75,20 @@ public class DragHandler {
     Point2D pt = new Point2D(event.getX(), event.getY());
     wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
     wp.lockTangent();
-    if (wp.getPreviousSpline() != null) {
-      wp.getPreviousSpline().updateControlPoints();
-    }
-    if (wp.getNextSpline() != null) {
-      wp.getNextSpline().updateControlPoints();
-    }
+    wp.getPath().updateSplines();
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
     if (splineDragStarted) {
       handleWaypointDrag(event, wp);
     } else {
-      Spline current = Spline.currentSpline;
-      Waypoint start = current.getStart();
-      Waypoint end = current.getEnd();
-      Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
+      ISpline current = currentSpline;
+      Waypoint newPoint = current.getPath().addNewWaypoint(current);
       controller.addWaypointToPane(newPoint);
-      newPoint.getPreviousSpline().getCubic().toBack();
       controller.setupWaypoint(newPoint);
       controller.selectWaypoint(newPoint, false);
-      Spline.currentSpline = null;
       Waypoint.currentWaypoint = newPoint;
+      current = new NullSpline(null);
       splineDragStarted = true;
     }
   }

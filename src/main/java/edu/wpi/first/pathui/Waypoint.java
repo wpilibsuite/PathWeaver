@@ -17,8 +17,8 @@ public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private boolean lockTangent;
-  private Spline previousSpline = null;
-  private Spline nextSpline = null;
+
+  private ISpline spline;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
   private final Path path;
@@ -58,6 +58,8 @@ public class Waypoint {
     tangent.set(tangentVector);
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
+
+    this.spline = new NullSpline(myPath);
 
     setupDnd();
   }
@@ -101,7 +103,7 @@ public class Waypoint {
     if (this != path.getStart() && this != path.getEnd()) {
       updateTheta();
     }
-    path.updatePoint(this);
+    path.updateSplines();
   }
 
   /**
@@ -113,26 +115,7 @@ public class Waypoint {
     }
   }
 
-  /**
-   * Sets previous or nextSpline and binds the Spline to waypoints position.
-   *
-   * @param newSpline The spline to add
-   * @param amFirst   True if this waypoint is the first point in the spline
-   */
-  public void addSpline(Spline newSpline, boolean amFirst) {
-    if (amFirst) {
-      nextSpline = newSpline;
-      nextSpline.getCubic().startXProperty().bind(x);
-      nextSpline.getCubic().startYProperty().bind(y);
-      newSpline.setStart(this);
-    }
-    if (!amFirst) {
-      previousSpline = newSpline;
-      previousSpline.getCubic().endXProperty().bind(x);
-      previousSpline.getCubic().endYProperty().bind(y);
-      newSpline.setEnd(this);
-    }
-  }
+
 
   /**
    * Convenience function for math purposes.
@@ -176,14 +159,6 @@ public class Waypoint {
     this.tangent.set(tangent);
   }
 
-  public Spline getPreviousSpline() {
-    return previousSpline;
-  }
-
-  public Spline getNextSpline() {
-    return nextSpline;
-  }
-
   public Circle getDot() {
     return dot;
   }
@@ -221,4 +196,11 @@ public class Waypoint {
     setY(newCoords.getY());
   }
 
+  public void setSpline(ISpline spline) {
+    this.spline = spline;
+  }
+
+  public ISpline getSpline() {
+    return spline;
+  }
 }

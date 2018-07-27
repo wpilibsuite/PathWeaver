@@ -136,24 +136,17 @@ public class PathDisplayController {
     current.getDot().setScaleY(circleScale / field.getScale());
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().toBack();
-    if (current != null && current.getPath().getStart() != current) {
-      splineGroup.getChildren().add(current.getPreviousSpline().getCubic());
-      current.getPreviousSpline().getCubic().toBack();
-      current.getPreviousSpline().getCubic().setStrokeWidth(splineScale / field.getScale());
-    }
-    if (current != null && current.getNextSpline() != null) {
-      current.getNextSpline().getCubic().toBack();
-    }
+    current.getSpline().addToGroup(splineGroup, splineScale / field.getScale());
   }
 
 
   private void removePathFromPane(Path newPath) {
     for (Waypoint wp : newPath.getWaypoints()) {
+      wp.getSpline().removeFromGroup(splineGroup);
+    }
+    for (Waypoint wp : newPath.getWaypoints()) {
       waypointGroup.getChildren().remove(wp.getDot());
       vectorGroup.getChildren().remove(wp.getTangentLine());
-      if (wp.getPath().getEnd() != wp) {
-        splineGroup.getChildren().remove(wp.getNextSpline().getCubic());
-      }
     }
   }
 
@@ -207,24 +200,19 @@ public class PathDisplayController {
 
 
   private boolean isDeletable(Waypoint waypoint) {
-    return waypoint.getPath().getStart() != waypoint &&
-        waypoint.getPath().getEnd() != waypoint;
+    return waypoint.getPath().getStart() != waypoint
+        && waypoint.getPath().getEnd() != waypoint;
   }
 
   private void delete(Waypoint waypoint) {
     Path path = waypoint.getPath();
     Waypoint previous = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) - 1);
-    Waypoint next = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) + 1);
     waypointGroup.getChildren().remove(waypoint.getDot());
     vectorGroup.getChildren().remove(waypoint.getTangentLine());
-    splineGroup.getChildren().remove(waypoint.getPreviousSpline().getCubic());
-    splineGroup.getChildren().remove(waypoint.getNextSpline().getCubic());
-    waypoint.getPath().remove(waypoint);
-    Spline newCurve = path.createCurve(previous, next);
-    newCurve.getCubic().setStrokeWidth(splineScale / field.getScale());
-    splineGroup.getChildren().add(newCurve.getCubic());
-    newCurve.getCubic().toBack();
+    waypoint.getSpline().removeFromGroup(splineGroup);
+    path.remove(waypoint);
     previous.update();
+    Waypoint next = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) + 1);
     next.update();
     PathIOUtil.export(pathDirectory, path);
   }

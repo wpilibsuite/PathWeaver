@@ -2,8 +2,8 @@ package edu.wpi.first.pathui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -11,9 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
 public class Path {
-  private LinkedList<Waypoint> waypoints = new LinkedList<>();
-  private ArrayList<Spline> splines = new ArrayList<>();
-  private String pathName = "default";
+  private final List<Waypoint> waypoints = new LinkedList<>();
+  private final String pathName;
 
   public Path(String name) {
     pathName = name;
@@ -51,47 +50,10 @@ public class Path {
   private void createInitialWaypoints(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent) {
     Waypoint start = new Waypoint(startPos, startTangent, false, this);
     Waypoint end = new Waypoint(endPos, endTangent, false, this);
+    start.setSpline(new QuickSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
-    createCurve(start, end);
-  }
-
-  /**
-   * Make new Spline object.
-   *
-   * @param start First Waypoint connected
-   * @param end   Second Waypoint connected
-   *
-   * @return Spline object
-   */
-  public Spline createCurve(Waypoint start, Waypoint end) {
-    Spline curve = new Spline(start, end);
-    curve.getCubic().toBack();
-    return curve;
-  }
-
-  /**
-   * Add Waypoint between previous and next.
-   *
-   * @param previous The point prior to new point
-   * @param next     The point after the new point
-   *
-   * @return new Waypoint
-   */
-  public Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
-    if (waypoints.indexOf(previous) != waypoints.indexOf(next) - 1) {
-      throw new IllegalArgumentException("New Waypoint not between connected points");
-    }
-    Point2D position = new Point2D(previous.getX() + next.getX() / 2, (previous.getY() + next.getY()) / 2);
-    Point2D tangent = new Point2D(0, 0);
-
-    //add new point after previous
-    Waypoint newPoint = addNewWaypoint(previous, position, tangent, false);
-
-    //tell spline going from previous -> next to go from previous -> new
-    newPoint.addSpline(next.getPreviousSpline(), true);
-    newPoint.update();
-    return newPoint;
+    updateSplines();
   }
 
   /**
@@ -105,11 +67,41 @@ public class Path {
    */
   public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, Boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
+    if (previous == getEnd()) {
+      previous.setSpline(new QuickSpline(previous, newPoint));
+    } else {
+      previous.getSpline().setEnd(newPoint);
+    }
     waypoints.add(waypoints.indexOf(previous) + 1, newPoint);
-    createCurve(previous, newPoint); //new spline from new -> next
+    int nextPointIndex = waypoints.indexOf(newPoint) + 1;
+    if (nextPointIndex < waypoints.size()) {
+      newPoint.setSpline(new QuickSpline(newPoint, waypoints.get(nextPointIndex)));
+    }
+    newPoint.update();
+    updateSplines();
     return newPoint;
   }
 
+  /**
+   * Add Waypoint in the middle of a spline.
+   *
+   * @param spline The spline to add point in middle of
+   *
+   * @return new Waypoint
+   */
+  public Waypoint addNewWaypoint(ISpline spline) {
+    for (int i = 1; i < waypoints.size(); i++) {
+      Waypoint current = waypoints.get(i - 1);
+      Waypoint next = waypoints.get(i);
+      if (current.getSpline() == spline) {
+        Point2D position = new Point2D(current.getX() + next.getX() / 2,
+            (current.getY() + next.getY()) / 2);
+        Point2D tangent = new Point2D(0, 0);
+        return addNewWaypoint(current, position, tangent, false);
+      }
+    }
+    return getEnd();
+  }
 
   /**
    * Reflects the Path across an axis.
@@ -169,52 +161,32 @@ public class Path {
     a.showAndWait();
   }
 
-  /**
-   * Convenience function for debugging purposes.
-   *
-   * @return A nicely formatted String representing some of the data stored in the Waypoint class.
-   */
-  public String getPointString() {
-    StringBuilder sb = new StringBuilder();
-    for (Waypoint wp : waypoints) {
-      sb.append(String.format("X: %s\tY:%s\n", wp.getX(), wp.getY()));
-    }
-    return sb.toString();
-  }
-
   public String getPathName() {
     return pathName;
   }
 
-  public void setPathName(String pathName) {
-    this.pathName = pathName;
-  }
-
   public Waypoint getStart() {
-    return waypoints.getFirst();
+    return waypoints.get(0);
   }
 
   public Waypoint getEnd() {
-    return waypoints.getLast();
+    return waypoints.get(waypoints.size() - 1);
   }
 
-  public void updatePoint(Waypoint wp) {
-    if (getStart() != wp) {
-      Waypoint previous = waypoints.get(waypoints.indexOf(wp) - 1);
-      wp.getPreviousSpline().updateControlPoints();
-      if (previous.getPreviousSpline() != null) {
-        previous.getPreviousSpline().updateControlPoints();
-      }
-    }
-    if (getEnd() != wp) {
-      Waypoint next = waypoints.get(waypoints.indexOf(wp) + 1);
-      wp.getNextSpline().updateControlPoints();
-      if (next.getNextSpline() != null) {
-        next.getNextSpline().updateControlPoints();
-      }
+  /**
+   * Calls update on all the Path's splines.
+   */
+  public void updateSplines() {
+    for (Waypoint wp : waypoints) {
+      wp.getSpline().update();
     }
   }
 
+  /**
+   * Forces recomputation of optimal theta value.
+   * @param wp Waypoint to update theta for.
+   */
+  @SuppressWarnings("PMD.NcssCount")
   public void updateTheta(Waypoint wp) {
     Waypoint previous = waypoints.get(waypoints.indexOf(wp) - 1);
     Waypoint next = waypoints.get(waypoints.indexOf(wp) + 1);
@@ -266,6 +238,10 @@ public class Path {
     wp.setTangent(tangent);
   }
 
+  /**
+   * Return all the tangent lines for the waypoints.
+   * @return Collection of Tangent Lines.
+   */
   public Collection<Node> getTangentLines() {
     Collection<Node> nodes = new ArrayList<>();
     for (Waypoint wp : waypoints) {
@@ -274,11 +250,22 @@ public class Path {
     return nodes;
   }
 
-  public LinkedList<Waypoint> getWaypoints() {
+  public List<Waypoint> getWaypoints() {
     return waypoints;
   }
 
+  /**
+   * Removes waypoint from path.
+   * @param waypoint Waypoint to remove.
+   */
   public void remove(Waypoint waypoint) {
     waypoints.remove(waypoint);
+    for (int i = 1; i < waypoints.size(); i++) {
+      Waypoint current = waypoints.get(i - 1);
+      Waypoint next = waypoints.get(i);
+      current.getSpline().setEnd(next);
+      current.getSpline().update();
+    }
   }
+
 }
