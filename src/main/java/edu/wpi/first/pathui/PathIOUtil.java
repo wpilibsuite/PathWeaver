@@ -38,16 +38,12 @@ public final class PathIOUtil {
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
             .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
     ) {
-      Waypoint current = path.getStart();
-      while (current != null) {
-        double xPos = current.getX();
-        double yPos = current.getY();
-        double tangentX = current.getTangent().getX();
-        double tangentY = current.getTangent().getY();
-        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, current.isLockTangent());
-
-        current = current.getNextWaypoint();
-
+      for (Waypoint wp : path.getWaypoints()) {
+        double xPos = wp.getX();
+        double yPos = wp.getY();
+        double tangentX = wp.getTangent().getX();
+        double tangentY = wp.getTangent().getY();
+        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent());
       }
       csvPrinter.flush();
     } catch (IOException except) {

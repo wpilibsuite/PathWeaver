@@ -14,8 +14,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class Waypoint {
-  private Waypoint previousWaypoint = null;
-  private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private boolean lockTangent;
@@ -100,84 +98,19 @@ public class Waypoint {
    * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
    */
   public void update() {
-    updateTheta();
-    if (previousWaypoint != null) {
-      previousWaypoint.updateTheta();
-      getPreviousSpline().updateControlPoints();
-      if (previousWaypoint.getPreviousSpline() != null) {
-        previousWaypoint.getPreviousSpline().updateControlPoints();
-      }
+    if (this != path.getStart() && this != path.getEnd()) {
+      updateTheta();
     }
-    if (nextWaypoint != null) {
-      nextWaypoint.updateTheta();
-      getNextSpline().updateControlPoints();
-      if (nextWaypoint.getNextSpline() != null) {
-        nextWaypoint.getNextSpline().updateControlPoints();
-      }
-    }
+    path.updatePoint(this);
   }
 
   /**
    * Forces Waypoint to recompute optimal theta value. Does nothing if lockTangent is true.
    */
-  @SuppressWarnings("PMD.NcssCount")
   public void updateTheta() {
-    if (lockTangent) {
-      return;
+    if (!isLockTangent()) {
+      path.updateTheta(this);
     }
-    if (previousWaypoint == null) {
-      return;
-    }
-    if (nextWaypoint == null) {
-      return;
-    }
-
-    Point2D p1 = new Point2D(previousWaypoint.getX(), previousWaypoint.getY());
-    Point2D p2 = new Point2D(this.getX(), this.getY());
-    Point2D p3 = new Point2D(nextWaypoint.getX(), nextWaypoint.getY());
-
-    Point2D p1Scaled = new Point2D(0, 0);
-    Point2D p2Scaled = p2.subtract(p1).multiply(1 / p3.distance(p1));
-    Point2D p3Shifted = p3.subtract(p1);
-    Point2D p3Scaled = p3Shifted.multiply(1 / p3.distance(p1)); // scale
-
-    //refactor later
-    // Point2D q = new Point2D(0, 0); // for reference
-    Point2D r = new Point2D(p2Scaled.getX() * p3Scaled.getX() + p2Scaled.getY() * p3Scaled.getY(),
-
-        -p2Scaled.getX() * p3Scaled.getY() + p2Scaled.getY() * p3Scaled.getX());
-    // Point2D s = new Point2D(1, 0); // for reference
-
-    double beta = 1 - 2 * r.getX();
-    double gamma = Math.pow(4 * (r.getX() - Math.pow(r.distance(p1Scaled), 2)) - 3, 3) / 27;
-    double lambda = Math.pow(-gamma, 1 / 6);
-
-    double phi1 = Math.atan2(Math.sqrt(-gamma - Math.pow(beta, 2)), beta) / 3;
-    double ur = lambda * Math.cos(phi1);
-    double ui = lambda * Math.sin(phi1);
-    double phi2 = Math.atan2(-Math.sqrt(-gamma - Math.pow(beta, 2)), beta) / 3;
-
-    double zr = lambda * Math.cos(phi2);
-    double zi = lambda * Math.sin(phi2);
-
-    double t1 = 1.0 / 2 + ur + zr / 2;
-    double t2 = 1.0 / 2 - (1.0 / 4) * (ur + zr + Math.sqrt(3) * (ui - zi));
-    double t3 = 1.0 / 2 - (1.0 / 4) * (ur + zr - Math.sqrt(3) * (ui - zi));
-
-    double t;
-    if (t1 > 0 && t1 < 1) {
-      t = t1;
-    } else if (t2 > 0 && t2 < 1) {
-      t = t2;
-    } else {
-      t = t3;
-    }
-
-    Point2D a1 = p2.subtract(p1).subtract(p3Shifted.multiply(t)).multiply(1 / (t * t - t));
-    Point2D a2 = p3Shifted.subtract(a1);
-
-    Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
-    this.tangent.set(tangent);
   }
 
   /**
@@ -286,22 +219,6 @@ public class Waypoint {
   public void setCoords(Point2D newCoords) {
     setX(newCoords.getX());
     setY(newCoords.getY());
-  }
-
-  public Waypoint getPreviousWaypoint() {
-    return previousWaypoint;
-  }
-
-  public void setPreviousWaypoint(Waypoint previousWaypoint) {
-    this.previousWaypoint = previousWaypoint;
-  }
-
-  public Waypoint getNextWaypoint() {
-    return nextWaypoint;
-  }
-
-  public void setNextWaypoint(Waypoint nextWaypoint) {
-    this.nextWaypoint = nextWaypoint;
   }
 
 }

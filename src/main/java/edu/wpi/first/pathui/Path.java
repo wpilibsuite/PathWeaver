@@ -1,12 +1,18 @@
 package edu.wpi.first.pathui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
 public class Path {
-  private Waypoint start;
-  private Waypoint end;
+  private LinkedList<Waypoint> waypoints = new LinkedList<>();
+  private ArrayList<Spline> splines = new ArrayList<>();
   private String pathName = "default";
 
   public Path(String name) {
@@ -43,11 +49,10 @@ public class Path {
   }
 
   private void createInitialWaypoints(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent) {
-    start = new Waypoint(startPos, startTangent, false, this);
-    end = new Waypoint(endPos, endTangent, false, this);
-
-    start.setNextWaypoint(end);
-    end.setPreviousWaypoint(start);
+    Waypoint start = new Waypoint(startPos, startTangent, false, this);
+    Waypoint end = new Waypoint(endPos, endTangent, false, this);
+    waypoints.add(start);
+    waypoints.add(end);
     createCurve(start, end);
   }
 
@@ -74,7 +79,7 @@ public class Path {
    * @return new Waypoint
    */
   public Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
-    if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
+    if (waypoints.indexOf(previous) != waypoints.indexOf(next) - 1) {
       throw new IllegalArgumentException("New Waypoint not between connected points");
     }
     Point2D position = new Point2D(previous.getX() + next.getX() / 2, (previous.getY() + next.getY()) / 2);
@@ -83,9 +88,6 @@ public class Path {
     //add new point after previous
     Waypoint newPoint = addNewWaypoint(previous, position, tangent, false);
 
-    //connect newPoint to next
-    newPoint.setNextWaypoint(next);
-    next.setPreviousWaypoint(newPoint);
     //tell spline going from previous -> next to go from previous -> new
     newPoint.addSpline(next.getPreviousSpline(), true);
     newPoint.update();
@@ -103,12 +105,8 @@ public class Path {
    */
   public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, Boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
-    newPoint.setPreviousWaypoint(previous);
-    previous.setNextWaypoint(newPoint);
+    waypoints.add(waypoints.indexOf(previous) + 1, newPoint);
     createCurve(previous, newPoint); //new spline from new -> next
-    if (previous == getEnd()) {
-      setEnd(newPoint);
-    }
     return newPoint;
   }
 
@@ -121,28 +119,22 @@ public class Path {
    */
   public void flip(boolean horizontal, Pane drawPane) {
     // Check if any new points are outside drawPane
-    Waypoint current = start;
-    while (current != null) {
-      if (!drawPane.contains(reflectPoint(start, current, horizontal, false))) {
+    for (Waypoint wp : waypoints) {
+      if (!drawPane.contains(reflectPoint(getStart(), wp, horizontal, false))) {
         invalidFlipAlert();
         return; // The new path is invalid
       }
-      current = current.getNextWaypoint();
     }
     // New waypoints are valid, update all Waypoints
-    current = start;
-    while (current != null) {
-      Point2D reflectedPos = reflectPoint(start, current, horizontal, false);
-      Point2D reflectedTangent = reflectPoint(start, current, horizontal, true);
-      current.setCoords(reflectedPos);
-      current.setTangent(reflectedTangent);
-      current = current.getNextWaypoint();
+    for (Waypoint wp : waypoints) {
+      Point2D reflectedPos = reflectPoint(getStart(), wp, horizontal, false);
+      Point2D reflectedTangent = reflectPoint(getStart(), wp, horizontal, true);
+      wp.setCoords(reflectedPos);
+      wp.setTangent(reflectedTangent);
     }
     // Loop through to update points
-    current = start;
-    while (current != null) {
-      current.update();
-      current = current.getNextWaypoint();
+    for (Waypoint wp : waypoints) {
+      wp.update();
     }
   }
 
@@ -184,10 +176,8 @@ public class Path {
    */
   public String getPointString() {
     StringBuilder sb = new StringBuilder();
-    Waypoint current = start;
-    while (current != null) {
-      sb.append(String.format("X: %s\tY:%s\n", current.getX(), current.getY()));
-      current = current.getNextWaypoint();
+    for (Waypoint wp : waypoints) {
+      sb.append(String.format("X: %s\tY:%s\n", wp.getX(), wp.getY()));
     }
     return sb.toString();
   }
@@ -201,14 +191,94 @@ public class Path {
   }
 
   public Waypoint getStart() {
-    return start;
+    return waypoints.getFirst();
   }
 
   public Waypoint getEnd() {
-    return end;
+    return waypoints.getLast();
   }
 
-  public void setEnd(Waypoint end) {
-    this.end = end;
+  public void updatePoint(Waypoint wp) {
+    if (getStart() != wp) {
+      Waypoint previous = waypoints.get(waypoints.indexOf(wp) - 1);
+      wp.getPreviousSpline().updateControlPoints();
+      if (previous.getPreviousSpline() != null) {
+        previous.getPreviousSpline().updateControlPoints();
+      }
+    }
+    if (getEnd() != wp) {
+      Waypoint next = waypoints.get(waypoints.indexOf(wp) + 1);
+      wp.getNextSpline().updateControlPoints();
+      if (next.getNextSpline() != null) {
+        next.getNextSpline().updateControlPoints();
+      }
+    }
+  }
+
+  public void updateTheta(Waypoint wp) {
+    Waypoint previous = waypoints.get(waypoints.indexOf(wp) - 1);
+    Waypoint next = waypoints.get(waypoints.indexOf(wp) + 1);
+
+    Point2D p1 = previous.getCoords();
+    Point2D p2 = wp.getCoords();
+    Point2D p3 = next.getCoords();
+
+    Point2D p1Scaled = new Point2D(0, 0);
+    Point2D p2Scaled = p2.subtract(p1).multiply(1 / p3.distance(p1));
+    Point2D p3Shifted = p3.subtract(p1);
+    Point2D p3Scaled = p3Shifted.multiply(1 / p3.distance(p1)); // scale
+
+    //refactor later
+    // Point2D q = new Point2D(0, 0); // for reference
+    Point2D r = new Point2D(p2Scaled.getX() * p3Scaled.getX() + p2Scaled.getY() * p3Scaled.getY(),
+        -p2Scaled.getX() * p3Scaled.getY() + p2Scaled.getY() * p3Scaled.getX());
+    // Point2D s = new Point2D(1, 0); // for reference
+
+    double beta = 1 - 2 * r.getX();
+    double gamma = Math.pow(4 * (r.getX() - Math.pow(r.distance(p1Scaled), 2)) - 3, 3) / 27;
+    double lambda = Math.pow(-gamma, 1 / 6);
+
+    double phi1 = Math.atan2(Math.sqrt(-gamma - Math.pow(beta, 2)), beta) / 3;
+    double ur = lambda * Math.cos(phi1);
+    double ui = lambda * Math.sin(phi1);
+    double phi2 = Math.atan2(-Math.sqrt(-gamma - Math.pow(beta, 2)), beta) / 3;
+
+    double zr = lambda * Math.cos(phi2);
+    double zi = lambda * Math.sin(phi2);
+
+    double t1 = 1.0 / 2 + ur + zr / 2;
+    double t2 = 1.0 / 2 - (1.0 / 4) * (ur + zr + Math.sqrt(3) * (ui - zi));
+    double t3 = 1.0 / 2 - (1.0 / 4) * (ur + zr - Math.sqrt(3) * (ui - zi));
+
+    double t;
+    if (t1 > 0 && t1 < 1) {
+      t = t1;
+    } else if (t2 > 0 && t2 < 1) {
+      t = t2;
+    } else {
+      t = t3;
+    }
+
+    Point2D a1 = p2.subtract(p1).subtract(p3Shifted.multiply(t)).multiply(1 / (t * t - t));
+    Point2D a2 = p3Shifted.subtract(a1);
+
+    Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
+    wp.setTangent(tangent);
+  }
+
+  public Collection<Node> getTangentLines() {
+    Collection<Node> nodes = new ArrayList<>();
+    for (Waypoint wp : waypoints) {
+      nodes.add(wp.getTangentLine());
+    }
+    return nodes;
+  }
+
+  public LinkedList<Waypoint> getWaypoints() {
+    return waypoints;
+  }
+
+  public void remove(Waypoint waypoint) {
+    waypoints.remove(waypoint);
   }
 }

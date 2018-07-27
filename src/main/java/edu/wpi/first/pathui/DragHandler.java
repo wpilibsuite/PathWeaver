@@ -105,27 +105,20 @@ public class DragHandler {
     double offsetY = event.getY() - wp.getY();
 
     // Make sure all waypoints will be within the bounds
-    Waypoint next = wp.getPath().getStart();
-    while (next != null) {
-      double wpNewX = next.getX() + offsetX;
-      double wpNewY = next.getY() + offsetY;
+    for (Waypoint point : wp.getPath().getWaypoints()) {
+      double wpNewX = point.getX() + offsetX;
+      double wpNewY = point.getY() + offsetY;
       if (!checkBounds(wpNewX, wpNewY)) {
         return;
       }
-
-      next = next.getNextWaypoint();
     }
 
     // Apply new positions
-    next = wp.getPath().getStart();
-    while (next != null) {
-      double wpNewX = next.getX() + offsetX;
-      double wpNewY = next.getY() + offsetY;
-      next.setX(wpNewX);
-      next.setY(wpNewY);
-
-      next = next.getNextWaypoint();
+    for (Waypoint point : wp.getPath().getWaypoints()) {
+      double wpNewX = point.getX() + offsetX;
+      double wpNewY = point.getY() + offsetY;
+      point.setX(wpNewX);
+      point.setY(wpNewY);
     }
-
   }
 }
