@@ -203,8 +203,8 @@ public class Path {
   }
 
   /**
-   * Removes extension from filename.
-   * @return Filename without ".path".
+   * Removes extension and version number from filename.
+   * @return Filename without ".path" and version number.
    */
   public String getPathNameNoExtension() {
     String extension = ".path";
@@ -212,6 +212,8 @@ public class Path {
     if (pathName.endsWith(extension)) {
       filename = filename.substring(0, filename.length() - extension.length());
     }
+    // remove version number
+    filename = filename.replaceFirst("_[0-9]+", "");
     return filename;
   }
 
