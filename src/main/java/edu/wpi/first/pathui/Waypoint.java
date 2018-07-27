@@ -18,7 +18,7 @@ public class Waypoint {
   private final DoubleProperty y = new SimpleDoubleProperty();
   private boolean lockTangent;
 
-  private ISpline spline;
+  private Spline spline;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
   private final Path path;
@@ -196,11 +196,11 @@ public class Waypoint {
     setY(newCoords.getY());
   }
 
-  public void setSpline(ISpline spline) {
+  public void setSpline(Spline spline) {
     this.spline = spline;
   }
 
-  public ISpline getSpline() {
+  public Spline getSpline() {
     return spline;
   }
 }

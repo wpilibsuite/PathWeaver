@@ -76,7 +76,7 @@ public class Path {
    *
    * @return new Waypoint
    */
-  public Waypoint addNewWaypoint(ISpline spline) {
+  public Waypoint addNewWaypoint(Spline spline) {
     for (int i = 1; i < waypoints.size(); i++) {
       Waypoint current = waypoints.get(i - 1);
       Waypoint next = waypoints.get(i);

@@ -2,7 +2,11 @@ package edu.wpi.first.pathui;
 
 import javafx.scene.Group;
 
-public interface ISpline {
+/**
+ * Representation of a connection between points. Adds a JavaFX node that shows the connection.
+ */
+public interface Spline {
+  
   Path getPath();
 
   void update();

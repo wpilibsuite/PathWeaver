@@ -9,7 +9,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
-public class QuickSpline implements ISpline {
+public class QuickSpline implements Spline {
   private final Waypoint start;
   private Waypoint end;
   private final CubicCurve curve;

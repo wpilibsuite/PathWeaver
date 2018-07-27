@@ -2,7 +2,7 @@ package edu.wpi.first.pathui;
 
 import javafx.scene.Group;
 
-public class NullSpline implements ISpline {
+public class NullSpline implements Spline {
   private final Path path;
 
   public NullSpline(Path path) {

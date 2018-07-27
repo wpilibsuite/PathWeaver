@@ -10,7 +10,7 @@ public class DragHandler {
 
   private final PathDisplayController controller;
   private final Pane drawPane;
-  public static ISpline currentSpline = new NullSpline(null);
+  public static Spline currentSpline = new NullSpline(null);
 
   private boolean isShiftDown = false;
   private boolean splineDragStarted = false;
@@ -82,7 +82,7 @@ public class DragHandler {
     if (splineDragStarted) {
       handleWaypointDrag(event, wp);
     } else {
-      ISpline current = currentSpline;
+      Spline current = currentSpline;
       Waypoint newPoint = current.getPath().addNewWaypoint(current);
       controller.addWaypointToPane(newPoint);
       controller.setupWaypoint(newPoint);
