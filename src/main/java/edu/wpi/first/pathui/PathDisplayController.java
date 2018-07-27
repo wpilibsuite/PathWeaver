@@ -150,7 +150,7 @@ public class PathDisplayController {
   private void removePathFromPane(Path newPath) {
     for (Waypoint wp : newPath.getWaypoints()) {
       waypointGroup.getChildren().remove(wp.getDot());
-      waypointGroup.getChildren().remove(wp.getTangentLine());
+      vectorGroup.getChildren().remove(wp.getTangentLine());
       if (wp.getPath().getEnd() != wp) {
         splineGroup.getChildren().remove(wp.getNextSpline().getCubic());
       }
