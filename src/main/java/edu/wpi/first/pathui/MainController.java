@@ -183,7 +183,6 @@ public class MainController {
                 pathDisplayController.removeAllPath();
                 pathDisplayController.addPath(pathDirectory, newValue);
               }
-
             });
     autons.getSelectionModel()
         .selectedItemProperty()
@@ -192,7 +191,6 @@ public class MainController {
               selected = newValue;
               pathDisplayController.removeAllPath();
               if (newValue != autonRoot) {
-                pathDisplayController.removeAllPath();
                 if (newValue.isLeaf()) { //has no children so try to display path
                   Path path = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
