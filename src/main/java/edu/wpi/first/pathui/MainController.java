@@ -190,6 +190,7 @@ public class MainController {
         .addListener(
             (observable, oldValue, newValue) -> {
               selected = newValue;
+              pathDisplayController.removeAllPath();
               if (newValue != autonRoot) {
                 pathDisplayController.removeAllPath();
                 if (newValue.isLeaf()) { //has no children so try to display path
@@ -235,6 +236,14 @@ public class MainController {
   @FXML
   private void flipVertical() {
     pathDisplayController.flip(false);
+  }
+
+  @FXML
+  private void duplicate() {
+    Path newPath = pathDisplayController.duplicate(pathDirectory);
+    TreeItem<String> stringTreeItem = MainIOUtil.addChild(pathRoot, newPath.getPathName());
+    PathIOUtil.export(pathDirectory, newPath);
+    paths.getSelectionModel().select(stringTreeItem);
   }
 
   @FXML
