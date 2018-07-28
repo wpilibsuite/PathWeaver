@@ -2,90 +2,52 @@
     -fx-background-color: #101824;
 }
 
-.tree-cell:filled:subchild0 {
-    -fx-background-color: CHART_COLOR_2;
-}
-.waypoint:subchild0 {
-    -fx-fill: CHART_COLOR_2;
-}
-.path:subchild0 {
-    -fx-stroke: derive(CHART_COLOR_2, -25%);
+* {
+    my-color: CHART_COLOR_2;
 }
 
-.tree-cell:filled:subchild1 {
-    -fx-background-color: CHART_COLOR_1;
+:subchild0 {
+    my-color: CHART_COLOR_2;
 }
-.waypoint:subchild1 {
-    -fx-fill: CHART_COLOR_1;
+:subchild1 {
+    my-color: CHART_COLOR_1;
 }
-.path:subchild1 {
-    -fx-stroke: derive(CHART_COLOR_1, -25%);
+:subchild2 {
+    my-color: CHART_COLOR_3;
 }
-
-.tree-cell:filled:subchild2{
-    -fx-background-color: CHART_COLOR_3;
+:subchild3 {
+    my-color: CHART_COLOR_4;
 }
-.waypoint:subchild2 {
-    -fx-fill: CHART_COLOR_3;
+:subchild4 {
+    my-color: CHART_COLOR_5;
 }
-.path:subchild2 {
-    -fx-stroke: derive(CHART_COLOR_3, -25%);
+:subchild5 {
+    my-color: CHART_COLOR_6;
 }
-
-.tree-cell:filled:subchild3 {
-    -fx-background-color: CHART_COLOR_4;
+:subchild6 {
+    my-color: CHART_COLOR_7;
 }
-.waypoint:subchild3 {
-    -fx-fill: CHART_COLOR_4;
-}
-.path:subchild3 {
-    -fx-stroke: derive(CHART_COLOR_4, -25%);
+:subchild7 {
+    my-color: CHART_COLOR_8;
 }
 
-.tree-cell:filled:subchild4 {
-    -fx-background-color: CHART_COLOR_5;
-}
-.waypoint:subchild4 {
-    -fx-fill: CHART_COLOR_5;
-}
-.path:subchild04{
-    -fx-stroke: derive(CHART_COLOR_5, -25%);
-}
 
-.tree-cell:filled:subchild5 {
-    -fx-background-color: CHART_COLOR_6;
-}
-.waypoint:subchild5 {
-    -fx-fill: CHART_COLOR_6;
-}
-.path:subchild5 {
-    -fx-stroke: derive(CHART_COLOR_6, -25%);
-}
-
-.tree-cell:filled:subchild6 {
-    -fx-background-color: CHART_COLOR_7;
-}
-.waypoint:subchild6 {
-    -fx-fill: CHART_COLOR_7;
-}
-.path:subchild6 {
-    -fx-stroke: derive(CHART_COLOR_7, -25%);
-}
-
+.tree-cell:filled:subchild0,
+.tree-cell:filled:subchild1,
+.tree-cell:filled:subchild2,
+.tree-cell:filled:subchild3,
+.tree-cell:filled:subchild4,
+.tree-cell:filled:subchild5,
+.tree-cell:filled:subchild6,
 .tree-cell:filled:subchild7 {
-    -fx-background-color: CHART_COLOR_8;
-}
-.waypoint:subchild7 {
-    -fx-fill: CHART_COLOR_8;
-}
-.path:subchild7 {
-    -fx-stroke: derive(CHART_COLOR_8, -25%);
+    -fx-background-color: my-color;
 }
 
 .waypoint {
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
     -fx-cursor: hand;
+    -fx-fill: my-color;
 }
 
 .waypoint:selected {
@@ -96,6 +58,7 @@
     -fx-stroke-line-cap: round;
     -fx-fill: null;
     -fx-cursor: hand;
+    -fx-stroke: derive(my-color, -25%);
 }
 
 .tangent {
