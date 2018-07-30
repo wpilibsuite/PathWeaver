@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class MainController {
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
-  private String directory = "pathUI/";
+  private String directory = "PathWeaver/";
   private String pathDirectory;
   private String autonDirectory;
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");

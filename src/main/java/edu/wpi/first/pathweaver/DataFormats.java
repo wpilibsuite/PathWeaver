@@ -1,13 +1,13 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import javafx.scene.input.DataFormat;
 
 /**
- * Custom data formats for PathUI.
+ * Custom data formats for PathWeaver.
  */
 public final class DataFormats { //NOPMD
 
-  public static final String APP_PREFIX = "pathui";
+  public static final String APP_PREFIX = "pathweaver";
 
   /**
    * Data format for dragging waypoints.
