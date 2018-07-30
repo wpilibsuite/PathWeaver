@@ -5,7 +5,7 @@ plugins {
     `checkstyle`
 }
 
-group = "edu.wpi.first.path_ui"
+group = "edu.wpi.first.pathweaver"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -36,7 +36,7 @@ pmd {
 }
 
 application {
-    mainClassName = "edu.wpi.first.pathui.PathUI"
+    mainClassName = "edu.wpi.first.pathweaver.PathWeaver"
 }
 
 task<Wrapper>("wrapper") {

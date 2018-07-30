@@ -1,2 +1,2 @@
-rootProject.name = "pathui"
+rootProject.name = "pathweaver"
 
