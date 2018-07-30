@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class PathDisplayController {
   @FXML
   private ImageView backgroundImage;
