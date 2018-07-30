@@ -189,8 +189,8 @@
         </module>
         <module name="AvoidStarImport"/>
         <module name="CustomImportOrder">
-            <property name="specialImportsRegExp" value="^edu\.wpi\.first\.pathui\.*$"/>
-            <property name="thirdPartyPackageRegExp" value="^(?!edu\.wpi\.first\.pathui\.).*$"/>
+            <property name="specialImportsRegExp" value="^edu\.wpi\.first\.pathweaver\.*$"/>
+            <property name="thirdPartyPackageRegExp" value="^(?!edu\.wpi\.first\.pathweaver\.).*$"/>
             <property name="standardPackageRegExp" value="^(java|javafx|javax)\."/>
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="customImportOrderRules" value="SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###STATIC"/>

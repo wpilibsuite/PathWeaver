@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import systems.uom.common.USCustomary;
 import tec.units.ri.AbstractSystemOfUnits;
@@ -11,7 +11,7 @@ import javax.measure.quantity.Time;
 import javax.measure.spi.SystemOfUnits;
 
 public final class PathUnits extends AbstractSystemOfUnits {
-  private static final String SYSTEM_NAME = "Path UI Units";
+  private static final String SYSTEM_NAME = "PathWeaver Units";
 
   private static final PathUnits INSTANCE = new PathUnits();
 

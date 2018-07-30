@@ -19,7 +19,7 @@ env:
     - DOCKER_GRADLE_CACHES="/root/.gradle/"
 
 before_install:
-  - docker build -f Dockerfile -t pathui-devel .
+  - docker build -f Dockerfile -t pathweaver-devel .
 
 install: echo "skip 'gradle assemble' step"
 
@@ -27,7 +27,7 @@ script:
   # Get the code coverage environment variables to pass to docker
   # https://github.com/codecov/support/wiki/Testing-with-Docker
   #- ci_env=`bash <(curl -s https://codecov.io/env)`
-  - docker run -it $ci_env -v ${GRADLE_CACHES}:${DOCKER_GRADLE_CACHES} pathui-devel ./.travis.ubuntu.sh
+  - docker run -it $ci_env -v ${GRADLE_CACHES}:${DOCKER_GRADLE_CACHES} pathweaver-devel ./.travis.ubuntu.sh
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock

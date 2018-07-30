@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

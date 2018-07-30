@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ final class Loggers {
   }
 
   /**
-   * Sets up loggers to print to stdout (rather than stderr) and log to ~/PathUI/pathui.time.log
+   * Sets up loggers to print to stdout (rather than stderr) and log to ~/PathWeaver/pathweaver.time.log
    */
   @SuppressWarnings("PMD.NcssCount")
   public static void setupLoggers() throws IOException {
@@ -38,14 +38,14 @@ final class Loggers {
       globalLogger.removeHandler(handler);
     }
 
-    String directory = System.getProperty("user.home") + "/PathUI";
+    String directory = System.getProperty("user.home") + "/PathWeaver";
     ;
     File folder = new File(directory);
     if (!folder.exists()) {
       folder.mkdir();
     }
     String time = DateTimeFormatter.ofPattern("YYYY-MM-dd-HH.mm.ss", Locale.getDefault()).format(LocalDateTime.now());
-    final Handler fileHandler = new FileHandler(directory + "/pathui." + time + ".log");
+    final Handler fileHandler = new FileHandler(directory + "/pathweaver." + time + ".log");
 
     fileHandler.setLevel(Level.INFO);    // Only log INFO and above to disk
     globalLogger.setLevel(Level.CONFIG); // Log CONFIG and higher
