@@ -28,7 +28,7 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
-  private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
+  public final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
