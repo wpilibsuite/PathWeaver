@@ -1,4 +1,4 @@
-/*module edu.wpi.first.pathui {
+/*module edu.wpi.first.pathweaver {
   requires javafx.base;
   requires javafx.graphics;
   requires javafx.controls;

@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import tec.units.indriya.quantity.Quantities;
 
@@ -10,11 +10,11 @@ import javax.measure.Quantity;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
-import static edu.wpi.first.pathui.PathUnits.FOOT;
+import static edu.wpi.first.pathweaver.PathUnits.FOOT;
 
 
 public class Field {
-  private Image image = new Image("edu/wpi/first/pathui/2018-field.jpg");
+  private Image image = new Image("edu/wpi/first/pathweaver/2018-field.jpg");
   private Quantity<Length> rWidth = Quantities.getQuantity(54, FOOT);
   private Quantity<Length> rLength = Quantities.getQuantity(27, FOOT);
   private double scale = 16.5;
