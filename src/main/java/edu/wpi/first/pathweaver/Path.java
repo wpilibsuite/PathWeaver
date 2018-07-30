@@ -44,7 +44,7 @@ public class Path {
   }
 
   /**
-   * Create new Waypoint in Path after previous.
+   * Creates new Waypoint in Path after previous.
    *
    * @param previous The node before this one
    * @param position Position to play new Waypoint
@@ -70,7 +70,7 @@ public class Path {
   }
 
   /**
-   * Add Waypoint in the middle of a spline.
+   * Adds Waypoint in the middle of a spline.
    *
    * @param spline The spline to add point in middle of
    *
@@ -241,7 +241,7 @@ public class Path {
   }
 
   /**
-   * Return all the tangent lines for the waypoints.
+   * Returns all the tangent lines for the waypoints.
    * @return Collection of Tangent Lines.
    */
   public Collection<Node> getTangentLines() {
