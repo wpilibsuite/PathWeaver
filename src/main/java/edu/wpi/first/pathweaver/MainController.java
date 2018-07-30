@@ -32,6 +32,8 @@ public class MainController {
   private TreeItem<String> selected = null;
 
   @FXML private Button duplicate;
+  @FXML private Button flipHorizontal;
+  @FXML private Button flipVertical;
 
   @FXML
   private void initialize() {
@@ -58,6 +60,9 @@ public class MainController {
     setupEditable();
 
     duplicate.disableProperty().bind(pathDisplayController.currentPath.isNull());
+    flipHorizontal.disableProperty().bind(pathDisplayController.currentPath.isNull());
+    flipVertical.disableProperty().bind(pathDisplayController.currentPath.isNull());
+
   }
 
   @SuppressWarnings("PMD.NcssCount")
