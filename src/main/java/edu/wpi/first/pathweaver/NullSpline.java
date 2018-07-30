@@ -1,4 +1,4 @@
-package edu.wpi.first.pathui;
+package edu.wpi.first.pathweaver;
 
 import javafx.scene.Group;
 
