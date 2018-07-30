@@ -59,9 +59,9 @@ public class MainController {
     paths.setEditable(true);
     setupEditable();
 
-    duplicate.disableProperty().bind(pathDisplayController.currentPath.isNull());
-    flipHorizontal.disableProperty().bind(pathDisplayController.currentPath.isNull());
-    flipVertical.disableProperty().bind(pathDisplayController.currentPath.isNull());
+    duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
 
   }
 
