@@ -3,16 +3,6 @@ package edu.wpi.first.pathui;
 import javafx.scene.Group;
 
 public class NullSpline implements Spline {
-  private final Path path;
-
-  public NullSpline(Path path) {
-    this.path = path;
-  }
-
-  @Override
-  public Path getPath() {
-    return path;
-  }
 
   @Override
   public void update() {
@@ -32,4 +22,10 @@ public class NullSpline implements Spline {
   public void removeFromGroup(Group splineGroup) {
 
   }
+
+  @Override
+  public void addPathWaypoint(PathDisplayController controller) {
+
+  }
+
 }

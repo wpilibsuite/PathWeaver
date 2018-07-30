@@ -59,7 +59,7 @@ public class Waypoint {
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
-    this.spline = new NullSpline(myPath);
+    this.spline = new NullSpline();
 
     setupDnd();
   }

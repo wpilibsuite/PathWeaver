@@ -7,8 +7,6 @@ import javafx.scene.Group;
  */
 public interface Spline {
 
-  Path getPath();
-
   void update();
 
   void addToGroup(Group splineGroup, double scaleFactor);
@@ -16,4 +14,6 @@ public interface Spline {
   void setEnd(Waypoint end);
 
   void removeFromGroup(Group splineGroup);
+
+  void addPathWaypoint(PathDisplayController controller);
 }

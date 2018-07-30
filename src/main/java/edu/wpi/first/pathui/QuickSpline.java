@@ -29,6 +29,15 @@ public class QuickSpline implements Spline {
     splineGroup.getChildren().remove(curve);
   }
 
+  @Override
+  public void addPathWaypoint(PathDisplayController controller) {
+    Waypoint newPoint = start.getPath().addNewWaypoint(this);
+    controller.addWaypointToPane(newPoint);
+    controller.setupWaypoint(newPoint);
+    controller.selectWaypoint(newPoint, false);
+    Waypoint.currentWaypoint = newPoint;
+  }
+
   /**
    * Constructs a QuickSpline.
    * @param start The waypoint at start of spline.
@@ -55,11 +64,6 @@ public class QuickSpline implements Spline {
     Point2D control2 = new Point2D(end.getX() - 2 * (end.getTangent().getX()) / 3,
         end.getY() - 2 * (end.getTangent().getY()) / 3);
     return new Pair<>(control1, control2);
-  }
-
-  @Override
-  public Path getPath() {
-    return start.getPath();
   }
 
   @Override
