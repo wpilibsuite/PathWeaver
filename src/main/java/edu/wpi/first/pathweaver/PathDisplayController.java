@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class PathDisplayController {
   @FXML
   private ImageView backgroundImage;
@@ -28,6 +29,7 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
   private Waypoint selectedWaypoint = null;
+
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
 
@@ -262,29 +264,17 @@ public class PathDisplayController {
     currentPath.get().flip(horizontal, drawPane);
   }
 
-  /**
-   * Retrieves a named Path.
-   *
-   * @param name The name of the Path to retrieve
-   *
-   * @return The appropriate Path from the Path List
-   */
-  public Path getPath(String name) {
-    for (Path p : pathList) {
-      if (p.getPathName().equals(name)) {
-        return p;
-      }
-    }
-    // TODO: Return a default path
-    return null;
-  }
-
   public void setPathDirectory(String pathDirectory) {
     this.pathDirectory = pathDirectory;
   }
 
   public String getPathDirectory() {
     return pathDirectory;
+  }
+
+
+  public ObjectProperty<Path> currentPathProperty() {
+    return currentPath;
   }
 
   /**
