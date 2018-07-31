@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -30,6 +31,10 @@ public class MainController {
 
   private TreeItem<String> selected = null;
 
+  @FXML private Button duplicate;
+  @FXML private Button flipHorizontal;
+  @FXML private Button flipVertical;
+
   @FXML
   private void initialize() {
     pathDirectory = directory + "Paths/";
@@ -53,6 +58,11 @@ public class MainController {
     autons.setEditable(true);
     paths.setEditable(true);
     setupEditable();
+
+    duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+
   }
 
   @SuppressWarnings("PMD.NcssCount")
