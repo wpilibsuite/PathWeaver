@@ -210,7 +210,7 @@ public class PathDisplayController {
 
   @FXML
   private void keyPressed(KeyEvent event) {
-    if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)) {
+    if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
       if (isDeletable(selectedWaypoint)) {
         delete(selectedWaypoint);
       } else {
