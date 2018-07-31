@@ -19,6 +19,11 @@ public class NullSpline implements Spline {
   }
 
   @Override
+  public void enableSubchildSelector(int i) {
+
+  }
+
+  @Override
   public void removeFromGroup(Group splineGroup) {
 
   }

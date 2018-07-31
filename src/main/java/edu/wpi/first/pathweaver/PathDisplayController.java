@@ -150,16 +150,8 @@ public class PathDisplayController {
       wp.getSpline().removeFromGroup(splineGroup);
     }
     for (Waypoint wp : newPath.getWaypoints()) {
-      waypointGroup.getChildren().remove(wp.getDot());
+      waypointGroup.getChildren().remove(wp.getIcon());
       vectorGroup.getChildren().remove(wp.getTangentLine());
-    Waypoint current = newPath.getStart();
-    while (current != null) {
-      waypointGroup.getChildren().remove(current.getIcon());
-      vectorGroup.getChildren().remove(current.getTangentLine());
-      current = current.getNextWaypoint();
-      if (current != null) {
-        splineGroup.getChildren().remove(current.getPreviousSpline().getCubic());
-      }
     }
   }
 
@@ -220,7 +212,7 @@ public class PathDisplayController {
   private void delete(Waypoint waypoint) {
     Path path = waypoint.getPath();
     Waypoint previous = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) - 1);
-    waypointGroup.getChildren().remove(waypoint.getDot());
+    waypointGroup.getChildren().remove(waypoint.getIcon());
     vectorGroup.getChildren().remove(waypoint.getTangentLine());
     waypoint.getSpline().removeFromGroup(splineGroup);
     path.remove(waypoint);

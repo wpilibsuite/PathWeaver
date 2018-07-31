@@ -25,6 +25,12 @@ public class QuickSpline implements Spline {
   }
 
   @Override
+  public void enableSubchildSelector(int i) {
+    FxUtils.enableSubchildSelector(curve, i);
+    curve.applyCss();
+  }
+
+  @Override
   public void removeFromGroup(Group splineGroup) {
     splineGroup.getChildren().remove(curve);
   }
@@ -52,6 +58,8 @@ public class QuickSpline implements Spline {
       board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
       DragHandler.currentSpline = this;
     });
+    curve.getStyleClass().add("path");
+    FxUtils.applySubchildClasses(curve);
   }
 
   private Pair<Point2D, Point2D> computeControlPoints() {

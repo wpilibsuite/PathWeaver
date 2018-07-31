@@ -45,34 +45,6 @@ public class Path {
   }
 
   /**
-   * Creates new Waypoint in Path after previous.
-   *
-   * @param previous The point prior to new point
-   * @param next     The point after the new point
-   *
-   * @return new Waypoint
-   */
-  public Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
-    if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
-      throw new IllegalArgumentException("New Waypoint not between connected points");
-    }
-    Point2D position = new Point2D(previous.getX() + next.getX() / 2, (previous.getY() + next.getY()) / 2);
-    Point2D tangent = new Point2D(0, 0);
-
-    //add new point after previous
-    Waypoint newPoint = addNewWaypoint(previous, position, tangent, false);
-
-    //connect newPoint to next
-    newPoint.setNextWaypoint(next);
-    next.setPreviousWaypoint(newPoint);
-    //tell spline going from previous -> next to go from previous -> new
-    newPoint.addSpline(next.getPreviousSpline(), true);
-    newPoint.update();
-    this.enableSubchildSelector(this.subchildIdx);
-    return newPoint;
-  }
-
-  /**
    * Create new Waypoint in Path after previous.
    *
    * @param previous The node before this one
@@ -94,6 +66,7 @@ public class Path {
       newPoint.setSpline(new QuickSpline(newPoint, waypoints.get(nextPointIndex)));
     }
     newPoint.update();
+    this.enableSubchildSelector(this.subchildIdx);
     updateSplines();
     return newPoint;
   }
@@ -308,7 +281,7 @@ public class Path {
     this.subchildIdx = i;
     for (Waypoint wp : waypoints) {
       wp.enableSubchildSelector(i);
-      wp.getSpline().enableSubstuff;
+      wp.getSpline().enableSubchildSelector(i);
     }
   }
 
