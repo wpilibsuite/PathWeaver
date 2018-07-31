@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -21,6 +22,7 @@ public class MainController {
   @FXML private Pane pathDisplay;
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
+  @FXML private TableView<PropertyManager.NamedProperty> wpProperties;
 
   private String directory = "PathWeaver/";
   private String pathDirectory;
@@ -29,6 +31,8 @@ public class MainController {
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   private TreeItem<String> selected = null;
+
+  private PropertyManager wpPropManager;
 
   @FXML
   private void initialize() {
@@ -46,6 +50,7 @@ public class MainController {
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
 
     pathDisplayController.setPathDirectory(pathDirectory);
+    setupPropertyManager();
 
     setupClickablePaths();
     loadAllAutons();
@@ -53,6 +58,20 @@ public class MainController {
     autons.setEditable(true);
     paths.setEditable(true);
     setupEditable();
+  }
+
+  private void setupPropertyManager() {
+    wpPropManager = new PropertyManager(wpProperties);
+    pathDisplayController.getSelectedWaypointProp().addListener((observable, oldValue, newValue) ->
+            wpPropManager.manageProperties(newValue));
+    wpPropManager.setCommitCallback(obj -> {
+      boolean isValid = pathDisplayController.checkBounds((Waypoint) obj);
+      if (isValid) {
+        PathIOUtil.export(pathDisplayController.getPathDirectory(),
+                pathDisplayController.getSelectedWaypointProp().getValue().getPath());
+      }
+      return isValid;
+    });
   }
 
   @SuppressWarnings("PMD.NcssCount")

@@ -7,13 +7,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-public class Waypoint {
+public class Waypoint implements PropertyManager.PropertyEditable {
   private Waypoint previousWaypoint = null;
   private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
@@ -29,6 +30,8 @@ public class Waypoint {
 
   private final Line tangentLine;
   private final Circle dot;
+
+  private final ObservableList<PropertyManager.NamedProperty> properties = new ObservableArrayList<>();
 
 
   public Path getPath() {
@@ -61,7 +64,16 @@ public class Waypoint {
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
 
+    setupProperties();
+
     setupDnd();
+  }
+
+  private void setupProperties() {
+    properties.add(new PropertyManager.NamedProperty("X", xProperty()));
+    properties.add(new PropertyManager.NamedProperty("Y", yProperty()));
+    properties.add(new PropertyManager.NamedProperty("Tangent X", tangentLine.endXProperty()));
+    properties.add(new PropertyManager.NamedProperty("Tangent Y", tangentLine.endYProperty()));
   }
 
   private void setupDnd() {
@@ -304,4 +316,8 @@ public class Waypoint {
     this.nextWaypoint = nextWaypoint;
   }
 
+  @Override
+  public ObservableList<PropertyManager.NamedProperty> getProperties() {
+    return this.properties;
+  }
 }
