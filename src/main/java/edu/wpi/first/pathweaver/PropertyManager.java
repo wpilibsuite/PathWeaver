@@ -4,7 +4,6 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -122,7 +121,6 @@ public class PropertyManager {
 
   private class EditingCell extends TableCell<NamedProperty, Object> {
     private TextField textField;
-    private CheckBox checkBox;
 
     public EditingCell() {
       super();
@@ -131,17 +129,10 @@ public class PropertyManager {
     @Override public void startEdit() {
       if (!isEmpty()) {
         super.startEdit();
-
-        if (getItem() instanceof Boolean) {
-          createCheckBox();
-          setText(null);
-          setGraphic(checkBox);
-        } else {
-          createTextField();
-          setText(null);
-          setGraphic(textField);
-          textField.selectAll();
-        }
+        createTextField();
+        setText(null);
+        setGraphic(textField);
+        textField.selectAll();
       }
     }
 
@@ -156,7 +147,6 @@ public class PropertyManager {
       setGraphic(null);
     }
 
-    @SuppressWarnings("PMD.NcssCount")
     @Override
     public void updateItem(Object item, boolean empty) {
       super.updateItem(item, empty);
@@ -165,19 +155,11 @@ public class PropertyManager {
         setGraphic(null);
       } else {
         if (isEditing()) {
-          if (getItem() instanceof Boolean) {
-            if (checkBox != null) {
-              checkBox.setSelected(getBoolean());
-            }
-            setText(null);
-            setGraphic(checkBox);
-          } else {
-            if (textField != null) {
-              textField.setText(getString());
-            }
-            setText(null);
-            setGraphic(textField);
+          if (textField != null) {
+            textField.setText(getString());
           }
+          setText(null);
+          setGraphic(textField);
         } else {
           setText(getString());
           setGraphic(null);
@@ -200,23 +182,8 @@ public class PropertyManager {
       });
     }
 
-    private void createCheckBox() {
-      checkBox = new CheckBox();
-      checkBox.setSelected(getBoolean());
-      checkBox.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-      checkBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
-        if (!newValue) {
-          commitEdit(checkBox.isSelected());
-        }
-      });
-    }
-
     private String getString() {
       return getItem() == null ? "" : getItem().toString();
-    }
-
-    private Boolean getBoolean() {
-      return getItem() != null && (Boolean) getItem();
     }
   }
 }
