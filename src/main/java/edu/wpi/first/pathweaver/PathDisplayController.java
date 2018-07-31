@@ -118,6 +118,7 @@ public class PathDisplayController {
    * Remove all paths from Controller.
    */
   public void removeAllPath() {
+    selectedWaypointProp.setValue(null);
     pathList.clear();
   }
 
