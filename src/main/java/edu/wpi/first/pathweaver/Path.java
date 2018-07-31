@@ -8,6 +8,7 @@ public class Path {
   private Waypoint start;
   private Waypoint end;
   private String pathName = "default";
+  private int subchildIdx = 0;
 
   public Path(String name) {
     pathName = name;
@@ -89,6 +90,7 @@ public class Path {
     //tell spline going from previous -> next to go from previous -> new
     newPoint.addSpline(next.getPreviousSpline(), true);
     newPoint.update();
+    this.enableSubchildSelector(this.subchildIdx);
     return newPoint;
   }
 
@@ -238,6 +240,7 @@ public class Path {
    * @param i The index of subchild class to enable
    */
   public void enableSubchildSelector(int i) {
+    this.subchildIdx = i;
     Waypoint next = getStart();
     while (next != null) {
       next.enableSubchildSelector(i);
