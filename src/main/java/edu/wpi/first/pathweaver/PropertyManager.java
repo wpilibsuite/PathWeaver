@@ -10,6 +10,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
 
@@ -186,9 +188,14 @@ public class PropertyManager {
     private void createTextField() {
       textField = new TextField(getString());
       textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-      textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-        if (!newValue) {
+      textField.focusedProperty().addListener((observable, oldIsFocused, newIsFocused) -> {
+        if (!newIsFocused) {
           commitEdit(textField.getText());
+        }
+      });
+      textField.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+          this.requestFocus();  // Unfocus the textfield to call commitEdit
         }
       });
     }
