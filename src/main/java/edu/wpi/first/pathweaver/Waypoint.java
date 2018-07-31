@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   private final DoubleProperty y = new SimpleDoubleProperty();
   private final DoubleProperty tangentX = new SimpleDoubleProperty();
   private final DoubleProperty tangentY = new SimpleDoubleProperty();
-  private boolean lockTangent;
+  private final SimpleBooleanProperty lockTangent = new SimpleBooleanProperty();
   private Spline previousSpline = null;
   private Spline nextSpline = null;
 
@@ -48,7 +49,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
    */
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
-    lockTangent = fixedAngle;
+    lockTangent.set(fixedAngle);
     setX(position.getX());
     setY(position.getY());
     dot = new Circle(10);
@@ -70,10 +71,17 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   }
 
   private void setupProperties() {
-    properties.add(new PropertyManager.NamedProperty("X", xProperty()));
-    properties.add(new PropertyManager.NamedProperty("Y", yProperty()));
-    properties.add(new PropertyManager.NamedProperty("Tangent Vector X", tangentX));
-    properties.add(new PropertyManager.NamedProperty("Tangent Vector Y", tangentY));
+    properties.add(new PropertyManager.NamedProperty<Double>("X", xProperty()));
+    properties.add(new PropertyManager.NamedProperty<Double>("Y", yProperty()));
+    properties.add(new PropertyManager.NamedProperty<Double>("Tangent Vector X", tangentX, (newVal) -> {
+      lockTangent();
+      return true;
+    }));
+    properties.add(new PropertyManager.NamedProperty<Double>("Tangent Vector Y", tangentY, (newVal) -> {
+      lockTangent();
+      return true;
+    }));
+    properties.add(new PropertyManager.NamedProperty<Double>("Lock Tangent", lockTangent));
   }
 
   private void setupDnd() {
@@ -98,14 +106,14 @@ public class Waypoint implements PropertyManager.PropertyEditable {
    * @param event The mouse event that was triggered
    */
   public void resetOnDoubleClick(MouseEvent event) {
-    if (event.getClickCount() == 2 && lockTangent) {
-      lockTangent = false;
+    if (event.getClickCount() == 2 && lockTangent.get()) {
+      lockTangent.set(false);
       update();
     }
   }
 
   public void lockTangent() {
-    lockTangent = true;
+    lockTangent.set(true);
   }
 
   /**
@@ -134,7 +142,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
    */
   @SuppressWarnings("PMD.NcssCount")
   public void updateTheta() {
-    if (lockTangent) {
+    if (lockTangent.get()) {
       return;
     }
     if (previousWaypoint == null) {
@@ -236,7 +244,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   }
 
   public boolean isLockTangent() {
-    return lockTangent;
+    return lockTangent.get();
   }
 
   public Line getTangentLine() {

@@ -327,6 +327,6 @@ public class PathDisplayController {
 
   public boolean checkBounds(Waypoint obj) {
     return drawPane.getLayoutBounds().contains(obj.getCoords())
-            && drawPane.getLayoutBounds().contains(obj.getTangent());
+            && drawPane.getLayoutBounds().contains(obj.getCoords().add(obj.getTangent()));
   }
 }

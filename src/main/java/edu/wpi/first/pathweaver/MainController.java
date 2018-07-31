@@ -70,7 +70,6 @@ public class MainController {
       if (isValid) {
         PathIOUtil.export(pathDisplayController.getPathDirectory(),
                 pathDisplayController.getSelectedWaypointProp().getValue().getPath());
-        wp.lockTangent();
         if (wp.getPreviousSpline() != null) {
           wp.getPreviousSpline().updateControlPoints();
         }

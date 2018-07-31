@@ -31,6 +31,7 @@ public class PropertyManager {
     this.propertyView.setEditable(true);
 
     TableColumn<NamedProperty, String> nameCol = new TableColumn<>("Property");
+    nameCol.setPrefWidth(130.0);
     nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
     TableColumn<NamedProperty, Object> valueCol = new TableColumn<>("Value");
     valueCol.setPrefWidth(100.0);
@@ -75,17 +76,29 @@ public class PropertyManager {
     this.commitCallback = commitCallback;
   }
 
-  public static class NamedProperty {
-    private final Property value;
+  public static class NamedProperty<T> {
+    private final Property<T> value;
     private final SimpleStringProperty name = new SimpleStringProperty();
+    private Callback<T, Boolean> updateCallback;
 
     public NamedProperty(String name, Property value) {
       this.name.set(name);
       this.value = value;
     }
 
-    public void setValue(Object val) {
-      value.setValue(val);
+    public NamedProperty(String name, Property value, Callback<T, Boolean> updateCallback) {
+      this(name, value);
+      this.updateCallback = updateCallback;
+    }
+
+    /**
+     * Sets the value of the property, contingent on the update callback returning true.
+     * @param val the new value of the property
+     */
+    public void setValue(T val) {
+      if (updateCallback == null || updateCallback.call(val)) {
+        value.setValue(val);
+      }
     }
 
     /**
@@ -94,14 +107,18 @@ public class PropertyManager {
      */
     public void coerceValue(Object val) {
       try {
-        value.setValue(val);
+        setValue((T) val);
         return;
       } catch (ClassCastException ignored) { }
 
       String sval = (String) val;
       try {
-        value.setValue(Double.parseDouble(sval));
+        setValue((T) Double.valueOf(Double.parseDouble(sval)));
         return;
+      } catch (NumberFormatException | ClassCastException ignored) { }
+
+      try {
+        setValue((T) Boolean.valueOf(Boolean.parseBoolean(sval)));
       } catch (ClassCastException ignored) { }
 
       throw new IllegalArgumentException("Failed to coerce property");
@@ -148,11 +165,7 @@ public class PropertyManager {
     @Override public void cancelEdit() {
       super.cancelEdit();
       Object item = getItem();
-      if (item instanceof Boolean) {
-        setText(getItem().toString());
-      } else {
-        setText(getItem().toString());
-      }
+      setText(item.toString());
       setGraphic(null);
     }
 
