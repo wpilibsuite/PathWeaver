@@ -1,5 +1,7 @@
 package edu.wpi.first.pathweaver;
 
+import java.util.List;
+
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,12 +11,14 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 public final class FxUtils { // NOPMD util class name
-  private static final PseudoClass[] SUBCHILD_SELECTORS = new PseudoClass[8]; // NOPMD
+  private static final List<PseudoClass> SUBCHILD_SELECTORS; // NOPMD
 
   static {
-    for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
-      SUBCHILD_SELECTORS[i] = PseudoClass.getPseudoClass("subchild" + i);
+    PseudoClass[] selectors = new PseudoClass[8];
+    for (int i = 0; i < selectors.length; i++) {
+      selectors[i] = PseudoClass.getPseudoClass("subchild" + i);
     }
+    SUBCHILD_SELECTORS = List.of(selectors);
   }
 
   private FxUtils() {
@@ -49,8 +53,8 @@ public final class FxUtils { // NOPMD util class name
    * @param idx The index of SUBCHILD_SELECTORS to set enabled. Use -1 to disable all.
    */
   public static void enableSubchildSelector(Node node, int idx) {
-    for (int i = 0; i < SUBCHILD_SELECTORS.length; i++) {
-      node.pseudoClassStateChanged(SUBCHILD_SELECTORS[i], i == idx % SUBCHILD_SELECTORS.length);
+    for (int i = 0; i < SUBCHILD_SELECTORS.size(); i++) {
+      node.pseudoClassStateChanged(SUBCHILD_SELECTORS.get(i), i == idx % SUBCHILD_SELECTORS.size());
     }
   }
 
