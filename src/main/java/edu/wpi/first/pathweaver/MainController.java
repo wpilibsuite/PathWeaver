@@ -65,10 +65,18 @@ public class MainController {
     pathDisplayController.getSelectedWaypointProp().addListener((observable, oldValue, newValue) ->
             wpPropManager.manageProperties(newValue));
     wpPropManager.setCommitCallback(obj -> {
-      boolean isValid = pathDisplayController.checkBounds((Waypoint) obj);
+      Waypoint wp = (Waypoint) obj;
+      boolean isValid = pathDisplayController.checkBounds(wp);
       if (isValid) {
         PathIOUtil.export(pathDisplayController.getPathDirectory(),
                 pathDisplayController.getSelectedWaypointProp().getValue().getPath());
+        wp.lockTangent();
+        if (wp.getPreviousSpline() != null) {
+          wp.getPreviousSpline().updateControlPoints();
+        }
+        if (wp.getNextSpline() != null) {
+          wp.getNextSpline().updateControlPoints();
+        }
       }
       return isValid;
     });

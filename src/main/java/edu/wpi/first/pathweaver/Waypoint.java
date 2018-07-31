@@ -4,9 +4,7 @@ import java.util.Map;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
@@ -20,10 +18,11 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty tangentX = new SimpleDoubleProperty();
+  private final DoubleProperty tangentY = new SimpleDoubleProperty();
   private boolean lockTangent;
   private Spline previousSpline = null;
   private Spline nextSpline = null;
-  private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
   private final Path path;
   public static Waypoint currentWaypoint = null;
@@ -61,9 +60,9 @@ public class Waypoint implements PropertyManager.PropertyEditable {
     tangentLine = new Line();
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(tangentVector);
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
+    setTangent(tangentVector);
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> tangentX.get() + getX(), tangentX, x));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> tangentY.get() + getY(), tangentY, y));
 
     setupProperties();
 
@@ -73,8 +72,8 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   private void setupProperties() {
     properties.add(new PropertyManager.NamedProperty("X", xProperty()));
     properties.add(new PropertyManager.NamedProperty("Y", yProperty()));
-    properties.add(new PropertyManager.NamedProperty("Tangent X", tangentLine.endXProperty()));
-    properties.add(new PropertyManager.NamedProperty("Tangent Y", tangentLine.endYProperty()));
+    properties.add(new PropertyManager.NamedProperty("Tangent Vector X", tangentX));
+    properties.add(new PropertyManager.NamedProperty("Tangent Vector Y", tangentY));
   }
 
   private void setupDnd() {
@@ -190,7 +189,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
     Point2D a2 = p3Shifted.subtract(a1);
 
     Point2D tangent = a1.multiply(2 * t).add(a2).multiply(1. / 3);
-    this.tangent.set(tangent);
+    this.setTangent(tangent);
   }
 
   /**
@@ -244,16 +243,9 @@ public class Waypoint implements PropertyManager.PropertyEditable {
     return tangentLine;
   }
 
-  public Point2D getTangent() {
-    return tangent.get();
-  }
-
-  public ObjectProperty<Point2D> tangentProperty() {
-    return tangent;
-  }
-
   public void setTangent(Point2D tangent) {
-    this.tangent.set(tangent);
+    this.tangentX.set(tangent.getX());
+    this.tangentY.set(tangent.getY());
   }
 
   public Spline getPreviousSpline() {
@@ -320,5 +312,9 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   @Override
   public ObservableList<PropertyManager.NamedProperty> getProperties() {
     return this.properties;
+  }
+
+  public Point2D getTangent() {
+    return new Point2D(tangentX.get(), tangentY.get());
   }
 }
