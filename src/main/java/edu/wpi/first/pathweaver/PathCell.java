@@ -48,6 +48,27 @@ public class PathCell extends TextFieldTreeCell<String> {
       setupDragDrop();
     }
     this.setConverter(new DefaultStringConverter());
+    FxUtils.applySubchildClasses(this);
+  }
+
+  @Override
+  public void updateItem(String s, boolean b) {
+    super.updateItem(s, b);
+    updateColor();
+  }
+
+  @Override
+  public void updateIndex(int i) {
+    super.updateIndex(i);
+    updateColor();
+  }
+
+  private void updateColor() {
+    if (FxUtils.isSubChild(this.getTreeView(), this.getTreeItem())) {
+      FxUtils.enableSubchildSelector(this, FxUtils.getItemIndex(this.getTreeItem()));
+    } else {
+      FxUtils.enableSubchildSelector(this, -1);
+    }
   }
 
   @Override
