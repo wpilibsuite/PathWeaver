@@ -10,8 +10,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
@@ -26,7 +26,9 @@ public class Waypoint {
 
 
   private final Line tangentLine;
-  private final Circle dot;
+  private Polygon icon;
+
+  private static final double SIZE = 30.0;
 
 
   public Path getPath() {
@@ -46,13 +48,13 @@ public class Waypoint {
     lockTangent = fixedAngle;
     setX(position.getX());
     setY(position.getY());
-    dot = new Circle(10);
-    dot.centerXProperty().bind(x);
-    dot.centerYProperty().bind(y);
+    icon = new Polygon();
+    setupIcon();
     x.addListener(__ -> update());
     y.addListener(__ -> update());
 
     tangentLine = new Line();
+    tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
     tangent.set(tangentVector);
@@ -64,10 +66,35 @@ public class Waypoint {
     setupDnd();
   }
 
+
+  public void enableSubchildSelector(int i) {
+    FxUtils.enableSubchildSelector(this.icon, i);
+    getIcon().applyCss();
+  }
+
+  private void setupIcon() {
+    icon = new Polygon(
+            0.0, SIZE / 3,
+            SIZE, 0.0,
+            0.0, -SIZE / 3);
+    double xOffset = (SIZE * 3D / 5D) / 16.5;
+    icon.setLayoutX(-(icon.getLayoutBounds().getMaxX() + icon.getLayoutBounds().getMinX()) / 2 - xOffset);
+    icon.setLayoutY(-(icon.getLayoutBounds().getMaxY() + icon.getLayoutBounds().getMinY()) / 2);
+
+    icon.translateXProperty().bind(x);
+    icon.translateYProperty().bind(y);
+    FxUtils.applySubchildClasses(this.icon);
+    this.icon.rotateProperty().bind(
+            Bindings.createObjectBinding(() ->
+                    getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
+                    tangent));
+    icon.getStyleClass().add("waypoint");
+  }
+
   private void setupDnd() {
-    dot.setOnDragDetected(event -> {
+    icon.setOnDragDetected(event -> {
       currentWaypoint = this;
-      dot.startDragAndDrop(TransferMode.MOVE)
+      icon.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.WAYPOINT, "point"));
     });
     tangentLine.setOnDragDetected(event -> {
@@ -159,8 +186,8 @@ public class Waypoint {
     this.tangent.set(tangent);
   }
 
-  public Circle getDot() {
-    return dot;
+  public Polygon getIcon() {
+    return icon;
   }
 
   public double getX() {

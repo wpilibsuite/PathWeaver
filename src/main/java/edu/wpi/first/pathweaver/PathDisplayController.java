@@ -10,6 +10,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -90,15 +91,16 @@ public class PathDisplayController {
   }
 
   /**
-   * Add path to Controller.
-   *
-   * @param fileLocations Current working directory
-   * @param fileName      Name of path file inside directory
+   * Adds a path to the controller.
+   * @param fileLocations The folder containing the path file
+   * @param newValue The TreeItem holding the name of this path
+   * @return The new path, or if duplicate, the old path matching the file name
    */
-  public void addPath(String fileLocations, String fileName) {
+  public Path addPath(String fileLocations, TreeItem<String> newValue) {
+    String fileName = newValue.getValue();
     for (Path path : pathList) {
       if (fileName.equals(path.getPathName())) {
-        return;
+        return path;
       }
     }
     Path newPath = PathIOUtil.importPath(fileLocations, fileName);
@@ -107,6 +109,7 @@ public class PathDisplayController {
       PathIOUtil.export(fileLocations, newPath);
     }
     pathList.add(newPath);
+    return newPath;
   }
 
   /**
@@ -132,10 +135,10 @@ public class PathDisplayController {
    * @param current The waypoint
    */
   public void addWaypointToPane(Waypoint current) {
-    waypointGroup.getChildren().add(current.getDot());
+    waypointGroup.getChildren().add(current.getIcon());
     vectorGroup.getChildren().add(current.getTangentLine());
-    current.getDot().setScaleX(circleScale / field.getScale());
-    current.getDot().setScaleY(circleScale / field.getScale());
+    current.getIcon().setScaleX(circleScale / field.getScale());
+    current.getIcon().setScaleY(circleScale / field.getScale());
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().toBack();
     current.getSpline().addToGroup(splineGroup, splineScale / field.getScale());
@@ -149,6 +152,14 @@ public class PathDisplayController {
     for (Waypoint wp : newPath.getWaypoints()) {
       waypointGroup.getChildren().remove(wp.getDot());
       vectorGroup.getChildren().remove(wp.getTangentLine());
+    Waypoint current = newPath.getStart();
+    while (current != null) {
+      waypointGroup.getChildren().remove(current.getIcon());
+      vectorGroup.getChildren().remove(current.getTangentLine());
+      current = current.getNextWaypoint();
+      if (current != null) {
+        splineGroup.getChildren().remove(current.getPreviousSpline().getCubic());
+      }
     }
   }
 
@@ -169,7 +180,7 @@ public class PathDisplayController {
    * @param waypoint The waypoint
    */
   public void setupWaypoint(Waypoint waypoint) {
-    waypoint.getDot().setOnMouseClicked(e -> {
+    waypoint.getIcon().setOnMouseClicked(e -> {
           waypoint.resetOnDoubleClick(e);
           if (e.getClickCount() == 1) {
             selectWaypoint(waypoint, true);
@@ -178,7 +189,7 @@ public class PathDisplayController {
         }
     );
 
-    waypoint.getDot().setOnContextMenuRequested(e -> {
+    waypoint.getIcon().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
         menu.getItems().add(FxUtils.menuItem("Delete", __ -> delete(waypoint)));
@@ -229,18 +240,18 @@ public class PathDisplayController {
   public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
     if (selectedWaypoint == waypoint && toggle) {
-      selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+      selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
       selectedWaypoint = null;
       currentPath.set(null);
     } else {
       if (selectedWaypoint != null) {
-        selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
       }
       selectedWaypoint = waypoint;
-      waypoint.getDot().pseudoClassStateChanged(selected, true);
-      waypoint.getDot().requestFocus();
-      waypoint.getDot().toFront();
+      waypoint.getIcon().pseudoClassStateChanged(selected, true);
+      waypoint.getIcon().requestFocus();
+      waypoint.getIcon().toFront();
       currentPath.set(selectedWaypoint.getPath());
     }
   }
@@ -248,7 +259,7 @@ public class PathDisplayController {
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
       if (selectedWaypoint != null) {
-        selectedWaypoint.getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
         selectedWaypoint = null;
       }
     });

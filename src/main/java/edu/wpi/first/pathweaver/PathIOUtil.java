@@ -36,7 +36,7 @@ public final class PathIOUtil {
         BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"));
+            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"))
     ) {
       for (Waypoint wp : path.getWaypoints()) {
         double xPos = wp.getX();
@@ -70,7 +70,7 @@ public final class PathIOUtil {
           CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
               .withFirstRecordAsHeader()
               .withIgnoreHeaderCase()
-              .withTrim());
+              .withTrim())
       ) {
         int count = 0;
         Point2D startPosition = null;

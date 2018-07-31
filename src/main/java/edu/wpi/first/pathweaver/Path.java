@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 public class Path {
   private final List<Waypoint> waypoints = new LinkedList<>();
   private final String pathName;
+  private int subchildIdx = 0;
 
   public Path(String name) {
     this(new Point2D(0, 0), new Point2D(10, 10), new Point2D(10, 0),
@@ -45,6 +46,34 @@ public class Path {
 
   /**
    * Creates new Waypoint in Path after previous.
+   *
+   * @param previous The point prior to new point
+   * @param next     The point after the new point
+   *
+   * @return new Waypoint
+   */
+  public Waypoint addNewWaypoint(Waypoint previous, Waypoint next) {
+    if (previous.getNextWaypoint() != next || next.getPreviousWaypoint() != previous) {
+      throw new IllegalArgumentException("New Waypoint not between connected points");
+    }
+    Point2D position = new Point2D(previous.getX() + next.getX() / 2, (previous.getY() + next.getY()) / 2);
+    Point2D tangent = new Point2D(0, 0);
+
+    //add new point after previous
+    Waypoint newPoint = addNewWaypoint(previous, position, tangent, false);
+
+    //connect newPoint to next
+    newPoint.setNextWaypoint(next);
+    next.setPreviousWaypoint(newPoint);
+    //tell spline going from previous -> next to go from previous -> new
+    newPoint.addSpline(next.getPreviousSpline(), true);
+    newPoint.update();
+    this.enableSubchildSelector(this.subchildIdx);
+    return newPoint;
+  }
+
+  /**
+   * Create new Waypoint in Path after previous.
    *
    * @param previous The node before this one
    * @param position Position to play new Waypoint
@@ -270,6 +299,18 @@ public class Path {
     }
   }
 
+
+  /**
+   * Enables a subchild class for all waypoints in this path.
+   * @param i The index of subchild class to enable
+   */
+  public void enableSubchildSelector(int i) {
+    this.subchildIdx = i;
+    for (Waypoint wp : waypoints) {
+      wp.enableSubchildSelector(i);
+      wp.getSpline().enableSubstuff;
+    }
+  }
 
   /**
    * Duplicates a path.
