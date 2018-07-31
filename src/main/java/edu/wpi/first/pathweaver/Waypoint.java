@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -31,7 +32,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
   private final Line tangentLine;
   private final Circle dot;
 
-  private final ObservableList<PropertyManager.NamedProperty> properties = new ObservableArrayList<>();
+  private final ObservableList<PropertyManager.NamedProperty> properties = FXCollections.observableArrayList();
 
 
   public Path getPath() {
