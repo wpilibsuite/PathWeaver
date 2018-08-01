@@ -54,6 +54,14 @@ public class WelcomeController {
   }
 
   private void createProject() {
+    try {
+      Pane root = FXMLLoader.load(getClass().getResource("createProject.fxml"));
+      Scene scene = borderPane.getScene();
+      scene.setRoot(root);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
   private void loadProject(String folder) {
