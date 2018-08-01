@@ -11,13 +11,12 @@ import javafx.stage.Stage;
 public class PathWeaver extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
-    Pane root = FXMLLoader.load(getClass().getResource("main.fxml"));
+    Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
-    scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");
+    primaryStage.resizableProperty().setValue(false);
     primaryStage.setScene(scene);
     primaryStage.show();
 
     Loggers.setupLoggers();
-
   }
 }
