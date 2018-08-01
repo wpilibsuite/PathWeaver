@@ -5,8 +5,8 @@ import java.util.List;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -64,10 +64,14 @@ public class MainController {
     paths.setEditable(true);
     setupEditable();
 
+    setupButtonDisable();
+
+  }
+
+  private void setupButtonDisable() {
     duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
-
   }
 
   private void setupPropertyManager() {

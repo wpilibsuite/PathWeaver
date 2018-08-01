@@ -106,7 +106,7 @@ public class Waypoint implements PropertyManager.PropertyEditable {
     this.icon.rotateProperty().bind(
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
-                    tangent));
+                    tangentX, tangentY));
     icon.getStyleClass().add("waypoint");
   }
 

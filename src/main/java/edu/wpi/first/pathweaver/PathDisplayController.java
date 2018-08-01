@@ -261,12 +261,12 @@ public class PathDisplayController {
       currentPath.set(null);
     } else {
       if (selectedWaypointProp.getValue() != null) {
-        selectedWaypointProp.getValue().getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypointProp.getValue().getIcon().pseudoClassStateChanged(selected, false);
       }
       selectedWaypointProp.setValue(waypoint);
-      waypoint.getDot().pseudoClassStateChanged(selected, true);
-      waypoint.getDot().requestFocus();
-      waypoint.getDot().toFront();
+      waypoint.getIcon().pseudoClassStateChanged(selected, true);
+      waypoint.getIcon().requestFocus();
+      waypoint.getIcon().toFront();
       currentPath.set(selectedWaypointProp.getValue().getPath());
     }
   }
@@ -274,7 +274,7 @@ public class PathDisplayController {
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
       if (selectedWaypointProp.getValue() != null) {
-        selectedWaypointProp.getValue().getDot().pseudoClassStateChanged(selected, false);
+        selectedWaypointProp.getValue().getIcon().pseudoClassStateChanged(selected, false);
         selectedWaypointProp.setValue(null);
       }
     });
