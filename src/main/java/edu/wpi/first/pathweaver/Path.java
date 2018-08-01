@@ -45,7 +45,7 @@ public class Path {
   }
 
   /**
-   * Create new Waypoint in Path after previous.
+   * Creates new Waypoint in Path after previous.
    *
    * @param previous The node before this one
    * @param position Position to play new Waypoint
