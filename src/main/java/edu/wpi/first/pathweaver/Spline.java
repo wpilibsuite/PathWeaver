@@ -25,6 +25,8 @@ public class Spline {
     start = first;
     end = last;
     cubic = new CubicCurve();
+    cubic.getStyleClass().add("path");
+    FxUtils.applySubchildClasses(cubic);
     start.addSpline(this, true);
     end.addSpline(this, false);
     updateControlPoints();
@@ -35,6 +37,11 @@ public class Spline {
       board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
       currentSpline = this;
     });
+  }
+
+  public void enableSubchildSelector(int i) {
+    FxUtils.enableSubchildSelector(cubic, i);
+    cubic.applyCss();
   }
 
   /**

@@ -2,25 +2,67 @@
     -fx-background-color: #101824;
 }
 
-Circle {
-    -fx-fill: orange;
+* {
+    my-color: CHART_COLOR_2;
+}
+
+:subchild0 {
+    my-color: CHART_COLOR_2;
+}
+:subchild1 {
+    my-color: CHART_COLOR_1;
+}
+:subchild2 {
+    my-color: CHART_COLOR_3;
+}
+:subchild3 {
+    my-color: CHART_COLOR_4;
+}
+:subchild4 {
+    my-color: CHART_COLOR_5;
+}
+:subchild5 {
+    my-color: CHART_COLOR_6;
+}
+:subchild6 {
+    my-color: CHART_COLOR_7;
+}
+:subchild7 {
+    my-color: CHART_COLOR_8;
+}
+
+
+.tree-cell:filled:subchild0,
+.tree-cell:filled:subchild1,
+.tree-cell:filled:subchild2,
+.tree-cell:filled:subchild3,
+.tree-cell:filled:subchild4,
+.tree-cell:filled:subchild5,
+.tree-cell:filled:subchild6,
+.tree-cell:filled:subchild7 {
+    -fx-background-color: my-color;
+}
+
+.waypoint {
     -fx-stroke: #101824;
     -fx-stroke-width: 2px;
     -fx-cursor: hand;
+    -fx-fill: my-color;
 }
 
-Circle:selected {
-    -fx-fill: rgb(255, 241, 173);
+.waypoint:selected {
+    -fx-stroke: rgb(255, 241, 173);
 }
 
-CubicCurve {
-    -fx-stroke: derive(orange, -25%);
+.path {
     -fx-stroke-line-cap: round;
     -fx-fill: null;
     -fx-cursor: hand;
+    -fx-stroke: derive(my-color, -25%);
 }
 
-Line {
+.tangent {
     -fx-stroke: cyan;
     -fx-cursor: hand;
 }
+

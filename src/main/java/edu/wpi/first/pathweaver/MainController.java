@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -31,6 +32,10 @@ public class MainController {
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
   private TreeItem<String> selected = null;
+
+  @FXML private Button duplicate;
+  @FXML private Button flipHorizontal;
+  @FXML private Button flipVertical;
 
   private PropertyManager wpPropManager;
 
@@ -58,6 +63,11 @@ public class MainController {
     autons.setEditable(true);
     paths.setEditable(true);
     setupEditable();
+
+    duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+
   }
 
   private void setupPropertyManager() {
@@ -104,7 +114,7 @@ public class MainController {
       saveAllAutons();
       loadAllAutons();
       pathDisplayController.removeAllPath();
-      pathDisplayController.addPath(pathDirectory, edit.getNewValue());
+      pathDisplayController.addPath(pathDirectory, edit.getTreeItem());
     });
   }
 
@@ -207,9 +217,8 @@ public class MainController {
                 //pathRoot.setExpanded(!pathRoot.isExpanded());
               } else {
                 pathDisplayController.removeAllPath();
-                pathDisplayController.addPath(pathDirectory, newValue.getValue());
+                pathDisplayController.addPath(pathDirectory, newValue);
               }
-
             });
     autons.getSelectionModel()
         .selectedItemProperty()
@@ -217,16 +226,19 @@ public class MainController {
             (observable, oldValue, newValue) -> {
               selected = newValue;
               pathDisplayController.removeAllPath();
-              if (autons.getTreeItemLevel(newValue) == 2) { //has no children so try to display path
-                pathDisplayController.addPath(pathDirectory, newValue.getValue());
-              } else { //is an auton with children
-                for (TreeItem<String> item : newValue.getChildren()) {
-                  pathDisplayController.addPath(pathDirectory, item.getValue());
+              if (newValue != autonRoot) {
+                if (newValue.isLeaf()) { //has no children so try to display path
+                  Path path = pathDisplayController.addPath(pathDirectory, newValue);
+                  if (FxUtils.isSubChild(autons, newValue)) {
+                    path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
+                  }
+                } else { //is an auton with children
+                  for (TreeItem<String> it : selected.getChildren()) {
+                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
+                  }
                 }
               }
-
             });
-
   }
 
   private boolean validPathName(String oldName, String newName) {
