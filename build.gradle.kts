@@ -40,6 +40,6 @@ application {
 }
 
 task<Wrapper>("wrapper") {
-    gradleVersion = "4.7"
-    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = "4.9"
+    distributionType = Wrapper.DistributionType.BIN
 }
