@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
    <children>
       <Label text="Create Project...">
          <font>
@@ -46,20 +46,20 @@
             <Label text="Max Acceleration" GridPane.rowIndex="4" />
             <Label text="Max Jerk" GridPane.rowIndex="5" />
             <Label text="Wheel Base" GridPane.rowIndex="6" />
-            <TextField GridPane.columnIndex="1" />
+            <TextField fx:id="directory" GridPane.columnIndex="1" />
             <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" text="Browse" GridPane.columnIndex="2" />
+            <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button fx:id="browse" mnemonicParsing="false" text="Browse" GridPane.columnIndex="2" />
             <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label text="Maximum capable velocity of robot" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="Maximum acceleration (velocity per second)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Maximum jerk (acceleration per second)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <Label text="Distance between left and right of wheel base" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" text="Create Project" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Button fx:id="create" mnemonicParsing="false" text="Create Project" GridPane.columnIndex="2" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </children>
