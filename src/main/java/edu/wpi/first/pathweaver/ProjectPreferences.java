@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class ProjectPreferences {
 
-  private static final String filename = "/settings.json";
+  private static final String filename = "/pathweaver.project";
 
   private static ProjectPreferences instance;
 
