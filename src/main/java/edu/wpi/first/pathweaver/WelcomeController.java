@@ -7,10 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -41,12 +45,15 @@ public class WelcomeController {
     });
 
     createProject.setOnAction(event -> {
-      prefs.addProject("test1");
+      createProject();
     });
 
     importProject.setOnAction(event -> {
       importProject();
     });
+  }
+
+  private void createProject() {
   }
 
   private void loadProject(String folder) {
@@ -65,7 +72,9 @@ public class WelcomeController {
   private void importProject() {
     DirectoryChooser chooser = new DirectoryChooser();
     File selectedDirectory = chooser.showDialog(borderPane.getScene().getWindow());
-    ProgramPreferences.getInstance().addProject(selectedDirectory.getPath());
-    loadProject(selectedDirectory.getPath());
+    if (selectedDirectory != null) {
+      ProgramPreferences.getInstance().addProject(selectedDirectory.getPath());
+      loadProject(selectedDirectory.getPath());
+    }
   }
 }
