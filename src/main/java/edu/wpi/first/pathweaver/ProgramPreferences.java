@@ -91,6 +91,9 @@ public class ProgramPreferences {
       primaryStage.setX(values.getPosX());
       primaryStage.setY(values.getPosY());
       primaryStage.setMaximized(values.isMaximized());
+    } else {
+      primaryStage.setWidth(1024);
+      primaryStage.setHeight(768);
     }
   }
 
