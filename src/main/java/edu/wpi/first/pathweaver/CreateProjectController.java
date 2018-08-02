@@ -1,6 +1,7 @@
 package edu.wpi.first.pathweaver;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 import javafx.beans.binding.BooleanBinding;
@@ -8,11 +9,14 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 public class CreateProjectController {
 
@@ -83,5 +87,11 @@ public class CreateProjectController {
     if (selectedDirectory != null) {
       directory.setText(selectedDirectory.getPath());
     }
+  }
+
+  @FXML
+  private void cancel() throws IOException {
+    Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
+    vBox.getScene().setRoot(root);
   }
 }
