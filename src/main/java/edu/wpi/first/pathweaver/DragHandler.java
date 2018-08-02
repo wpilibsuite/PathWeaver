@@ -11,6 +11,8 @@ public class DragHandler {
   private final PathDisplayController controller;
   private final Pane drawPane;
 
+  private static Spline currentSpline = new NullSpline();
+
   private boolean isShiftDown = false;
   private boolean splineDragStarted = false;
 
@@ -74,28 +76,16 @@ public class DragHandler {
     Point2D pt = new Point2D(event.getX(), event.getY());
     wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
     wp.lockTangent();
-    if (wp.getPreviousSpline() != null) {
-      wp.getPreviousSpline().updateControlPoints();
-    }
-    if (wp.getNextSpline() != null) {
-      wp.getNextSpline().updateControlPoints();
-    }
+    wp.getPath().updateSplines();
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
     if (splineDragStarted) {
       handleWaypointDrag(event, wp);
     } else {
-      Spline current = Spline.currentSpline;
-      Waypoint start = current.getStart();
-      Waypoint end = current.getEnd();
-      Waypoint newPoint = current.getEnd().getPath().addNewWaypoint(start, end);
-      controller.addWaypointToPane(newPoint);
-      newPoint.getPreviousSpline().getCubic().toBack();
-      controller.setupWaypoint(newPoint);
-      controller.selectWaypoint(newPoint, false);
-      Spline.currentSpline = null;
-      Waypoint.currentWaypoint = newPoint;
+      Spline current = currentSpline;
+      current.addPathWaypoint(controller);
+      current = new NullSpline();
       splineDragStarted = true;
     }
   }
@@ -105,27 +95,28 @@ public class DragHandler {
     double offsetY = event.getY() - wp.getY();
 
     // Make sure all waypoints will be within the bounds
-    Waypoint next = wp.getPath().getStart();
-    while (next != null) {
-      double wpNewX = next.getX() + offsetX;
-      double wpNewY = next.getY() + offsetY;
+    for (Waypoint point : wp.getPath().getWaypoints()) {
+      double wpNewX = point.getX() + offsetX;
+      double wpNewY = point.getY() + offsetY;
       if (!checkBounds(wpNewX, wpNewY)) {
         return;
       }
-
-      next = next.getNextWaypoint();
     }
 
     // Apply new positions
-    next = wp.getPath().getStart();
-    while (next != null) {
-      double wpNewX = next.getX() + offsetX;
-      double wpNewY = next.getY() + offsetY;
-      next.setX(wpNewX);
-      next.setY(wpNewY);
-
-      next = next.getNextWaypoint();
+    for (Waypoint point : wp.getPath().getWaypoints()) {
+      double wpNewX = point.getX() + offsetX;
+      double wpNewY = point.getY() + offsetY;
+      point.setX(wpNewX);
+      point.setY(wpNewY);
     }
+  }
 
+  /**
+   * Set the spline that is currently being dragged.
+   * @param currentSpline Spline that is being dragged.
+   */
+  public static void setCurrentSpline(Spline currentSpline) {
+    DragHandler.currentSpline = currentSpline;
   }
 }
