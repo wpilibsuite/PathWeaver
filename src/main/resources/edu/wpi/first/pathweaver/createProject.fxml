@@ -43,12 +43,12 @@
             <Label text="Max Jerk" GridPane.rowIndex="4" />
             <Label text="Wheel Base" GridPane.rowIndex="5" />
             <TextField fx:id="directory" GridPane.columnIndex="1" />
+            <Button fx:id="browse" mnemonicParsing="false" text="Browse" onAction="#browseDirectory" GridPane.columnIndex="2" />
             <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Button fx:id="browse" mnemonicParsing="false" text="Browse" onAction="#browseDirectory" GridPane.columnIndex="2" />
             <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="Maximum capable velocity of robot" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label text="Maximum acceleration (velocity per second)" GridPane.columnIndex="2" GridPane.rowIndex="3" />

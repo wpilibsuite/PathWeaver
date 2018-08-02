@@ -1,15 +1,21 @@
 package edu.wpi.first.pathweaver;
 
 import java.io.File;
-import java.util.List;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 
 public class CreateProjectController {
 
+  @FXML
+  private Button create;
   @FXML
   private VBox vBox;
   @FXML
@@ -25,26 +31,24 @@ public class CreateProjectController {
   @FXML
   private TextField wheelBase;
 
-  private List<TextField> numericFields;
-
   @FXML
   private void initialize() {
-    numericFields = List.of(timeStep, maxVelocity, maxAcceleration, maxJerk, wheelBase);
+    ObservableList<TextField> numericFields = FXCollections.observableArrayList(timeStep, maxVelocity,
+        maxAcceleration, maxJerk, wheelBase);
+    ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
+    allFields.add(directory);
+
+    BooleanBinding bind = new SimpleBooleanProperty(true).not();
+    for (TextField field : allFields) {
+      bind = bind.or(field.textProperty().isEmpty());
+    }
+    create.disableProperty().bind(bind);
     // TODO: validate numbers only
   }
 
   @FXML
   private void createProject() {
-    // TODO: prompt user if fields are empty
-    for (TextField field : numericFields) {
-      if (field.getText().trim().isEmpty()) {
-        return;
-      }
-    }
     String folder = directory.getText().trim();
-    if (folder.isEmpty()) {
-      return;
-    }
     ProgramPreferences.getInstance().addProject(folder);
     double t = Double.parseDouble(timeStep.getText());
     double v = Double.parseDouble(maxVelocity.getText());
