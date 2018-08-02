@@ -68,6 +68,7 @@ public class DragHandler {
     if (checkBounds(event.getX(), event.getY())) {
       wp.setX(event.getX());
       wp.setY(event.getY());
+      wp.getPath().getWaypoints().forEach(Waypoint::update);
     }
     controller.selectWaypoint(wp, false);
   }
