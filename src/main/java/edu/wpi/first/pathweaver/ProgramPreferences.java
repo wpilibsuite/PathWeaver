@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.stage.Stage;
+
 public class ProgramPreferences {
   private static ProgramPreferences instance;
   private Values values;
@@ -53,6 +55,12 @@ public class ProgramPreferences {
     }
   }
 
+  public void saveResolution(double width, double height) {
+    values.width = width;
+    values.height = height;
+    updatePrefs();
+  }
+
   public void addProject(String path) {
     if (!values.recentProjects.contains(path)) {
       values.recentProjects.add(path);
@@ -64,8 +72,17 @@ public class ProgramPreferences {
     return values.recentProjects;
   }
 
+  public void setResolution(Stage primaryStage) {
+    if (values.width != 0 && values.height != 0) {
+      primaryStage.setWidth(values.width);
+      primaryStage.setHeight(values.height);
+    }
+  }
+
   public class Values {
     public List<String> recentProjects;
+    public double width;
+    public double height;
 
     public Values() {
       recentProjects = new ArrayList<>();
