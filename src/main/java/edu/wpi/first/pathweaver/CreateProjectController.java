@@ -50,7 +50,7 @@ public class CreateProjectController {
 
     UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
       String text = c.getControlNewText();
-      if (text.matches("^\\d*\\.?\\d*$")) {
+      if (text.matches("^\\d+\\.?\\d*$") || text.isEmpty()) {
         return c;
       } else {
         return null;
