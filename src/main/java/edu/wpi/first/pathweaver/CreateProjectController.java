@@ -64,6 +64,7 @@ public class CreateProjectController {
     ProjectPreferences.Values values = new ProjectPreferences.Values(t, v, a, j, w);
     ProjectPreferences prefs = ProjectPreferences.getInstance(folder);
     prefs.setValues(values);
+    FxUtils.loadMainScreen(vBox.getScene(), getClass());
   }
 
   private void browseDirectory() {

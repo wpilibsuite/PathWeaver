@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class ProjectPreferences {
 
@@ -16,16 +15,16 @@ public class ProjectPreferences {
 
   private static ProjectPreferences instance;
 
-  private final String folder;
+  private final String directory;
 
   private Values values;
 
   private boolean defaults;
 
-  private ProjectPreferences(String folder) {
-    this.folder = folder;
+  private ProjectPreferences(String directory) {
+    this.directory = directory;
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(folder + filename));
+      BufferedReader reader = new BufferedReader(new FileReader(directory + filename));
       Gson gson = new Gson();
       values = gson.fromJson(reader, Values.class);
       defaults = false;
@@ -43,7 +42,7 @@ public class ProjectPreferences {
   private void updateValues() {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      FileWriter writer = new FileWriter(folder + filename);
+      FileWriter writer = new FileWriter(directory + filename);
       gson.toJson(values, writer);
       writer.close();
     } catch (IOException e) {
@@ -56,12 +55,28 @@ public class ProjectPreferences {
     updateValues();
   }
 
+  public Values getValues() {
+    return values;
+  }
+
+  public String getDirectory() {
+    return directory;
+  }
+
 
   public static ProjectPreferences getInstance(String folder) {
-    if (instance == null || !instance.folder.equals(folder)) {
+    if (instance == null || !instance.directory.equals(folder)) {
       instance = new ProjectPreferences(folder);
     }
     return instance;
+  }
+
+  public static ProjectPreferences getInstance() {
+    if (instance == null) {
+      instance = new ProjectPreferences("PathWeaver");
+    }
+    return instance;
+
   }
 
   public static class Values {

@@ -23,7 +23,7 @@ public class MainController {
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
-  private String directory = "PathWeaver/";
+  private String directory = ProjectPreferences.getInstance().getDirectory();
   private String pathDirectory;
   private String autonDirectory;
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
@@ -37,8 +37,8 @@ public class MainController {
 
   @FXML
   private void initialize() {
-    pathDirectory = directory + "Paths/";
-    autonDirectory = directory + "Autons/";
+    pathDirectory = directory + "/Paths/";
+    autonDirectory = directory + "/Autons/";
     setupDrag();
 
     autons.setRoot(autonRoot);

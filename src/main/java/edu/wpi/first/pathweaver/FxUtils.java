@@ -1,14 +1,19 @@
 package edu.wpi.first.pathweaver;
 
+import java.io.IOException;
 import java.util.List;
 
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public final class FxUtils { // NOPMD util class name
   private static final List<PseudoClass> SUBCHILD_SELECTORS; // NOPMD
@@ -79,6 +84,18 @@ public final class FxUtils { // NOPMD util class name
       return parent.getChildren().indexOf(item);
     }
     return 0;
+  }
+
+  public static void loadMainScreen(Scene scene, Class aClass) {
+    try {
+      Pane root = FXMLLoader.load(aClass.getResource("main.fxml"));
+      Stage primaryStage = (Stage) scene.getWindow();
+      primaryStage.resizableProperty().setValue(true);
+      scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");
+      scene.setRoot(root);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

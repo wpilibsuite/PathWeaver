@@ -9,9 +9,10 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
-        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <SplitPane fx:id="sidePane" dividerPositions="0.5" onKeyPressed="#keyPressed" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
@@ -41,32 +42,28 @@
             </items>
         </SplitPane>
     </right>
-    <top>
-        <VBox prefHeight="76.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-            <children>
-                <MenuBar>
-                    <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Close" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Edit">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Delete" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-            </children>
-        </VBox>
-    </top>
     <center>
         <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
     </center>
+   <top>
+          <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Close" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Delete" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                      </items>
+                  </Menu>
+              </menus>
+          </MenuBar>
+   </top>
 </BorderPane>
