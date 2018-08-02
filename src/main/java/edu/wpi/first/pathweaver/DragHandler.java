@@ -10,7 +10,8 @@ public class DragHandler {
 
   private final PathDisplayController controller;
   private final Pane drawPane;
-  public static Spline currentSpline = new NullSpline();
+
+  private static Spline currentSpline = new NullSpline();
 
   private boolean isShiftDown = false;
   private boolean splineDragStarted = false;
@@ -109,5 +110,13 @@ public class DragHandler {
       point.setX(wpNewX);
       point.setY(wpNewY);
     }
+  }
+
+  /**
+   * Set the spline that is currently being dragged.
+   * @param currentSpline Spline that is being dragged.
+   */
+  public static void setCurrentSpline(Spline currentSpline) {
+    DragHandler.currentSpline = currentSpline;
   }
 }

@@ -2,7 +2,6 @@ package edu.wpi.first.pathweaver;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import javafx.geometry.Point2D;
@@ -11,7 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
 public class Path {
-  private final List<Waypoint> waypoints = new LinkedList<>();
+  private final List<Waypoint> waypoints = new ArrayList<>();
   private final String pathName;
   private int subchildIdx = 0;
 
@@ -25,9 +24,9 @@ public class Path {
    *
    * @param startPos        The starting waypoint of new path
    * @param endPos          The ending waypoint of new path
-   * @param startTangent The starting tangent vector of new path
-   * @param endTangent   The ending tangent vector of new path
-   * @param name         The string name to assign path, also used for naming exported files
+   * @param startTangent    The starting tangent vector of new path
+   * @param endTangent      The ending tangent vector of new path
+   * @param name            The string name to assign path, also used for naming exported files
    */
   public Path(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
@@ -53,7 +52,7 @@ public class Path {
    *
    * @return new Waypoint
    */
-  public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, Boolean locked) {
+  public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
     if (previous == getEnd()) {
       previous.setSpline(new QuickSpline(previous, newPoint));
