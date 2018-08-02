@@ -74,6 +74,7 @@ public class ProgramPreferences {
       primaryStage.setHeight(values.height);
       primaryStage.setX(values.posX);
       primaryStage.setY(values.posY);
+      primaryStage.setMaximized(values.maximized);
     }
   }
 
@@ -82,6 +83,7 @@ public class ProgramPreferences {
     values.height = primaryStage.getHeight();
     values.posX = primaryStage.getX();
     values.posY = primaryStage.getY();
+    values.maximized = primaryStage.isMaximized();
     updatePrefs();
   }
 
@@ -91,6 +93,7 @@ public class ProgramPreferences {
     public double height;
     public double posX;
     public double posY;
+    public boolean maximized;
 
     public Values() {
     }
