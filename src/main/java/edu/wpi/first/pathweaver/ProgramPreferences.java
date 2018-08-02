@@ -31,6 +31,9 @@ public class ProgramPreferences {
       BufferedReader prefs = new BufferedReader(new FileReader(directory + fileName));
       Gson gson = new GsonBuilder().serializeNulls().create();
       values = gson.fromJson(prefs, Values.class);
+      if (values.recentProjects == null) {
+        values.recentProjects = new ArrayList<>();
+      }
     } catch (FileNotFoundException e) {
       values = new Values();
       updatePrefs();
@@ -56,10 +59,9 @@ public class ProgramPreferences {
   }
 
   public void addProject(String path) {
-    if (!values.recentProjects.contains(path)) {
-      values.recentProjects.add(path);
-      updatePrefs();
-    }
+    values.recentProjects.remove(path);
+    values.recentProjects.add(0, path);
+    updatePrefs();
   }
 
   public List<String> getRecentProjects() {
@@ -91,7 +93,6 @@ public class ProgramPreferences {
     public double posY;
 
     public Values() {
-      recentProjects = new ArrayList<>();
     }
   }
 }

@@ -35,7 +35,9 @@ public class WelcomeController {
 
     projects.setOnMouseClicked(event -> {
       String folder = projects.getSelectionModel().getSelectedItem();
-      loadProject(folder);
+      if (folder != null) {
+        loadProject(folder);
+      }
     });
 
     createProject.setOnAction(event -> {
@@ -59,6 +61,7 @@ public class WelcomeController {
   }
 
   private void loadProject(String folder) {
+    ProgramPreferences.getInstance().addProject(folder);
     ProjectPreferences.getInstance(folder);
     FxUtils.loadMainScreen(borderPane.getScene(), getClass());
   }
