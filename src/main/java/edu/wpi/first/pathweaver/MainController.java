@@ -201,14 +201,14 @@ public class MainController {
               selected = newValue;
               pathDisplayController.removeAllPath();
               if (newValue != autonRoot) {
-                if (newValue.isLeaf()) { //has no children so try to display path
+                if (newValue.getParent() == autonRoot) { //is an auton with children
+                  for (TreeItem<String> it : selected.getChildren()) {
+                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
+                  }
+                } else { //has no children so try to display path
                   Path path = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
                     path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
-                  }
-                } else { //is an auton with children
-                  for (TreeItem<String> it : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
                   }
                 }
               }
