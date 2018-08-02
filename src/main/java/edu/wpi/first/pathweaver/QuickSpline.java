@@ -56,7 +56,7 @@ public class QuickSpline implements Spline {
     curve.setOnDragDetected(event -> {
       Dragboard board = curve.startDragAndDrop(TransferMode.ANY);
       board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
-      DragHandler.currentSpline = this;
+      DragHandler.setCurrentSpline(this);
     });
     curve.getStyleClass().add("path");
     FxUtils.applySubchildClasses(curve);
