@@ -50,12 +50,13 @@ public class CreateProjectController {
   private void createProject() {
     String folder = directory.getText().trim();
     ProgramPreferences.getInstance().addProject(folder);
-    double t = Double.parseDouble(timeStep.getText());
-    double v = Double.parseDouble(maxVelocity.getText());
-    double a = Double.parseDouble(maxAcceleration.getText());
-    double j = Double.parseDouble(maxJerk.getText());
-    double w = Double.parseDouble(wheelBase.getText());
-    ProjectPreferences.Values values = new ProjectPreferences.Values(t, v, a, j, w);
+    double timeDelta = Double.parseDouble(timeStep.getText());
+    double velocityMax = Double.parseDouble(maxVelocity.getText());
+    double accelerationMax = Double.parseDouble(maxAcceleration.getText());
+    double jerkMax = Double.parseDouble(maxJerk.getText());
+    double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
+    ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
+        jerkMax, wheelBaseDistance);
     ProjectPreferences prefs = ProjectPreferences.getInstance(folder);
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
