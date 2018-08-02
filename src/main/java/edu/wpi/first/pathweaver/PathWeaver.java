@@ -18,7 +18,7 @@ public class PathWeaver extends Application {
     primaryStage.show();
 
     primaryStage.setOnCloseRequest(value -> {
-      ProgramPreferences.getInstance().saveResolution(primaryStage.getWidth(), primaryStage.getHeight());
+      ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
     });
 
     Loggers.setupLoggers();

@@ -55,12 +55,6 @@ public class ProgramPreferences {
     }
   }
 
-  public void saveResolution(double width, double height) {
-    values.width = width;
-    values.height = height;
-    updatePrefs();
-  }
-
   public void addProject(String path) {
     if (!values.recentProjects.contains(path)) {
       values.recentProjects.add(path);
@@ -72,17 +66,29 @@ public class ProgramPreferences {
     return values.recentProjects;
   }
 
-  public void setResolution(Stage primaryStage) {
-    if (values.width != 0 && values.height != 0) {
+  public void setSizeAndPosition(Stage primaryStage) {
+    if (values.width != 0 && values.height != 0 && values.posX != 0 && values.posY != 0) {
       primaryStage.setWidth(values.width);
       primaryStage.setHeight(values.height);
+      primaryStage.setX(values.posX);
+      primaryStage.setY(values.posY);
     }
   }
 
-  public class Values {
+  public void saveSizeAndPosition(Stage primaryStage) {
+    values.width = primaryStage.getWidth();
+    values.height = primaryStage.getHeight();
+    values.posX = primaryStage.getX();
+    values.posY = primaryStage.getY();
+    updatePrefs();
+  }
+
+  private class Values {
     public List<String> recentProjects;
     public double width;
     public double height;
+    public double posX;
+    public double posY;
 
     public Values() {
       recentProjects = new ArrayList<>();
