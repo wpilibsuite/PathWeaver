@@ -59,10 +59,6 @@ public class ProjectPreferences {
     updateValues();
   }
 
-  public Values getValues() {
-    return values;
-  }
-
   public String getDirectory() {
     return directory;
   }
@@ -94,11 +90,11 @@ public class ProjectPreferences {
   }
 
   public static class Values {
-    public double timeStep;
-    public double maxVelocity;
-    public double maxAcceleration;
-    public double maxJerk;
-    public double wheelBase;
+    private final double timeStep;
+    private final double maxVelocity;
+    private final double maxAcceleration;
+    private final double maxJerk;
+    private final double wheelBase;
 
     /**
      * Constructor for Values of ProjectPreferences.
@@ -115,6 +111,26 @@ public class ProjectPreferences {
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
+    }
+
+    public double getTimeStep() {
+      return timeStep;
+    }
+
+    public double getMaxVelocity() {
+      return maxVelocity;
+    }
+
+    public double getMaxAcceleration() {
+      return maxAcceleration;
+    }
+
+    public double getMaxJerk() {
+      return maxJerk;
+    }
+
+    public double getWheelBase() {
+      return wheelBase;
     }
   }
 }

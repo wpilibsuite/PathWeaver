@@ -38,9 +38,6 @@ public class ProgramPreferences {
       values = new Values();
       updatePrefs();
     }
-    if (values.recentProjects == null) {
-      values.recentProjects = new ArrayList<>();
-    }
   }
 
   /**
@@ -71,8 +68,7 @@ public class ProgramPreferences {
    * @param path Path to the project.
    */
   public void addProject(String path) {
-    values.recentProjects.remove(path);
-    values.recentProjects.add(0, path);
+    values.addProject(path);
     updatePrefs();
   }
 
@@ -81,7 +77,7 @@ public class ProgramPreferences {
    * @return List of paths of recent projects.
    */
   public List<String> getRecentProjects() {
-    return values.recentProjects;
+    return values.getRecentProjects();
   }
 
   /**
@@ -89,12 +85,12 @@ public class ProgramPreferences {
    * @param primaryStage The Stage to set the values for.
    */
   public void setSizeAndPosition(Stage primaryStage) {
-    if (values.width != 0 && values.height != 0 && values.posX != 0 && values.posY != 0) {
-      primaryStage.setWidth(values.width);
-      primaryStage.setHeight(values.height);
-      primaryStage.setX(values.posX);
-      primaryStage.setY(values.posY);
-      primaryStage.setMaximized(values.maximized);
+    if (values.getWidth() != 0 && values.getHeight() != 0 && values.getPosX() != 0 && values.getPosY() != 0) {
+      primaryStage.setWidth(values.getWidth());
+      primaryStage.setHeight(values.getHeight());
+      primaryStage.setX(values.getPosX());
+      primaryStage.setY(values.getPosY());
+      primaryStage.setMaximized(values.isMaximized());
     }
   }
 
@@ -103,23 +99,63 @@ public class ProgramPreferences {
    * @param primaryStage The stage to save size, position, and maximized values for.
    */
   public void saveSizeAndPosition(Stage primaryStage) {
-    values.width = primaryStage.getWidth();
-    values.height = primaryStage.getHeight();
-    values.posX = primaryStage.getX();
-    values.posY = primaryStage.getY();
-    values.maximized = primaryStage.isMaximized();
+    values.setSizeAndPosition(primaryStage.getWidth(), primaryStage.getHeight(), primaryStage.getX(),
+        primaryStage.getY(), primaryStage.isMaximized());
     updatePrefs();
   }
 
   private class Values {
-    public List<String> recentProjects;
-    public double width;
-    public double height;
-    public double posX;
-    public double posY;
-    public boolean maximized;
+    private List<String> recentProjects;
+    private double width;
+    private double height;
+    private double posX;
+    private double posY;
+    private boolean maximized;
+
+    public List<String> getRecentProjects() {
+      if (recentProjects == null) {
+        recentProjects = new ArrayList<>();
+      }
+      return recentProjects;
+    }
+
+    public double getWidth() {
+      return width;
+    }
+
+    public double getHeight() {
+      return height;
+    }
+
+    public double getPosX() {
+      return posX;
+    }
+
+    public double getPosY() {
+      return posY;
+    }
+
+    public boolean isMaximized() {
+      return maximized;
+    }
 
     public Values() {
+    }
+
+    public void setSizeAndPosition(double width, double height, double posX, double posY, boolean maximized) {
+      this.width = width;
+      this.height = height;
+      this.posX = posX;
+      this.posY = posY;
+      this.maximized = maximized;
+    }
+
+    public void addProject(String path) {
+      if (recentProjects == null) {
+        recentProjects = new ArrayList<>();
+      }
+      recentProjects.remove(path);
+      recentProjects.add(0, path);
     }
   }
 }

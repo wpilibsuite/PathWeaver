@@ -16,8 +16,6 @@ public class CreateProjectController {
   @FXML
   private TextField directory;
   @FXML
-  private Button browse;
-  @FXML
   private TextField timeStep;
   @FXML
   private TextField maxVelocity;
@@ -27,8 +25,6 @@ public class CreateProjectController {
   private TextField maxJerk;
   @FXML
   private TextField wheelBase;
-  @FXML
-  private Button create;
 
   private List<TextField> numericFields;
 
@@ -36,14 +32,9 @@ public class CreateProjectController {
   private void initialize() {
     numericFields = List.of(timeStep, maxVelocity, maxAcceleration, maxJerk, wheelBase);
     // TODO: validate numbers only
-    browse.setOnAction(event -> {
-      browseDirectory();
-    });
-    create.setOnAction(event -> {
-      createProject();
-    });
   }
 
+  @FXML
   private void createProject() {
     // TODO: prompt user if fields are empty
     for (TextField field : numericFields) {
@@ -67,6 +58,7 @@ public class CreateProjectController {
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
   }
 
+  @FXML
   private void browseDirectory() {
     DirectoryChooser chooser = new DirectoryChooser();
     File selectedDirectory = chooser.showDialog(vBox.getScene().getWindow());

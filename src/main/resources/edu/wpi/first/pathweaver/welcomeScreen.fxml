@@ -22,8 +22,8 @@
                </font>
             </Label>
             <Label text="Version 0.1" />
-            <Button fx:id="createProject" mnemonicParsing="false" text="Create Project" />
-            <Button fx:id="importProject" mnemonicParsing="false" text="Import Project" />
+            <Button fx:id="createProject" mnemonicParsing="false" text="Create Project" onAction="#createProject" />
+            <Button fx:id="importProject" mnemonicParsing="false" text="Import Project" onAction="#importProject" />
             <Button fx:id="help" mnemonicParsing="false" text="Help" />
          </children>
       </VBox>

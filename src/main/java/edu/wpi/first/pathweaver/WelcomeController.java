@@ -6,12 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -23,18 +20,10 @@ public class WelcomeController {
   private BorderPane borderPane;
   @FXML
   private ListView<String> projects;
-  @FXML
-  private Button createProject;
-  @FXML
-  private Button importProject;
-  @FXML
-  private Button help;
 
   @FXML
   private void initialize() {
-    ProgramPreferences prefs = ProgramPreferences.getInstance();
-    ObservableList<String> items = FXCollections.observableArrayList(prefs.getRecentProjects());
-    projects.setItems(items);
+    projects.getItems().setAll(ProgramPreferences.getInstance().getRecentProjects());
 
     projects.setOnMouseClicked(event -> {
       String folder = projects.getSelectionModel().getSelectedItem();
@@ -42,16 +31,9 @@ public class WelcomeController {
         loadProject(folder);
       }
     });
-
-    createProject.setOnAction(event -> {
-      createProject();
-    });
-
-    importProject.setOnAction(event -> {
-      importProject();
-    });
   }
 
+  @FXML
   private void createProject() {
     try {
       Pane root = FXMLLoader.load(getClass().getResource("createProject.fxml"));
@@ -70,6 +52,7 @@ public class WelcomeController {
     FxUtils.loadMainScreen(borderPane.getScene(), getClass());
   }
 
+  @FXML
   private void importProject() {
     DirectoryChooser chooser = new DirectoryChooser();
     File selectedDirectory = chooser.showDialog(borderPane.getScene().getWindow());
