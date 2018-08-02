@@ -99,6 +99,9 @@ public final class FxUtils { // NOPMD util class name
       Pane root = FXMLLoader.load(aClass.getResource("main.fxml"));
       Stage primaryStage = (Stage) scene.getWindow();
       primaryStage.resizableProperty().setValue(true);
+      primaryStage.setOnCloseRequest(value -> {
+        ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
+      });
       ProgramPreferences.getInstance().setSizeAndPosition(primaryStage);
       scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");
       scene.setRoot(root);

@@ -16,11 +16,6 @@ public class PathWeaver extends Application {
     primaryStage.resizableProperty().setValue(false);
     primaryStage.setScene(scene);
     primaryStage.show();
-
-    primaryStage.setOnCloseRequest(value -> {
-      ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
-    });
-
     Loggers.setupLoggers();
   }
 }

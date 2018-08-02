@@ -107,6 +107,11 @@ public class ProgramPreferences {
     updatePrefs();
   }
 
+  public void removeProject(String folder) {
+    values.removeProject(folder);
+    updatePrefs();
+  }
+
   private class Values {
     private List<String> recentProjects;
     private double width;
@@ -159,6 +164,10 @@ public class ProgramPreferences {
       }
       recentProjects.remove(path);
       recentProjects.add(0, path);
+    }
+
+    public void removeProject(String path) {
+      recentProjects.remove(path);
     }
   }
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -77,16 +78,16 @@ public class ProjectPreferences {
   }
 
   /**
-   * Returns the singelton instance of ProjectPreferences for the previously requested directory
+   * Returns the singleton instance of ProjectPreferences for the previously requested directory
    * or the default directory.
    * @return Singleton instance of ProjectPreferences.
    */
   public static ProjectPreferences getInstance() {
-    if (instance == null) {
-      instance = new ProjectPreferences("PathWeaver/");
-    }
     return instance;
+  }
 
+  public static boolean projectExists(String folder) {
+    return new File(folder + FILENAME).exists();
   }
 
   public static class Values {
