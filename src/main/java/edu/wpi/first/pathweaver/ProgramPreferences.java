@@ -31,12 +31,12 @@ public class ProgramPreferences {
       BufferedReader prefs = new BufferedReader(new FileReader(directory + fileName));
       Gson gson = new GsonBuilder().serializeNulls().create();
       values = gson.fromJson(prefs, Values.class);
-      if (values.recentProjects == null) {
-        values.recentProjects = new ArrayList<>();
-      }
     } catch (FileNotFoundException e) {
       values = new Values();
       updatePrefs();
+    }
+    if (values.recentProjects == null) {
+      values.recentProjects = new ArrayList<>();
     }
   }
 
