@@ -2,6 +2,9 @@ package edu.wpi.first.pathweaver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,15 +20,15 @@ import javafx.stage.DirectoryChooser;
 public class WelcomeController {
 
   @FXML
-  BorderPane borderPane;
+  private BorderPane borderPane;
   @FXML
-  ListView<String> projects;
+  private ListView<String> projects;
   @FXML
-  Button createProject;
+  private Button createProject;
   @FXML
-  Button importProject;
+  private Button importProject;
   @FXML
-  Button help;
+  private Button help;
 
   @FXML
   private void initialize() {
@@ -55,7 +58,8 @@ public class WelcomeController {
       Scene scene = borderPane.getScene();
       scene.setRoot(root);
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger log = LogManager.getLogManager().getLogger(getClass().getName());
+      log.log(Level.WARNING, e.getMessage());
     }
 
   }

@@ -8,10 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class ProjectPreferences {
 
-  private static final String filename = "/pathweaver.project";
+  private static final String FILENAME = "/pathweaver.project";
 
   private static ProjectPreferences instance;
 
@@ -19,22 +22,18 @@ public class ProjectPreferences {
 
   private Values values;
 
-  private boolean defaults;
-
   private ProjectPreferences(String directory) {
     this.directory = directory;
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(directory + filename));
+      BufferedReader reader = new BufferedReader(new FileReader(directory + FILENAME));
       Gson gson = new Gson();
       values = gson.fromJson(reader, Values.class);
-      defaults = false;
     } catch (FileNotFoundException e) {
       setDefaults();
     }
   }
 
   private void setDefaults() {
-    defaults = true;
     values = new Values(0.2, 10.0, 60.0, 60.0, 2.0);
     updateValues();
   }
@@ -42,14 +41,19 @@ public class ProjectPreferences {
   private void updateValues() {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      FileWriter writer = new FileWriter(directory + filename);
+      FileWriter writer = new FileWriter(directory + FILENAME);
       gson.toJson(values, writer);
       writer.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger log = LogManager.getLogManager().getLogger(getClass().getName());
+      log.log(Level.WARNING, e.getMessage());
     }
   }
 
+  /**
+   * Sets the preferences for the current project.
+   * @param values Values to set for preferences.
+   */
   public void setValues(Values values) {
     this.values = values;
     updateValues();
@@ -64,6 +68,11 @@ public class ProjectPreferences {
   }
 
 
+  /**
+   * Return the singleton instance of ProjectPreferences for a given project directory.
+   * @param folder Path to project folder.
+   * @return Singleton instance of ProjectPreferences.
+   */
   public static ProjectPreferences getInstance(String folder) {
     if (instance == null || !instance.directory.equals(folder)) {
       instance = new ProjectPreferences(folder);
@@ -71,9 +80,14 @@ public class ProjectPreferences {
     return instance;
   }
 
+  /**
+   * Returns the singelton instance of ProjectPreferences for the previously requested directory
+   * or the default directory.
+   * @return Singleton instance of ProjectPreferences.
+   */
   public static ProjectPreferences getInstance() {
     if (instance == null) {
-      instance = new ProjectPreferences("PathWeaver");
+      instance = new ProjectPreferences("PathWeaver/");
     }
     return instance;
 
@@ -86,6 +100,14 @@ public class ProjectPreferences {
     public double maxJerk;
     public double wheelBase;
 
+    /**
+     * Constructor for Values of ProjectPreferences.
+     * @param timeStep        The time delta between points (in seconds)
+     * @param maxVelocity     The maximum velocity the body is capable of travelling at
+     * @param maxAcceleration The maximum acceleration to use
+     * @param maxJerk         The maximum jerk (acceleration per second) to use
+     * @param wheelBase       The width between the individual sides of the drivebase
+     */
     public Values(double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
                   double wheelBase) {
       this.timeStep = timeStep;

@@ -12,25 +12,25 @@ import javafx.stage.DirectoryChooser;
 public class CreateProjectController {
 
   @FXML
-  VBox vBox;
+  private VBox vBox;
   @FXML
-  TextField directory;
+  private TextField directory;
   @FXML
-  Button browse;
+  private Button browse;
   @FXML
-  TextField timeStep;
+  private TextField timeStep;
   @FXML
-  TextField maxVelocity;
+  private TextField maxVelocity;
   @FXML
-  TextField maxAcceleration;
+  private TextField maxAcceleration;
   @FXML
-  TextField maxJerk;
+  private TextField maxJerk;
   @FXML
-  TextField wheelBase;
+  private TextField wheelBase;
   @FXML
-  Button create;
+  private Button create;
 
-  List<TextField> numericFields;
+  private List<TextField> numericFields;
 
   @FXML
   private void initialize() {
