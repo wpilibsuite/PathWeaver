@@ -201,7 +201,7 @@ public class MainController {
               selected = newValue;
               pathDisplayController.removeAllPath();
               if (newValue != autonRoot) {
-                if (newValue.isLeaf()) { //has no children so try to display path
+                if (newValue.getParent() != autonRoot) { //has no children so try to display path
                   Path path = pathDisplayController.addPath(pathDirectory, newValue);
                   if (FxUtils.isSubChild(autons, newValue)) {
                     path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
