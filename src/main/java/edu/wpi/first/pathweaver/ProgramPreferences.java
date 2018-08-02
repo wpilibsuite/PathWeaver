@@ -85,15 +85,15 @@ public class ProgramPreferences {
    * @param primaryStage The Stage to set the values for.
    */
   public void setSizeAndPosition(Stage primaryStage) {
-    if (values.getWidth() != 0 && values.getHeight() != 0 && values.getPosX() != 0 && values.getPosY() != 0) {
+    if (values.getWidth() == 0 || values.getHeight() == 0 || values.getPosX() == 0 || values.getPosY() == 0) {
+      primaryStage.setWidth(1024);
+      primaryStage.setHeight(768);
+    } else {
       primaryStage.setWidth(values.getWidth());
       primaryStage.setHeight(values.getHeight());
       primaryStage.setX(values.getPosX());
       primaryStage.setY(values.getPosY());
       primaryStage.setMaximized(values.isMaximized());
-    } else {
-      primaryStage.setWidth(1024);
-      primaryStage.setHeight(768);
     }
   }
 

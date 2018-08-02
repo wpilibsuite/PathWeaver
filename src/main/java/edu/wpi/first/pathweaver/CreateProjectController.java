@@ -16,7 +16,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 
 public class CreateProjectController {
 
