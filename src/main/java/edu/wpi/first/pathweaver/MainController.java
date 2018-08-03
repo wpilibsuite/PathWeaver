@@ -82,8 +82,7 @@ public class MainController {
       Waypoint wp = (Waypoint) obj;
       boolean isValid = pathDisplayController.checkBounds(wp);
       if (isValid) {
-        PathIOUtil.export(pathDisplayController.getPathDirectory(),
-                pathDisplayController.getSelectedWaypointProp().getValue().getPath());
+        PathIOUtil.export(pathDisplayController.getPathDirectory(), wp.getPath());
         wp.getSpline().update();
       }
       return isValid;

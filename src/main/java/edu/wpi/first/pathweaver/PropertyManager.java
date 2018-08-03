@@ -19,8 +19,8 @@ import javafx.util.Callback;
 // https://stackoverflow.com/questions/13853621/multiple-components-in-one-column-of-javafx-tableview
 public class PropertyManager {
   private final TableView<NamedProperty> propertyView;
+  private PropertyEditable lastNonNullItem = null;
   private Callback<PropertyEditable, Boolean> commitCallback;
-  private PropertyEditable current;
 
   /**
    * Creates a PropertyManager with a tableview.
@@ -41,10 +41,10 @@ public class PropertyManager {
     valueCol.setOnEditCommit(
         t -> {
           int row = t.getTablePosition().getRow();
-          NamedProperty property = t.getTableView().getItems().get(row);
+          NamedProperty property = lastNonNullItem.getProperties().get(row);
           Object oldVal = t.getOldValue();
           property.coerceValue(t.getNewValue());
-          if (!commitCallback.call(current)) {
+          if (!commitCallback.call(lastNonNullItem)) {
             property.coerceValue(oldVal);
           }
         }
@@ -58,10 +58,12 @@ public class PropertyManager {
    * @param object The object to show and edit the properties of
    */
   public void manageProperties(PropertyEditable object) {
-    current = object;
     if (object == null) {
       this.propertyView.setItems(null);
     } else {
+      // It's necessary to keep track of the last non-null item because of race conditions between edit commits and
+      // manageProperties being called with a null argument
+      lastNonNullItem = object;
       this.propertyView.setItems(object.getProperties());
     }
     this.propertyView.refresh();
