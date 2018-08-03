@@ -43,10 +43,15 @@ public class PropertyManager {
           int row = t.getTablePosition().getRow();
           NamedProperty property = lastNonNullItem.getProperties().get(row);
           Object oldVal = t.getOldValue();
-          property.coerceValue(t.getNewValue());
-          if (!commitCallback.call(lastNonNullItem)) {
+          try {
+            property.coerceValue(t.getNewValue());
+            if (!commitCallback.call(lastNonNullItem)) {
+              property.coerceValue(oldVal);
+            }
+          } catch (IllegalArgumentException e) {
             property.coerceValue(oldVal);
           }
+          t.getTableView().refresh();
         }
     );
     this.propertyView.getColumns().add(nameCol);
