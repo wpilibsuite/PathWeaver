@@ -84,12 +84,7 @@ public class MainController {
       if (isValid) {
         PathIOUtil.export(pathDisplayController.getPathDirectory(),
                 pathDisplayController.getSelectedWaypointProp().getValue().getPath());
-        if (wp.getPreviousSpline() != null) {
-          wp.getPreviousSpline().updateControlPoints();
-        }
-        if (wp.getNextSpline() != null) {
-          wp.getNextSpline().updateControlPoints();
-        }
+        wp.getSpline().update();
       }
       return isValid;
     });

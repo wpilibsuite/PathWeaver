@@ -15,15 +15,12 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 
 public class Waypoint implements PropertyManager.PropertyEditable {
-  private Waypoint previousWaypoint = null;
-  private Waypoint nextWaypoint = null;
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private final DoubleProperty tangentX = new SimpleDoubleProperty();
   private final DoubleProperty tangentY = new SimpleDoubleProperty();
   private final SimpleBooleanProperty lockTangent = new SimpleBooleanProperty();
-  private Spline previousSpline = null;
-  private Spline nextSpline = null;
+  private Spline spline;
 
   private final Path path;
   public static Waypoint currentWaypoint = null;
@@ -243,10 +240,6 @@ public class Waypoint implements PropertyManager.PropertyEditable {
 
   public Spline getSpline() {
     return spline;
-  }
-
-  public void setNextWaypoint(Waypoint nextWaypoint) {
-    this.nextWaypoint = nextWaypoint;
   }
 
   @Override
