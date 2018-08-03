@@ -61,8 +61,8 @@ public class WelcomeController {
 
   private void invalidProject(String folder) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Project Does Not Exists!");
-    alert.setHeaderText("The project does not exists.");
+    alert.setTitle("Project Does Not Exist!");
+    alert.setHeaderText("The project does not exist.");
     alert.setContentText("What do you want to do?");
     ButtonType recreate = new ButtonType("Create it");
     ButtonType remove = new ButtonType("Remove it");
