@@ -39,7 +39,9 @@ application {
     mainClassName = "edu.wpi.first.pathweaver.PathWeaver"
 }
 
-task<Wrapper>("wrapper") {
-    gradleVersion = "4.9"
-    distributionType = Wrapper.DistributionType.BIN
+tasks {
+    "wrapper"(Wrapper::class) {
+        gradleVersion = "4.9"
+        distributionType = Wrapper.DistributionType.BIN
+    }
 }
