@@ -24,8 +24,8 @@ public class MainController {
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
-  private String pathDirectory;
-  private String autonDirectory;
+  private final String pathDirectory = directory + "/Paths/";
+  private final String autonDirectory = directory + "/Autons/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -37,8 +37,6 @@ public class MainController {
 
   @FXML
   private void initialize() {
-    pathDirectory = directory + "/Paths/";
-    autonDirectory = directory + "/Autons/";
     setupDrag();
 
     autons.setRoot(autonRoot);
@@ -64,7 +62,6 @@ public class MainController {
     duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
-
   }
 
   @SuppressWarnings("PMD.NcssCount")
