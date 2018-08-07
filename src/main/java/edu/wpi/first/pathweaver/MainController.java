@@ -43,9 +43,11 @@ public class MainController {
 
     autons.setRoot(autonRoot);
     autons.getRoot().setExpanded(true);
+    autons.setShowRoot(false);
 
     paths.setRoot(pathRoot);
     pathRoot.setExpanded(true);
+    paths.setShowRoot(false);
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
