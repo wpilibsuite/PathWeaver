@@ -83,7 +83,7 @@ public class MainController {
       boolean isValid = pathDisplayController.checkBounds(wp);
       if (isValid) {
         PathIOUtil.export(pathDisplayController.getPathDirectory(), wp.getPath());
-        wp.getSpline().update();
+        wp.update();
       }
       return isValid;
     });
