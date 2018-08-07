@@ -6,8 +6,10 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -40,10 +42,16 @@ public class MainController {
     setupDrag();
 
     autons.setRoot(autonRoot);
+    MenuItem newAuto = FxUtils.menuItem("New Autonomous...", __ -> createAuton());
+    autons.setContextMenu(new ContextMenu());
+    autons.getContextMenu().getItems().addAll(newAuto, FxUtils.menuItem("Delete", __ -> delete()));
     autons.getRoot().setExpanded(true);
     autons.setShowRoot(false);
 
     paths.setRoot(pathRoot);
+    MenuItem newPath = FxUtils.menuItem("New Path...", __ -> createPath());
+    paths.setContextMenu(new ContextMenu());
+    paths.getContextMenu().getItems().addAll(newPath, FxUtils.menuItem("Delete", __ -> delete()));
     pathRoot.setExpanded(true);
     paths.setShowRoot(false);
 

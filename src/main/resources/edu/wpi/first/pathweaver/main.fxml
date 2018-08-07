@@ -19,7 +19,7 @@
                       <TreeView fx:id="autons" />
                </content>
             </TitledPane>
-            <ToolBar prefHeight="50.0">
+            <ToolBar prefHeight="40.0">
                <items>
                   <Button mnemonicParsing="false" onAction="#createAuton" text="+" />
                   <Button mnemonicParsing="false" onAction="#delete" text="-" />
@@ -30,7 +30,7 @@
                       <TreeView fx:id="paths" />
                </content>
             </TitledPane>
-            <ToolBar prefHeight="50.0" VBox.vgrow="NEVER">
+            <ToolBar prefHeight="40.0" VBox.vgrow="NEVER">
                <items>
                   <Button mnemonicParsing="false" onAction="#createPath" text="+" />
                   <Button mnemonicParsing="false" onAction="#delete" text="-" />
