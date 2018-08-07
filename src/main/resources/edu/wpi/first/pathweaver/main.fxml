@@ -12,13 +12,8 @@
 <?import javafx.scene.control.TableView?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
-        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.2,0.6" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.4,0.8" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <items>
-            <VBox prefHeight="50.0" prefWidth="100.0">
-                <children>
-                    <TableView fx:id="wpProperties" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                </children>
-            </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                       <TreeView fx:id="autons" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
@@ -43,6 +38,11 @@
                      </items>
                   </ToolBar>
                </children>
+            </VBox>
+            <VBox prefHeight="50.0" prefWidth="100.0">
+                <children>
+                    <TableView fx:id="wpProperties" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                </children>
             </VBox>
             </items>
         </SplitPane>
