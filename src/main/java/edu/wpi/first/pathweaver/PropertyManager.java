@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,6 +30,7 @@ public class PropertyManager {
   public PropertyManager(TableView<NamedProperty> propertyView) {
     this.propertyView = propertyView;
     this.propertyView.setEditable(true);
+    this.propertyView.setPlaceholder(new Label("No waypoint selected"));
 
     TableColumn<NamedProperty, String> nameCol = new TableColumn<>("Property");
     nameCol.setPrefWidth(130.0);
