@@ -7,17 +7,21 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.util.Duration;
 
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private boolean lockTangent;
-  private String name;
+  private final StringProperty name = new SimpleStringProperty("");
 
   private Spline spline;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
@@ -30,6 +34,7 @@ public class Waypoint {
   private Polygon icon;
 
   private static final double SIZE = 30.0;
+  private final Tooltip nameTip = new Tooltip();
 
 
   public Path getPath() {
@@ -103,6 +108,8 @@ public class Waypoint {
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
                     tangent));
+    nameTip.setShowDelay(Duration.millis(200));
+    nameTip.textProperty().bind(name);
     icon.getStyleClass().add("waypoint");
   }
 
@@ -247,10 +254,19 @@ public class Waypoint {
   }
 
   public String getName() {
-    return name;
+    return name.get();
   }
 
+  /**
+   * Updates the Waypoint name and configures the icon tooltip.
+   * @param name New name of Waypoint.
+   */
   public void setName(String name) {
-    this.name = name;
+    if (name.isEmpty()) {
+      Tooltip.uninstall(icon, nameTip);
+    } else if (this.name.get().isEmpty()) {
+      Tooltip.install(icon, nameTip);
+    }
+    this.name.set(name);
   }
 }

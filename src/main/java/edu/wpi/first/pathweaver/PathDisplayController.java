@@ -53,6 +53,7 @@ public class PathDisplayController {
 
     Image image = field.getImage();
     backgroundImage.setImage(image);
+    topPane.getStyleClass().add("pane");
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
             Math.min(topPane.getWidth() / image.getWidth(), topPane.getHeight() / image.getHeight()),
