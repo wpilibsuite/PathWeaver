@@ -37,14 +37,15 @@ public final class PathIOUtil {
         BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"))
+            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta", "Name"))
     ) {
       for (Waypoint wp : path.getWaypoints()) {
         double xPos = wp.getX();
         double yPos = wp.getY();
         double tangentX = wp.getTangent().getX();
         double tangentY = wp.getTangent().getY();
-        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent());
+        String name = wp.getName();
+        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent(), name);
       }
       csvPrinter.flush();
     } catch (IOException except) {
