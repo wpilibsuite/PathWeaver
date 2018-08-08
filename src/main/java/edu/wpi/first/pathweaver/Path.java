@@ -15,7 +15,7 @@ public class Path {
   private int subchildIdx = 0;
 
   /**
-   * Path constructor based on a known list of points
+   * Path constructor based on a known list of points.
    * @param newPoints   The list of waypoints to add
    * @param name        The name of the path
    */
@@ -28,6 +28,9 @@ public class Path {
       current.setSpline(new QuickSpline(current, next));
     }
     getEnd().setSpline(new NullSpline());
+    for (Waypoint wp : waypoints) {
+      wp.setPath(this);
+    }
     updateSplines();
     enableSubchildSelector(subchildIdx);
   }

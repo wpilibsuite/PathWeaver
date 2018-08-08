@@ -22,7 +22,7 @@ public class Waypoint {
   private Spline spline;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
-  private final Path path;
+  private Path path;
   public static Waypoint currentWaypoint = null;
 
 
@@ -34,6 +34,10 @@ public class Waypoint {
 
   public Path getPath() {
     return path;
+  }
+
+  public void setPath(Path path) {
+    this.path = path;
   }
 
   /**
@@ -65,6 +69,16 @@ public class Waypoint {
     this.spline = new NullSpline();
 
     setupDnd();
+  }
+
+  /**
+   * Creates waypoint before a path is created. Call setPath() once path is created.
+   * @param position      x and y coordinates in user set units
+   * @param tangentVector tangent vector in user set units
+   * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
+   */
+  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle) {
+    this(position, tangentVector, fixedAngle, null);
   }
 
 
