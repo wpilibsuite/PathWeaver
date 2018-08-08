@@ -14,6 +14,24 @@ public class Path {
   private final String pathName;
   private int subchildIdx = 0;
 
+  /**
+   * Path constructor based on a known list of points
+   * @param newPoints   The list of waypoints to add
+   * @param name        The name of the path
+   */
+  public Path(List<Waypoint> newPoints, String name) {
+    pathName = name;
+    waypoints.addAll(newPoints);
+    for (int i = 1; i < waypoints.size(); i++) {
+      Waypoint current = waypoints.get(i - 1);
+      Waypoint next = waypoints.get(i);
+      current.setSpline(new QuickSpline(current, next));
+    }
+    getEnd().setSpline(new NullSpline());
+    updateSplines();
+    enableSubchildSelector(subchildIdx);
+  }
+
   public Path(String name) {
     this(new Point2D(0, 0), new Point2D(10, 10), new Point2D(10, 0),
         new Point2D(0, 10), name);
