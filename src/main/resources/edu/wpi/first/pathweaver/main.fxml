@@ -12,7 +12,7 @@
 <?import javafx.scene.control.TableView?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
-        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.4,0.8" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
@@ -38,11 +38,6 @@
                      </items>
                   </ToolBar>
                </children>
-            </VBox>
-            <VBox prefHeight="50.0" prefWidth="100.0">
-                <children>
-                    <TableView fx:id="wpProperties" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                </children>
             </VBox>
             </items>
         </SplitPane>
@@ -73,6 +68,14 @@
         </VBox>
     </top>
     <center>
-        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+        <VBox>
+            <children>
+                <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+                <TableView fx:id="wpProperties" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
     </center>
+    <bottom>
+
+    </bottom>
 </BorderPane>
