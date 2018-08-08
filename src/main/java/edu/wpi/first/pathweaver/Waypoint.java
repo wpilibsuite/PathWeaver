@@ -17,6 +17,7 @@ public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private boolean lockTangent;
+  private String name = "point";
 
   private Spline spline;
   private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
@@ -229,5 +230,13 @@ public class Waypoint {
 
   public Spline getSpline() {
     return spline;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }
