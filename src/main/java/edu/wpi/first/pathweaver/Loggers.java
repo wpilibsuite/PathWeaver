@@ -38,7 +38,7 @@ final class Loggers {
       globalLogger.removeHandler(handler);
     }
 
-    String directory = System.getProperty("user.home") + "/PathWeaver";
+    String directory = System.getProperty("user.home") + "/PathWeaver/logs";
     ;
     File folder = new File(directory);
     if (!folder.exists()) {

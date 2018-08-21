@@ -17,6 +17,7 @@ dependencies {
     compile("javax.measure", "unit-api", "1.0");
     compile("si.uom", "si-units", "0.9");
     compile("systems.uom", "systems-common", "0.8");
+    compile("com.google.code.gson", "gson", "2.8.5");
 
 }
 
