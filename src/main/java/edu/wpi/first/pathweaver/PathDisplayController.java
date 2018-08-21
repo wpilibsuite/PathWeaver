@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -197,9 +198,17 @@ public class PathDisplayController {
 
   @FXML
   private void keyPressed(KeyEvent event) {
-    if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
-        && isDeletable(selectedWaypoint)) {
-      delete(selectedWaypoint);
+    if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE) {
+      if (isDeletable(selectedWaypoint)) {
+        delete(selectedWaypoint);
+      } else {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("");
+        a.setHeaderText("Cannot delete start or end of path.");
+        String content = "You cannot delete the start or end of a path, only the middle points.";
+        a.setContentText(content);
+        a.showAndWait();
+      }
     }
   }
 
