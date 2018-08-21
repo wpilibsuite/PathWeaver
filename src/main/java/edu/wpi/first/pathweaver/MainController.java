@@ -6,6 +6,8 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -23,9 +25,9 @@ public class MainController {
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
-  private String directory = "PathWeaver/";
-  private String pathDirectory;
-  private String autonDirectory;
+  private String directory = ProjectPreferences.getInstance().getDirectory();
+  private final String pathDirectory = directory + "/Paths/";
+  private final String autonDirectory = directory + "/Autons/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -37,15 +39,11 @@ public class MainController {
 
   @FXML
   private void initialize() {
-    pathDirectory = directory + "Paths/";
-    autonDirectory = directory + "Autons/";
     setupDrag();
 
-    autons.setRoot(autonRoot);
-    autons.getRoot().setExpanded(true);
+    setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", __ -> createAuton()));
 
-    paths.setRoot(pathRoot);
-    pathRoot.setExpanded(true);
+    setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", __ -> createPath()));
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
@@ -62,7 +60,14 @@ public class MainController {
     duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+  }
 
+  private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {
+    treeView.setRoot(treeRoot);
+    treeView.setContextMenu(new ContextMenu());
+    treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", __ -> delete()));
+    treeRoot.setExpanded(true);
+    treeView.setShowRoot(false); // Don't show the roots "Paths" and "Autons" - cleaner appearance
   }
 
   @SuppressWarnings("PMD.NcssCount")
