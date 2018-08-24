@@ -3,7 +3,6 @@ package edu.wpi.first.pathweaver;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javafx.css.PseudoClass;
@@ -106,8 +105,8 @@ public final class FxUtils { // NOPMD util class name
       scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");
       scene.setRoot(root);
     } catch (IOException e) {
-      final Logger logger = LogManager.getLogManager().getLogger(FxUtils.class.getName());
-      logger.log(Level.WARNING, e.getMessage());
+      final Logger logger = Logger.getLogger(FxUtils.class.getName());
+      logger.log(Level.WARNING, "Couldn't load main screen", e);
     }
   }
 

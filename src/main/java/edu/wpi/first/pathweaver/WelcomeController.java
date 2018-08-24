@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
@@ -43,8 +42,8 @@ public class WelcomeController {
       Scene scene = borderPane.getScene();
       scene.setRoot(root);
     } catch (IOException e) {
-      Logger log = LogManager.getLogManager().getLogger(getClass().getName());
-      log.log(Level.WARNING, e.getMessage());
+      Logger log = Logger.getLogger(getClass().getName());
+      log.log(Level.WARNING, "Couldn't load create project screen", e);
     }
 
   }

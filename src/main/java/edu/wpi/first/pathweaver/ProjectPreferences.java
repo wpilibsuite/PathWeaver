@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class ProjectPreferences {
@@ -46,8 +45,8 @@ public class ProjectPreferences {
       gson.toJson(values, writer);
       writer.close();
     } catch (IOException e) {
-      Logger log = LogManager.getLogManager().getLogger(getClass().getName());
-      log.log(Level.WARNING, e.getMessage());
+      Logger log = Logger.getLogger(getClass().getName());
+      log.log(Level.WARNING, "Couldn't update Project Preferences", e);
     }
   }
 
