@@ -65,19 +65,29 @@ public class DragHandler {
 
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
+    double oldX = wp.getX();
+    double oldY = wp.getY();
     if (checkBounds(event.getX(), event.getY())) {
       wp.setX(event.getX());
       wp.setY(event.getY());
       wp.getPath().getWaypoints().forEach(Waypoint::update);
+      // Verify that the new computed tangent is within the bounds of the drawPane
+      if (!checkBounds(wp.getTangent().getX() + wp.getX(), wp.getTangent().getY() + wp.getY())) {
+        wp.setX(oldX);
+        wp.setY(oldY);
+        wp.getPath().getWaypoints().forEach(Waypoint::update);
+      }
     }
     controller.selectWaypoint(wp, false);
   }
 
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
-    Point2D pt = new Point2D(event.getX(), event.getY());
-    wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
-    wp.lockTangent();
-    wp.getPath().updateSplines();
+    if (checkBounds(event.getX(), event.getY())) {
+      Point2D pt = new Point2D(event.getX(), event.getY());
+      wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
+      wp.lockTangent();
+      wp.getPath().getWaypoints().forEach(Waypoint::update);
+    }
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
