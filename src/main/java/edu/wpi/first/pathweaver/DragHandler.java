@@ -65,8 +65,6 @@ public class DragHandler {
 
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    double oldX = wp.getX();
-    double oldY = wp.getY();
     if (checkBounds(event.getX(), event.getY())) {
       wp.setX(event.getX());
       wp.setY(event.getY());
