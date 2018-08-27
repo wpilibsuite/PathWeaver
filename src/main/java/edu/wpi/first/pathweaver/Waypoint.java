@@ -4,22 +4,23 @@ import java.util.Map;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 
-public class Waypoint {
+public class Waypoint implements PropertyManager.PropertyEditable {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
-  private boolean lockTangent;
-
+  private final DoubleProperty tangentX = new SimpleDoubleProperty();
+  private final DoubleProperty tangentY = new SimpleDoubleProperty();
+  private final SimpleBooleanProperty lockTangent = new SimpleBooleanProperty();
   private Spline spline;
-  private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
   private final Path path;
   public static Waypoint currentWaypoint = null;
@@ -29,6 +30,8 @@ public class Waypoint {
   private Polygon icon;
 
   private static final double SIZE = 30.0;
+
+  private final ObservableList<PropertyManager.NamedProperty> properties = FXCollections.observableArrayList();
 
 
   public Path getPath() {
@@ -45,7 +48,7 @@ public class Waypoint {
    */
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
-    lockTangent = fixedAngle;
+    lockTangent.set(fixedAngle);
     setX(position.getX());
     setY(position.getY());
     icon = new Polygon();
@@ -57,15 +60,30 @@ public class Waypoint {
     tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(tangentVector);
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
+    setTangent(tangentVector);
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> tangentX.get() + getX(), tangentX, x));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> tangentY.get() + getY(), tangentY, y));
+
+    setupProperties();
 
     this.spline = new NullSpline();
 
     setupDnd();
   }
 
+  private void setupProperties() {
+    properties.add(new PropertyManager.NamedProperty<Double>("X", xProperty()));
+    properties.add(new PropertyManager.NamedProperty<Double>("Y", yProperty()));
+    properties.add(new PropertyManager.NamedProperty<Double>("Tangent Vector X", tangentX, (newVal) -> {
+      lockTangent();
+      return true;
+    }));
+    properties.add(new PropertyManager.NamedProperty<Double>("Tangent Vector Y", tangentY, (newVal) -> {
+      lockTangent();
+      return true;
+    }));
+    properties.add(new PropertyManager.NamedProperty<Double>("Lock Tangent", lockTangent));
+  }
 
   public void enableSubchildSelector(int i) {
     FxUtils.enableSubchildSelector(this.icon, i);
@@ -87,7 +105,7 @@ public class Waypoint {
     this.icon.rotateProperty().bind(
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
-                    tangent));
+                    tangentX, tangentY));
     icon.getStyleClass().add("waypoint");
   }
 
@@ -113,14 +131,14 @@ public class Waypoint {
    * @param event The mouse event that was triggered
    */
   public void resetOnDoubleClick(MouseEvent event) {
-    if (event.getClickCount() == 2 && lockTangent) {
-      lockTangent = false;
+    if (event.getClickCount() == 2 && lockTangent.get()) {
+      lockTangent.set(false);
       update();
     }
   }
 
   public void lockTangent() {
-    lockTangent = true;
+    lockTangent.set(true);
   }
 
   /**
@@ -167,23 +185,16 @@ public class Waypoint {
   }
 
   public boolean isLockTangent() {
-    return lockTangent;
+    return lockTangent.get();
   }
 
   public Line getTangentLine() {
     return tangentLine;
   }
 
-  public Point2D getTangent() {
-    return tangent.get();
-  }
-
-  public ObjectProperty<Point2D> tangentProperty() {
-    return tangent;
-  }
-
   public void setTangent(Point2D tangent) {
-    this.tangent.set(tangent);
+    this.tangentX.set(tangent.getX());
+    this.tangentY.set(tangent.getY());
   }
 
   public Polygon getIcon() {
@@ -229,5 +240,14 @@ public class Waypoint {
 
   public Spline getSpline() {
     return spline;
+  }
+
+  @Override
+  public ObservableList<PropertyManager.NamedProperty> getProperties() {
+    return this.properties;
+  }
+
+  public Point2D getTangent() {
+    return new Point2D(tangentX.get(), tangentY.get());
   }
 }

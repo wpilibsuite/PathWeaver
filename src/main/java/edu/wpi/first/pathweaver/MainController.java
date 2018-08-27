@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -24,6 +25,7 @@ public class MainController {
   @FXML private Pane pathDisplay;
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
+  @FXML private TableView<PropertyManager.NamedProperty> wpProperties;
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
@@ -37,6 +39,8 @@ public class MainController {
   @FXML private Button flipHorizontal;
   @FXML private Button flipVertical;
 
+  private PropertyManager wpPropManager;
+
   @FXML
   private void initialize() {
     setupDrag();
@@ -49,6 +53,7 @@ public class MainController {
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
 
     pathDisplayController.setPathDirectory(pathDirectory);
+    setupPropertyManager();
 
     setupClickablePaths();
     loadAllAutons();
@@ -57,9 +62,29 @@ public class MainController {
     paths.setEditable(true);
     setupEditable();
 
+    setupButtonDisable();
+
+  }
+
+  private void setupButtonDisable() {
     duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+  }
+
+  private void setupPropertyManager() {
+    wpPropManager = new PropertyManager(wpProperties);
+    pathDisplayController.getSelectedWaypointProp().addListener((observable, oldValue, newValue) ->
+            wpPropManager.manageProperties(newValue));
+    wpPropManager.setCommitCallback(obj -> {
+      Waypoint wp = (Waypoint) obj;
+      boolean isValid = pathDisplayController.checkBounds(wp);
+      if (isValid) {
+        PathIOUtil.export(pathDisplayController.getPathDirectory(), wp.getPath());
+        wp.update();
+      }
+      return isValid;
+    });
   }
 
   private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {

@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -18,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
+// Should be refactored if an obvious distinction is found or method count grows too much more
 @SuppressWarnings("PMD.TooManyMethods")
 public class PathDisplayController {
   @FXML
@@ -29,8 +31,8 @@ public class PathDisplayController {
   @FXML
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-  private Waypoint selectedWaypoint = null;
 
+  private final Property<Waypoint> selectedWaypointProp = new SimpleObjectProperty<>(); //NOPMD
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
 
@@ -116,6 +118,7 @@ public class PathDisplayController {
    * Remove all paths from Controller.
    */
   public void removeAllPath() {
+    selectedWaypointProp.setValue(null);
     pathList.clear();
   }
 
@@ -198,8 +201,8 @@ public class PathDisplayController {
   @FXML
   private void keyPressed(KeyEvent event) {
     if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
-        && isDeletable(selectedWaypoint)) {
-      delete(selectedWaypoint);
+        && isDeletable(selectedWaypointProp.getValue())) {
+      delete(selectedWaypointProp.getValue());
     }
   }
 
@@ -231,28 +234,28 @@ public class PathDisplayController {
    */
   public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
-    if (selectedWaypoint == waypoint && toggle) {
-      selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+    if (selectedWaypointProp.getValue() == waypoint && toggle) {
+      selectedWaypointProp.getValue().getIcon().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
-      selectedWaypoint = null;
+      selectedWaypointProp.setValue(null);
       currentPath.set(null);
     } else {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+      if (selectedWaypointProp.getValue() != null) {
+        selectedWaypointProp.getValue().getIcon().pseudoClassStateChanged(selected, false);
       }
-      selectedWaypoint = waypoint;
+      selectedWaypointProp.setValue(waypoint);
       waypoint.getIcon().pseudoClassStateChanged(selected, true);
       waypoint.getIcon().requestFocus();
       waypoint.getIcon().toFront();
-      currentPath.set(selectedWaypoint.getPath());
+      currentPath.set(selectedWaypointProp.getValue().getPath());
     }
   }
 
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
-        selectedWaypoint = null;
+      if (selectedWaypointProp.getValue() != null) {
+        selectedWaypointProp.getValue().getIcon().pseudoClassStateChanged(selected, false);
+        selectedWaypointProp.setValue(null);
       }
     });
   }
@@ -289,5 +292,14 @@ public class PathDisplayController {
     Path path = currentPath.get();
     String fileName = MainIOUtil.getValidFileName(pathDirectory, path.getPathNameNoExtension(), ".path");
     return path.duplicate(fileName);
+  }
+
+  public Property<Waypoint> getSelectedWaypointProp() {
+    return selectedWaypointProp;
+  }
+
+  public boolean checkBounds(Waypoint obj) {
+    return drawPane.getLayoutBounds().contains(obj.getCoords())
+            && drawPane.getLayoutBounds().contains(obj.getCoords().add(obj.getTangent()));
   }
 }

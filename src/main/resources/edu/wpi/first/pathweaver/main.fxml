@@ -9,8 +9,9 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="360.0" minWidth="640.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -43,7 +44,12 @@
       </VBox>
     </right>
     <center>
-        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+        <VBox>
+            <children>
+                <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+                <TableView fx:id="wpProperties" prefHeight="50.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
     </center>
    <top>
           <MenuBar BorderPane.alignment="CENTER">
