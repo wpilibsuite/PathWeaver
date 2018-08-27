@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -16,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="360.0" minWidth="640.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="360.0" minWidth="640.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -70,16 +71,13 @@
           </MenuBar>
    </top>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <top>
-              <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
-         </top>
-         <center>
-            <GridPane fx:id="properties" hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
+      <BorderPane BorderPane.alignment="CENTER">
+         <bottom>
+            <GridPane fx:id="properties" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="18.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="18.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
@@ -93,7 +91,7 @@
                   <Label text="Tangent X" GridPane.rowIndex="1" />
                   <Label text="Tangent Y" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="Locked Tangent" GridPane.rowIndex="2" />
-                  <Label text="Waypoint Name" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label text="Name" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <TextField GridPane.columnIndex="1" fx:id="xPosition" />
                   <TextField fx:id="yPosition" GridPane.columnIndex="3" />
                   <TextField fx:id="tangentX" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -101,7 +99,13 @@
                   <CheckBox fx:id="lockedTangent" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField fx:id="pointName" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                </children>
+               <BorderPane.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </BorderPane.margin>
             </GridPane>
+         </bottom>
+         <center>
+              <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
          </center>
       </BorderPane>
    </center>
