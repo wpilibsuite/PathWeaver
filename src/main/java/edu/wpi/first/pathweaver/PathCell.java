@@ -134,7 +134,7 @@ public class PathCell extends TextFieldTreeCell<String> {
 
         TEMP_ITEM.getParent().getChildren().remove(TEMP_ITEM); //reset TEMP_ITEM
         TEMP_ITEM.setValue("");
-        this.getTreeView().getSelectionModel().select(this.getTreeItem());
+        this.getTreeView().getSelectionModel().select(newItem.getParent());
       }
     });
   }

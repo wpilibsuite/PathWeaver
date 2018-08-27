@@ -4,69 +4,45 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TableView?>
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.MainController">
     <right>
-        <SplitPane fx:id="sidePane" onKeyPressed="#keyPressed" dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-            <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                      <TreeView fx:id="autons" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <ToolBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
-                     <items>
-                        <Button mnemonicParsing="false" onAction="#createAuton" text="+" />
-                        <Button mnemonicParsing="false" onAction="#delete" text="-" />
-                     </items>
-                  </ToolBar>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                      <TreeView fx:id="paths" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <ToolBar prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
-                     <items>
-                        <Button mnemonicParsing="false" onAction="#createPath" text="+" />
-                        <Button mnemonicParsing="false" onAction="#delete" text="-" />
-                        <Button fx:id="flipHorizontal" mnemonicParsing="false" onAction="#flipHorizontal" text="Flip H" />
-                        <Button fx:id="flipVertical" mnemonicParsing="false" onAction="#flipVertical" text="Flip V" />
-                        <Button fx:id="duplicate" mnemonicParsing="false" onAction="#duplicate" text="Duplicate" />
-                     </items>
-                  </ToolBar>
-               </children>
-            </VBox>
-            </items>
-        </SplitPane>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <TitledPane animated="false" collapsible="false" text="Autons">
+               <content>
+                      <TreeView fx:id="autons" />
+               </content>
+            </TitledPane>
+            <ToolBar prefHeight="40.0">
+               <items>
+                  <Button mnemonicParsing="false" onAction="#createAuton" text="+" />
+                  <Button mnemonicParsing="false" onAction="#delete" text="-" />
+               </items>
+            </ToolBar>
+            <TitledPane animated="false" collapsible="false" text="Paths" VBox.vgrow="ALWAYS">
+               <content>
+                      <TreeView fx:id="paths" />
+               </content>
+            </TitledPane>
+            <ToolBar prefHeight="40.0" VBox.vgrow="NEVER">
+               <items>
+                  <Button mnemonicParsing="false" onAction="#createPath" text="+" />
+                  <Button mnemonicParsing="false" onAction="#delete" text="-" />
+                  <Button fx:id="flipHorizontal" mnemonicParsing="false" onAction="#flipHorizontal" text="Flip H" />
+                  <Button fx:id="flipVertical" mnemonicParsing="false" onAction="#flipVertical" text="Flip V" />
+                  <Button fx:id="duplicate" mnemonicParsing="false" onAction="#duplicate" text="Duplicate" />
+               </items>
+            </ToolBar>
+         </children>
+      </VBox>
     </right>
-    <top>
-        <VBox prefHeight="76.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-            <children>
-                <MenuBar>
-                    <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Close" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Edit">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Delete" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-            </children>
-        </VBox>
-    </top>
     <center>
         <VBox>
             <children>
@@ -75,4 +51,25 @@
             </children>
         </VBox>
     </center>
+   <top>
+          <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Close" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Delete" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                      </items>
+                  </Menu>
+              </menus>
+          </MenuBar>
+   </top>
 </BorderPane>
