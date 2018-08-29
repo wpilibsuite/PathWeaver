@@ -49,16 +49,9 @@ public class CreateProjectController {
     }
     create.disableProperty().bind(bind);
 
-    UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
-      String text = c.getControlNewText();
-      if (text.matches("^\\d+\\.?\\d*$") || text.isEmpty()) {
-        return c;
-      } else {
-        return null;
-      }
-    };
+
     // Validate that numericFields contain decimal numbers
-    numericFields.forEach(textField -> textField.setTextFormatter(new TextFormatter<Object>(onlyDoubleText)));
+    numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
 
     if (ProjectPreferences.getInstance() != null) {
       directory.setText(ProjectPreferences.getInstance().getDirectory());

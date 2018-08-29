@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
@@ -108,6 +110,18 @@ public final class FxUtils { // NOPMD util class name
       final Logger logger = Logger.getLogger(FxUtils.class.getName());
       logger.log(Level.WARNING, "Couldn't load main screen", e);
     }
+  }
+
+  public static TextFormatter<Object> onlyDoubleText() {
+    UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
+      String text = c.getControlNewText();
+      if (text.matches("^\\-?\\d+\\.?\\d*$") || text.isEmpty()) {
+        return c;
+      } else {
+        return null;
+      }
+    };
+    return new TextFormatter<>(onlyDoubleText);
   }
 
 }

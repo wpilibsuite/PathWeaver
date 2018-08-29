@@ -24,6 +24,8 @@ public class EditWaypointController {
     private void initialize() {
         controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName);
         controls.forEach(control -> control.setDisable(true));
+        List.of(xPosition, yPosition, tangentX, tangentY)
+                .forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
     }
 
     public void bindToWaypoint(ObservableValue<Waypoint> wp) {
