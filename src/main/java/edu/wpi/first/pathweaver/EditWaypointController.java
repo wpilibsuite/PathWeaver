@@ -7,8 +7,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.util.converter.NumberStringConverter;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 
 public class EditWaypointController {
@@ -19,14 +23,19 @@ public class EditWaypointController {
     @FXML private CheckBox lockedTangent;
     @FXML private TextField pointName;
 
+    private List<Control> controls;
+
     @FXML
     private void initialize() {
+        controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName);
+        controls.forEach(control -> control.setDisable(true));
     }
 
     public void bindToWaypoint(ObservableValue<Waypoint> wp) {
         wp.addListener((observable, oldValue, newValue) -> {
             // Remove old Bindings
             if (oldValue != null) {
+                controls.forEach(control -> control.setDisable(true));
                 disableDoubleBinding(xPosition, oldValue.xProperty());
                 disableDoubleBinding(yPosition, oldValue.yProperty());
                 disableDoubleBinding(tangentX, oldValue.tangentXProperty());
@@ -38,6 +47,10 @@ public class EditWaypointController {
             }
             // Set new bindings
             if (newValue != null) {
+                controls.forEach(control -> control.setDisable(false));
+                if (newValue.getPath().getStart() == newValue || newValue.getPath().getEnd() == newValue) {
+                    lockedTangent.setDisable(true);
+                }
                 enableDoubleBinding(xPosition, newValue.xProperty());
                 enableDoubleBinding(yPosition, newValue.yProperty());
                 enableDoubleBinding(tangentX, newValue.tangentXProperty());
