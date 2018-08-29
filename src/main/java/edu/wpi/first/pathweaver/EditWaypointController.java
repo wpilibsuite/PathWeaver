@@ -32,17 +32,21 @@ public class EditWaypointController {
 
     public void bindToWaypoint(ObservableValue<Waypoint> wp) {
         wp.addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
+            // Remove old Bindings
+            if (oldValue != null) {
                 disableDoubleBinding(xPosition, oldValue.xProperty());
                 disableDoubleBinding(yPosition, oldValue.yProperty());
-                tangent.unbindBidirectional(oldValue.tangentProperty());
+                //tangent.unbindBidirectional(oldValue.tangentProperty());
                 lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
                 lockedTangent.setSelected(false);
                 pointName.textProperty().unbindBidirectional(oldValue.nameProperty());
-            } else {
+                pointName.setText("");
+            }
+            // Set new bindings
+            if (newValue != null) {
                 enableDoubleBinding(xPosition, newValue.xProperty());
                 enableDoubleBinding(yPosition, newValue.yProperty());
-                tangent.bindBidirectional(newValue.tangentProperty());
+                //tangent.bindBidirectional(newValue.tangentProperty());
                 lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
                 pointName.textProperty().bindBidirectional(newValue.nameProperty());
             }
