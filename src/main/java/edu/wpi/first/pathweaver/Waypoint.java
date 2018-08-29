@@ -3,12 +3,7 @@ package edu.wpi.first.pathweaver;
 import java.util.Map;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +15,7 @@ import javafx.util.Duration;
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
-  private boolean lockTangent;
+  private BooleanProperty lockTangent = new SimpleBooleanProperty();
   private final StringProperty name = new SimpleStringProperty("");
 
   private Spline spline;
@@ -55,7 +50,7 @@ public class Waypoint {
    */
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
-    lockTangent = fixedAngle;
+    lockTangent.set(fixedAngle);
     setX(position.getX());
     setY(position.getY());
     icon = new Polygon();
@@ -135,14 +130,14 @@ public class Waypoint {
    * @param event The mouse event that was triggered
    */
   public void resetOnDoubleClick(MouseEvent event) {
-    if (event.getClickCount() == 2 && lockTangent) {
-      lockTangent = false;
+    if (event.getClickCount() == 2 && lockTangent.get()) {
+      lockTangent.set(false);
       update();
     }
   }
 
   public void lockTangent() {
-    lockTangent = true;
+    lockTangent.set(true);
   }
 
   /**
@@ -189,6 +184,10 @@ public class Waypoint {
   }
 
   public boolean isLockTangent() {
+    return lockTangent.get();
+  }
+
+  public BooleanProperty lockTangentProperty() {
     return lockTangent;
   }
 
@@ -255,6 +254,10 @@ public class Waypoint {
 
   public String getName() {
     return name.get();
+  }
+
+  public StringProperty nameProperty() {
+    return name;
   }
 
   /**

@@ -73,39 +73,10 @@
    <center>
       <BorderPane BorderPane.alignment="CENTER">
          <bottom>
-            <GridPane fx:id="properties" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label text="X" />
-                  <Label text="Y" GridPane.columnIndex="2" />
-                  <Label text="Tangent X" GridPane.rowIndex="1" />
-                  <Label text="Tangent Y" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label text="Locked Tangent" GridPane.rowIndex="2" />
-                  <Label text="Name" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" fx:id="xPosition" />
-                  <TextField fx:id="yPosition" GridPane.columnIndex="3" />
-                  <TextField fx:id="tangentX" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="tangentY" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <CheckBox fx:id="lockedTangent" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField fx:id="pointName" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-               </children>
-               <BorderPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </BorderPane.margin>
-            </GridPane>
+             <fx:include fx:id="editWaypoint" source="editWaypoint.fxml" />
          </bottom>
          <center>
-              <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+             <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
          </center>
       </BorderPane>
    </center>

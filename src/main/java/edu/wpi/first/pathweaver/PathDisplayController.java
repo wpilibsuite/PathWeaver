@@ -3,6 +3,7 @@ package edu.wpi.first.pathweaver;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,7 +30,8 @@ public class PathDisplayController {
   @FXML
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-  private Waypoint selectedWaypoint = null;
+
+  private ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
@@ -199,8 +201,8 @@ public class PathDisplayController {
   @FXML
   private void keyPressed(KeyEvent event) {
     if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
-        && isDeletable(selectedWaypoint)) {
-      delete(selectedWaypoint);
+        && isDeletable(getSelectedWaypoint())) {
+      delete(getSelectedWaypoint());
     }
   }
 
@@ -232,28 +234,28 @@ public class PathDisplayController {
    */
   public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
-    if (selectedWaypoint == waypoint && toggle) {
-      selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+    if (getSelectedWaypoint() == waypoint && toggle) {
+      getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
-      selectedWaypoint = null;
+      selectedWaypoint.setValue(null);
       currentPath.set(null);
     } else {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+      if (getSelectedWaypoint() != null) {
+        getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
       }
-      selectedWaypoint = waypoint;
+      selectedWaypoint.setValue(waypoint);
       waypoint.getIcon().pseudoClassStateChanged(selected, true);
       waypoint.getIcon().requestFocus();
       waypoint.getIcon().toFront();
-      currentPath.set(selectedWaypoint.getPath());
+      currentPath.set(getSelectedWaypoint().getPath());
     }
   }
 
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
-        selectedWaypoint = null;
+      if (getSelectedWaypoint() != null) {
+        getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
+        selectedWaypoint.setValue(null);
       }
     });
   }
@@ -290,5 +292,13 @@ public class PathDisplayController {
     Path path = currentPath.get();
     String fileName = MainIOUtil.getValidFileName(pathDirectory, path.getPathNameNoExtension(), ".path");
     return path.duplicate(fileName);
+  }
+
+  public Waypoint getSelectedWaypoint() {
+    return selectedWaypoint.getValue();
+  }
+
+  public ObservableValue<Waypoint> selectedWaypointProperty() {
+    return selectedWaypoint;
   }
 }
