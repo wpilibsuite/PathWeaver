@@ -301,4 +301,15 @@ public class PathDisplayController {
   public ObservableValue<Waypoint> selectedWaypointProperty() {
     return selectedWaypoint;
   }
+
+  /**
+   * Checks if the given x, y coordinates are within the valid area of the drawpane
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @return True if X, Y is within the bounds of the drawpane.
+   */
+  public boolean checkBounds(double x, double y) {
+    return drawPane.getLayoutBounds().contains(x, y);
+  }
+
 }

@@ -59,13 +59,8 @@ public class DragHandler {
     });
   }
 
-  private boolean checkBounds(double x, double y) {
-    return drawPane.getLayoutBounds().contains(x, y);
-  }
-
-
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    if (checkBounds(event.getX(), event.getY())) {
+    if (controller.checkBounds(event.getX(), event.getY())) {
       wp.setX(event.getX());
       wp.setY(event.getY());
       wp.getPath().getWaypoints().forEach(Waypoint::update);
@@ -99,7 +94,7 @@ public class DragHandler {
     for (Waypoint point : wp.getPath().getWaypoints()) {
       double wpNewX = point.getX() + offsetX;
       double wpNewY = point.getY() + offsetY;
-      if (!checkBounds(wpNewX, wpNewY)) {
+      if (!controller.checkBounds(wpNewX, wpNewY)) {
         return;
       }
     }

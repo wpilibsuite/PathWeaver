@@ -67,7 +67,7 @@ public class MainController {
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
 
-    editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty());
+    editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty(), pathDisplayController);
   }
 
   private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {

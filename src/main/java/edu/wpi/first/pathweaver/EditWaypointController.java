@@ -1,11 +1,16 @@
 package edu.wpi.first.pathweaver;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
 import java.util.List;
 
@@ -28,15 +33,32 @@ public class EditWaypointController {
                 .forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
     }
 
-    public void bindToWaypoint(ObservableValue<Waypoint> wp) {
+    public void bindToWaypoint(ObservableValue<Waypoint> wp, PathDisplayController controller) {
+        // When changing X and Y values, verify points are valid
+        xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals("") && !yPosition.getText().equals("")) {
+                if (!controller.checkBounds(Double.valueOf(newValue), Double.valueOf(yPosition.getText()))) {
+                    xPosition.setText(oldValue);
+                }
+            }
+        });
+        yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals("") && !xPosition.getText().equals("")) {
+                if (!controller.checkBounds(Double.valueOf(xPosition.getText()), Double.valueOf(newValue))) {
+                    yPosition.setText(oldValue);
+                }
+            }
+        });
         wp.addListener((observable, oldValue, newValue) -> {
             if (oldValue != null) {
+                PathIOUtil.export(controller.getPathDirectory(), oldValue.getPath());
                 unbind(oldValue);
             }
             if (newValue != null) {
                 bind(newValue);
             }
         });
+        enableSaving(wp, controller);
     }
 
     private void enableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
@@ -64,12 +86,30 @@ public class EditWaypointController {
         controls.forEach(control -> control.setDisable(false));
         if (newValue.getPath().getStart() == newValue || newValue.getPath().getEnd() == newValue) {
             lockedTangent.setDisable(true);
+            lockedTangent.setSelected(true);
+        } else {
+            lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
         }
         enableDoubleBinding(xPosition, newValue.xProperty());
         enableDoubleBinding(yPosition, newValue.yProperty());
         enableDoubleBinding(tangentX, newValue.tangentXProperty());
         enableDoubleBinding(tangentY, newValue.tangentYProperty());
-        lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
         pointName.textProperty().bindBidirectional(newValue.nameProperty());
+    }
+
+    private void enableSaving(ObservableValue<Waypoint> wp, PathDisplayController controller) {
+        // Save values when out of focus
+        List.of(xPosition, yPosition, tangentX, tangentY, pointName)
+                .forEach(textField -> textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!newValue && wp.getValue() != null){
+                        PathIOUtil.export(controller.getPathDirectory(), wp.getValue().getPath());
+                    }
+                }));
+
+        lockedTangent.selectedProperty()
+                .addListener(__ -> {if (wp.getValue() != null) {
+                    PathIOUtil.export(controller.getPathDirectory(), wp.getValue().getPath());
+                }
+        });
     }
 }
