@@ -51,8 +51,8 @@ public class Path {
    */
   public Path(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
-    Waypoint start = new Waypoint(startPos, startTangent, false, this);
-    Waypoint end = new Waypoint(endPos, endTangent, false, this);
+    Waypoint start = new Waypoint(startPos, startTangent, true, this);
+    Waypoint end = new Waypoint(endPos, endTangent, true, this);
     start.setSpline(new QuickSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
