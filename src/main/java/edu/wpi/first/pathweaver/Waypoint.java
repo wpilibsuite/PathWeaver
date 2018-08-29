@@ -15,11 +15,12 @@ import javafx.util.Duration;
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
+  private final DoubleProperty tangentX = new SimpleDoubleProperty();
+  private final DoubleProperty tangentY = new SimpleDoubleProperty();
   private BooleanProperty lockTangent = new SimpleBooleanProperty();
   private final StringProperty name = new SimpleStringProperty("");
 
   private Spline spline;
-  private final ObjectProperty<Point2D> tangent = new SimpleObjectProperty<>();
 
   private Path path;
   public static Waypoint currentWaypoint = null;
@@ -62,9 +63,9 @@ public class Waypoint {
     tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
-    tangent.set(tangentVector);
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangent, x));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangent, y));
+    setTangent(tangentVector);
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangentX, x));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangentY, y));
 
     this.spline = new NullSpline();
 
@@ -102,7 +103,7 @@ public class Waypoint {
     this.icon.rotateProperty().bind(
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
-                    tangent));
+                    tangentX, tangentY));
     nameTip.setShowDelay(Duration.millis(200));
     nameTip.textProperty().bind(name);
     icon.getStyleClass().add("waypoint");
@@ -196,15 +197,12 @@ public class Waypoint {
   }
 
   public Point2D getTangent() {
-    return tangent.get();
-  }
-
-  public ObjectProperty<Point2D> tangentProperty() {
-    return tangent;
+    return new Point2D(tangentX.get(), tangentY.get());
   }
 
   public void setTangent(Point2D tangent) {
-    this.tangent.set(tangent);
+    this.tangentX.set(tangent.getX());
+    this.tangentY.set(tangent.getY());
   }
 
   public Polygon getIcon() {
@@ -271,5 +269,13 @@ public class Waypoint {
       Tooltip.install(icon, nameTip);
     }
     this.name.set(name);
+  }
+
+  public DoubleProperty tangentXProperty() {
+    return tangentX;
+  }
+
+  public DoubleProperty tangentYProperty() {
+    return tangentY;
   }
 }
