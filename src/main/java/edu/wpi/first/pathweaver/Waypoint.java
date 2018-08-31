@@ -3,7 +3,12 @@ package edu.wpi.first.pathweaver;
 import java.util.Map;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
@@ -17,7 +22,7 @@ public class Waypoint {
   private final DoubleProperty y = new SimpleDoubleProperty();
   private final DoubleProperty tangentX = new SimpleDoubleProperty();
   private final DoubleProperty tangentY = new SimpleDoubleProperty();
-  private BooleanProperty lockTangent = new SimpleBooleanProperty();
+  private final BooleanProperty lockTangent = new SimpleBooleanProperty();
   private final StringProperty name = new SimpleStringProperty("");
 
   private Spline spline;
@@ -137,30 +142,15 @@ public class Waypoint {
     }
   }
 
-  public void lockTangent() {
-    lockTangent.set(true);
-  }
-
   /**
    * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
    */
   public void update() {
-    if (this != path.getStart() && this != path.getEnd()) {
-      updateTheta();
+    if (this != path.getStart() && this != path.getEnd() && !isLockTangent()) {
+      path.updateTheta(this);
     }
     path.updateSplines();
   }
-
-  /**
-   * Forces Waypoint to recompute optimal theta value. Does nothing if lockTangent is true.
-   */
-  public void updateTheta() {
-    if (!isLockTangent()) {
-      path.updateTheta(this);
-    }
-  }
-
-
 
   /**
    * Convenience function for math purposes.
@@ -170,17 +160,6 @@ public class Waypoint {
    * @return The coordinates of this Waypoint relative to the coordinates of another Waypoint.
    */
   public Point2D relativeTo(Waypoint other) {
-    return relativeTo(other.getCoords());
-  }
-
-  /**
-   * Convenience function allowing us to obtain the position of this Waypoint relative to a Point2S.
-   *
-   * @param other The other Point2D.
-   *
-   * @return A Point2D representing the distance between this Watpoint and a given Point2D.
-   */
-  public Point2D relativeTo(Point2D other) {
     return new Point2D(this.getX() - other.getX(), this.getY() - other.getY());
   }
 
@@ -235,11 +214,6 @@ public class Waypoint {
 
   public Point2D getCoords() {
     return new Point2D(getX(), getY());
-  }
-
-  public void setCoords(Point2D newCoords) {
-    setX(newCoords.getX());
-    setY(newCoords.getY());
   }
 
   public void setSpline(Spline spline) {

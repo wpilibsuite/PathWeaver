@@ -31,7 +31,7 @@ public class PathDisplayController {
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
 
-  private ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
+  private final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
@@ -303,7 +303,7 @@ public class PathDisplayController {
   }
 
   /**
-   * Checks if the given x, y coordinates are within the valid area of the drawpane
+   * Checks if the given x, y coordinates are within the valid area of the drawpane.
    * @param x X coordinate
    * @param y Y coordinate
    * @return True if X, Y is within the bounds of the drawpane.

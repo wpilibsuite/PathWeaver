@@ -6,10 +6,8 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
@@ -29,7 +27,8 @@ public class MainController {
   @FXML private PathDisplayController pathDisplayController; //NOPMD
 
   @FXML private GridPane editWaypoint;
-  @FXML private EditWaypointController editWaypointController;
+  // Variable is auto generated as Pane name + Controller
+  @FXML private EditWaypointController editWaypointController; //NOPMD
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";

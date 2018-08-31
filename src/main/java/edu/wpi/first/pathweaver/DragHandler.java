@@ -71,7 +71,7 @@ public class DragHandler {
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
     Point2D pt = new Point2D(event.getX(), event.getY());
     wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
-    wp.lockTangent();
+    wp.lockTangentProperty().set(true);
     wp.getPath().getWaypoints().forEach(Waypoint::update);
   }
 

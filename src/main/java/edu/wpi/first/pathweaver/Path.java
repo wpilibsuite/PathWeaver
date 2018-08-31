@@ -130,7 +130,8 @@ public class Path {
     for (Waypoint wp : waypoints) {
       Point2D reflectedPos = reflectPoint(getStart(), wp, horizontal, false);
       Point2D reflectedTangent = reflectPoint(getStart(), wp, horizontal, true);
-      wp.setCoords(reflectedPos);
+      wp.setX(reflectedPos.getX());
+      wp.setY(reflectedPos.getY());
       wp.setTangent(reflectedTangent);
     }
     // Loop through to update points

@@ -112,6 +112,10 @@ public final class FxUtils { // NOPMD util class name
     }
   }
 
+  /**
+   * Returns a TextFormatter for setting a TextField to only Numeric text.
+   * @return TextFormatter with only Numeric text.
+   */
   public static TextFormatter<Object> onlyDoubleText() {
     UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
       String text = c.getControlNewText();
