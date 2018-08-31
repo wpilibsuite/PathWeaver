@@ -117,15 +117,27 @@ public final class FxUtils { // NOPMD util class name
    * @return TextFormatter with only Numeric text.
    */
   public static TextFormatter<Object> onlyDoubleText() {
-    UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
+    return textRestriction("^\\-?\\d*\\.?\\d*$");
+  }
+
+  /**
+   * Returns a TextFormatter for setting a TextField to only positive Numeric text.
+   * @return TextFormatter with only Numeric text.
+   */
+  public static TextFormatter<Object> onlyPositiveDoubleText() {
+    return textRestriction("^\\d+\\.?\\d*$");
+  }
+
+  private static TextFormatter<Object> textRestriction(String regex) {
+    UnaryOperator<TextFormatter.Change> formatter = c -> {
       String text = c.getControlNewText();
-      if (text.matches("^\\-?\\d+\\.?\\d*$") || text.isEmpty()) {
+      if (text.matches(regex) || text.isEmpty()) {
         return c;
       } else {
         return null;
       }
     };
-    return new TextFormatter<>(onlyDoubleText);
+    return new TextFormatter<>(formatter);
   }
 
 }

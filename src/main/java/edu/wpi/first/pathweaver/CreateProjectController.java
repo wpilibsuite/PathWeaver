@@ -48,7 +48,7 @@ public class CreateProjectController {
 
 
     // Validate that numericFields contain decimal numbers
-    numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
+    numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
     if (ProjectPreferences.getInstance() != null) {
       directory.setText(ProjectPreferences.getInstance().getDirectory());

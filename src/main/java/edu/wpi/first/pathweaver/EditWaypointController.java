@@ -68,7 +68,18 @@ public class EditWaypointController {
   }
 
   private void enableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
-    field.textProperty().bindBidirectional(doubleProperty, new NumberStringConverter());
+    NumberStringConverter numberStringConverter = new NumberStringConverter() {
+      @Override
+      public Number fromString(String value) {
+        // Don't parse the beginning of a negative number
+        if (value.equals("-")) {
+          return null;
+        } else {
+          return super.fromString(value);
+        }
+      }
+    };
+    field.textProperty().bindBidirectional(doubleProperty, numberStringConverter);
   }
 
   private void disableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
