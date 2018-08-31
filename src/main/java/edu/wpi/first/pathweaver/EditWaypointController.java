@@ -42,15 +42,13 @@ public class EditWaypointController {
     // When changing X and Y values, verify points are within bounds
     xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(yPosition.getText());
-      boolean outsideBounds = !controller.checkBounds(Double.valueOf(newValue), Double.valueOf(yPosition.getText()));
-      if (validText && outsideBounds) {
+      if (validText && !controller.checkBounds(Double.valueOf(newValue), Double.valueOf(yPosition.getText()))) {
         xPosition.setText(oldValue);
       }
     });
     yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(xPosition.getText());
-      boolean outsideBounds = !controller.checkBounds(Double.valueOf(xPosition.getText()), Double.valueOf(newValue));
-      if (validText && outsideBounds) {
+      if (validText && !controller.checkBounds(Double.valueOf(xPosition.getText()), Double.valueOf(newValue))) {
         yPosition.setText(oldValue);
       }
     });
