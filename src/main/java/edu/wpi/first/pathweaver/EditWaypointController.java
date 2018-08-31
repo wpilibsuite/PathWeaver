@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -24,6 +25,8 @@ public class EditWaypointController {
   private TextField pointName;
 
   private List<Control> controls;
+
+  private ChangeListener<String> nameListener;
 
   @FXML
   private void initialize() {
@@ -81,7 +84,7 @@ public class EditWaypointController {
     disableDoubleBinding(tangentY, oldValue.tangentYProperty());
     lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
     lockedTangent.setSelected(false);
-    pointName.textProperty().unbindBidirectional(oldValue.nameProperty());
+    pointName.textProperty().removeListener(nameListener);
     pointName.setText("");
   }
 
@@ -97,7 +100,9 @@ public class EditWaypointController {
     enableDoubleBinding(yPosition, newValue.yProperty());
     enableDoubleBinding(tangentX, newValue.tangentXProperty());
     enableDoubleBinding(tangentY, newValue.tangentYProperty());
-    pointName.textProperty().bindBidirectional(newValue.nameProperty());
+    pointName.setText(newValue.getName());
+    nameListener = (observable, oldText, newText) -> newValue.setName(newText);
+    pointName.textProperty().addListener(nameListener);
   }
 
   private void enableSaving(ObservableValue<Waypoint> wp, PathDisplayController controller) {
