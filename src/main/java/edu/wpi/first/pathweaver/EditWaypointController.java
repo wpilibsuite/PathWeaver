@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
 
 public class EditWaypointController {
@@ -65,6 +66,7 @@ public class EditWaypointController {
       }
     });
     enableSaving(wp, controller);
+    lockTangentOnEdit();
   }
 
   private void enableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
@@ -131,5 +133,10 @@ public class EditWaypointController {
             PathIOUtil.export(controller.getPathDirectory(), wp.getValue().getPath());
           }
         });
+  }
+
+  private void lockTangentOnEdit() {
+    tangentY.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
+    tangentX.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
   }
 }
