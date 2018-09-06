@@ -86,6 +86,7 @@ public class PathDisplayController {
     });
     currentPath.addListener((change, oldValue, newValue) -> {
       vectorGroup.getChildren().clear();
+      selectedWaypoint.setValue(null);
       if (newValue == null) {
         return;
       }
@@ -213,6 +214,7 @@ public class PathDisplayController {
   }
 
   private void delete(Waypoint waypoint) {
+    selectedWaypoint.setValue(null);
     Path path = waypoint.getPath();
     Waypoint previous = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) - 1);
     waypointGroup.getChildren().remove(waypoint.getIcon());
