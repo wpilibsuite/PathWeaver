@@ -59,13 +59,8 @@ public class DragHandler {
     });
   }
 
-  private boolean checkBounds(double x, double y) {
-    return drawPane.getLayoutBounds().contains(x, y);
-  }
-
-
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    if (checkBounds(event.getX(), event.getY())) {
+    if (controller.checkBounds(event.getX(), event.getY())) {
       wp.setX(event.getX());
       wp.setY(event.getY());
       wp.getPath().getWaypoints().forEach(Waypoint::update);
@@ -76,8 +71,8 @@ public class DragHandler {
   private void handleVectorDrag(DragEvent event, Waypoint wp) {
     Point2D pt = new Point2D(event.getX(), event.getY());
     wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
-    wp.lockTangent();
-    wp.getPath().updateSplines();
+    wp.lockTangentProperty().set(true);
+    wp.getPath().getWaypoints().forEach(Waypoint::update);
   }
 
   private void handleSplineDrag(DragEvent event, Waypoint wp) {
@@ -99,7 +94,7 @@ public class DragHandler {
     for (Waypoint point : wp.getPath().getWaypoints()) {
       double wpNewX = point.getX() + offsetX;
       double wpNewY = point.getY() + offsetY;
-      if (!checkBounds(wpNewX, wpNewY)) {
+      if (!controller.checkBounds(wpNewX, wpNewY)) {
         return;
       }
     }

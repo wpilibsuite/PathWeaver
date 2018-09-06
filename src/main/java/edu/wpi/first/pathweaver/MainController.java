@@ -12,6 +12,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 @SuppressWarnings("PMD.TooManyMethods")
@@ -24,6 +25,10 @@ public class MainController {
   @FXML private Pane pathDisplay;
   // Variable is auto generated as Pane name + Controller
   @FXML private PathDisplayController pathDisplayController; //NOPMD
+
+  @FXML private GridPane editWaypoint;
+  // Variable is auto generated as Pane name + Controller
+  @FXML private EditWaypointController editWaypointController; //NOPMD
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
@@ -60,6 +65,8 @@ public class MainController {
     duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
     flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+
+    editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty(), pathDisplayController);
   }
 
   private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {

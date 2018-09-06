@@ -42,9 +42,6 @@
          </children>
       </VBox>
     </right>
-    <center>
-        <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
-    </center>
    <top>
           <MenuBar BorderPane.alignment="CENTER">
               <menus>
@@ -66,4 +63,18 @@
               </menus>
           </MenuBar>
    </top>
+   <center>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+             <fx:include fx:id="pathDisplay" source="pathDisplay.fxml" />
+         </center>
+         <bottom>
+            <TitledPane text="Waypoint Properties" BorderPane.alignment="CENTER">
+               <content>
+                   <fx:include fx:id="editWaypoint" source="editWaypoint.fxml" />
+               </content>
+            </TitledPane>
+         </bottom>
+      </BorderPane>
+   </center>
 </BorderPane>

@@ -3,6 +3,7 @@ package edu.wpi.first.pathweaver;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,7 +30,8 @@ public class PathDisplayController {
   @FXML
   private Pane topPane;
   private final PseudoClass selected = PseudoClass.getPseudoClass("selected");
-  private Waypoint selectedWaypoint = null;
+
+  private final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
   private final Field field = new Field();
@@ -53,6 +55,7 @@ public class PathDisplayController {
 
     Image image = field.getImage();
     backgroundImage.setImage(image);
+    topPane.getStyleClass().add("pane");
     Scale scale = new Scale();
     scale.xProperty().bind(Bindings.createDoubleBinding(() ->
             Math.min(topPane.getWidth() / image.getWidth(), topPane.getHeight() / image.getHeight()),
@@ -83,6 +86,7 @@ public class PathDisplayController {
     });
     currentPath.addListener((change, oldValue, newValue) -> {
       vectorGroup.getChildren().clear();
+      selectedWaypoint.setValue(null);
       if (newValue == null) {
         return;
       }
@@ -198,8 +202,8 @@ public class PathDisplayController {
   @FXML
   private void keyPressed(KeyEvent event) {
     if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
-        && isDeletable(selectedWaypoint)) {
-      delete(selectedWaypoint);
+        && isDeletable(getSelectedWaypoint())) {
+      delete(getSelectedWaypoint());
     }
   }
 
@@ -210,6 +214,7 @@ public class PathDisplayController {
   }
 
   private void delete(Waypoint waypoint) {
+    selectedWaypoint.setValue(null);
     Path path = waypoint.getPath();
     Waypoint previous = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) - 1);
     waypointGroup.getChildren().remove(waypoint.getIcon());
@@ -231,28 +236,28 @@ public class PathDisplayController {
    */
   public void selectWaypoint(Waypoint waypoint, boolean toggle) {
 
-    if (selectedWaypoint == waypoint && toggle) {
-      selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+    if (getSelectedWaypoint() == waypoint && toggle) {
+      getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
       drawPane.requestFocus();
-      selectedWaypoint = null;
+      selectedWaypoint.setValue(null);
       currentPath.set(null);
     } else {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
+      if (getSelectedWaypoint() != null) {
+        getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
       }
-      selectedWaypoint = waypoint;
+      selectedWaypoint.setValue(waypoint);
       waypoint.getIcon().pseudoClassStateChanged(selected, true);
       waypoint.getIcon().requestFocus();
       waypoint.getIcon().toFront();
-      currentPath.set(selectedWaypoint.getPath());
+      currentPath.set(getSelectedWaypoint().getPath());
     }
   }
 
   private void setupPress() {
     drawPane.setOnMouseClicked(e -> {
-      if (selectedWaypoint != null) {
-        selectedWaypoint.getIcon().pseudoClassStateChanged(selected, false);
-        selectedWaypoint = null;
+      if (getSelectedWaypoint() != null) {
+        getSelectedWaypoint().getIcon().pseudoClassStateChanged(selected, false);
+        selectedWaypoint.setValue(null);
       }
     });
   }
@@ -290,4 +295,23 @@ public class PathDisplayController {
     String fileName = MainIOUtil.getValidFileName(pathDirectory, path.getPathNameNoExtension(), ".path");
     return path.duplicate(fileName);
   }
+
+  public Waypoint getSelectedWaypoint() {
+    return selectedWaypoint.getValue();
+  }
+
+  public ObservableValue<Waypoint> selectedWaypointProperty() {
+    return selectedWaypoint;
+  }
+
+  /**
+   * Checks if the given x, y coordinates are within the valid area of the drawpane.
+   * @param x X coordinate
+   * @param y Y coordinate
+   * @return True if X, Y is within the bounds of the drawpane.
+   */
+  public boolean checkBounds(double x, double y) {
+    return drawPane.getLayoutBounds().contains(x, y);
+  }
+
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javafx.stage.Stage;
@@ -58,8 +57,8 @@ public class ProgramPreferences {
       gson.toJson(values, writer);
       writer.close();
     } catch (IOException e) {
-      Logger log = LogManager.getLogManager().getLogger(getClass().getName());
-      log.log(Level.WARNING, e.getMessage());
+      Logger log = Logger.getLogger(getClass().getName());
+      log.log(Level.WARNING, "couldn't update program preferences", e);
     }
   }
 

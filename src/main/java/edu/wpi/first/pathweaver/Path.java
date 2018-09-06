@@ -14,6 +14,27 @@ public class Path {
   private final String pathName;
   private int subchildIdx = 0;
 
+  /**
+   * Path constructor based on a known list of points.
+   * @param newPoints   The list of waypoints to add
+   * @param name        The name of the path
+   */
+  public Path(List<Waypoint> newPoints, String name) {
+    pathName = name;
+    waypoints.addAll(newPoints);
+    for (int i = 1; i < waypoints.size(); i++) {
+      Waypoint current = waypoints.get(i - 1);
+      Waypoint next = waypoints.get(i);
+      current.setSpline(new QuickSpline(current, next));
+    }
+    getEnd().setSpline(new NullSpline());
+    for (Waypoint wp : waypoints) {
+      wp.setPath(this);
+    }
+    updateSplines();
+    enableSubchildSelector(subchildIdx);
+  }
+
   public Path(String name) {
     this(new Point2D(0, 0), new Point2D(10, 10), new Point2D(10, 0),
         new Point2D(0, 10), name);
@@ -30,8 +51,8 @@ public class Path {
    */
   public Path(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent, String name) {
     pathName = name;
-    Waypoint start = new Waypoint(startPos, startTangent, false, this);
-    Waypoint end = new Waypoint(endPos, endTangent, false, this);
+    Waypoint start = new Waypoint(startPos, startTangent, true, this);
+    Waypoint end = new Waypoint(endPos, endTangent, true, this);
     start.setSpline(new QuickSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
@@ -109,7 +130,8 @@ public class Path {
     for (Waypoint wp : waypoints) {
       Point2D reflectedPos = reflectPoint(getStart(), wp, horizontal, false);
       Point2D reflectedTangent = reflectPoint(getStart(), wp, horizontal, true);
-      wp.setCoords(reflectedPos);
+      wp.setX(reflectedPos.getX());
+      wp.setY(reflectedPos.getY());
       wp.setTangent(reflectedTangent);
     }
     // Loop through to update points

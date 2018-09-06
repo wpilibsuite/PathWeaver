@@ -2,8 +2,8 @@ package edu.wpi.first.pathweaver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import javafx.css.PseudoClass;
@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
@@ -106,9 +107,37 @@ public final class FxUtils { // NOPMD util class name
       scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");
       scene.setRoot(root);
     } catch (IOException e) {
-      final Logger logger = LogManager.getLogManager().getLogger(FxUtils.class.getName());
-      logger.log(Level.WARNING, e.getMessage());
+      final Logger logger = Logger.getLogger(FxUtils.class.getName());
+      logger.log(Level.WARNING, "Couldn't load main screen", e);
     }
+  }
+
+  /**
+   * Returns a TextFormatter for setting a TextField to only Numeric text.
+   * @return TextFormatter with only Numeric text.
+   */
+  public static TextFormatter<Object> onlyDoubleText() {
+    return textRestriction("^\\-?\\d*\\.?\\d*$");
+  }
+
+  /**
+   * Returns a TextFormatter for setting a TextField to only positive Numeric text.
+   * @return TextFormatter with only Numeric text.
+   */
+  public static TextFormatter<Object> onlyPositiveDoubleText() {
+    return textRestriction("^\\d+\\.?\\d*$");
+  }
+
+  private static TextFormatter<Object> textRestriction(String regex) {
+    UnaryOperator<TextFormatter.Change> formatter = c -> {
+      String text = c.getControlNewText();
+      if (text.matches(regex) || text.isEmpty()) {
+        return c;
+      } else {
+        return null;
+      }
+    };
+    return new TextFormatter<>(formatter);
   }
 
 }

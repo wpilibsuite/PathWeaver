@@ -2,8 +2,6 @@ package edu.wpi.first.pathweaver;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.UnaryOperator;
-
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -12,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -49,16 +46,9 @@ public class CreateProjectController {
     }
     create.disableProperty().bind(bind);
 
-    UnaryOperator<TextFormatter.Change> onlyDoubleText = c -> {
-      String text = c.getControlNewText();
-      if (text.matches("^\\d+\\.?\\d*$") || text.isEmpty()) {
-        return c;
-      } else {
-        return null;
-      }
-    };
+
     // Validate that numericFields contain decimal numbers
-    numericFields.forEach(textField -> textField.setTextFormatter(new TextFormatter<Object>(onlyDoubleText)));
+    numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
     if (ProjectPreferences.getInstance() != null) {
       directory.setText(ProjectPreferences.getInstance().getDirectory());

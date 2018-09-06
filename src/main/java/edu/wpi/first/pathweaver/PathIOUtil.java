@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,14 +37,15 @@ public final class PathIOUtil {
         BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta"))
+            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta", "Name"))
     ) {
       for (Waypoint wp : path.getWaypoints()) {
         double xPos = wp.getX();
         double yPos = wp.getY();
         double tangentX = wp.getTangent().getX();
         double tangentY = wp.getTangent().getY();
-        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent());
+        String name = wp.getName();
+        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent(), name);
       }
       csvPrinter.flush();
     } catch (IOException except) {
@@ -61,48 +63,36 @@ public final class PathIOUtil {
    *
    * @return Path object saved in Path file
    */
-  @SuppressWarnings("PMD.NcssCount")
   public static Path importPath(String fileLocation, String fileName) {
     File file = new File(fileLocation + fileName);
-    if (file.exists()) {
-      try (
-          Reader reader = Files.newBufferedReader(file.toPath());
-          CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+    try {
+      Reader reader = Files.newBufferedReader(file.toPath());
+      CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
               .withFirstRecordAsHeader()
               .withIgnoreHeaderCase()
-              .withTrim())
-      ) {
-        int count = 0;
-        Point2D startPosition = null;
-        Point2D startTangent = null;
-        Path path = null;
-        for (CSVRecord csvRecord : csvParser) {
-          // Accessing values by Header names
-          count++;
-          Point2D position = new Point2D(
-              Double.parseDouble(csvRecord.get("X")),
-              Double.parseDouble(csvRecord.get("Y")));
-          Point2D tangent = new Point2D(
-              Double.parseDouble(csvRecord.get("Tangent X")),
-              Double.parseDouble(csvRecord.get("Tangent Y")));
-          boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
-          if (count == 1) {
-            startPosition = position;
-            startTangent = tangent;
-          } else if (count == 2) {
-            path = new Path(startPosition, position, startTangent, tangent, fileName);
-          } else {
-            path.addNewWaypoint(path.getEnd(), position, tangent, locked);
-          }
+              .withTrim());
+      ArrayList<Waypoint> waypoints = new ArrayList<>();
+      for (CSVRecord csvRecord : csvParser) {
+        Point2D position = new Point2D(
+                Double.parseDouble(csvRecord.get("X")),
+                Double.parseDouble(csvRecord.get("Y"))
+        );
+        Point2D tangent = new Point2D(
+                Double.parseDouble(csvRecord.get("Tangent X")),
+                Double.parseDouble(csvRecord.get("Tangent Y"))
+        );
+        boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
+        Waypoint point = new Waypoint(position, tangent, locked);
+        if (csvRecord.isMapped("Name")) {
+          String name = csvRecord.get("Name");
+          point.setName(name);
         }
-        return path;
-
-      } catch (IOException except) {
-        LOGGER.log(Level.WARNING, "Could not read Path file", except);
-        return null;
+        waypoints.add(point);
       }
-
+      return new Path(waypoints, fileName);
+    } catch (IOException except) {
+      LOGGER.log(Level.WARNING, "Could not read Path file", except);
+      return null;
     }
-    return null; //there was no file
   }
 }
