@@ -95,6 +95,7 @@ public class ProjectPreferences {
     private final double maxAcceleration;
     private final double maxJerk;
     private final double wheelBase;
+    private final String game;
 
     /**
      * Constructor for Values of ProjectPreferences.
@@ -111,6 +112,7 @@ public class ProjectPreferences {
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
+      this.game  = "POWERUP";
     }
 
     public double getTimeStep() {

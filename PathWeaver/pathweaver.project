@@ -3,5 +3,6 @@
   "maxVelocity": 10.0,
   "maxAcceleration": 60.0,
   "maxJerk": 60.0,
-  "wheelBase": 2.0
+  "wheelBase": 2.0,
+  "game": "POWERUP"
 }
