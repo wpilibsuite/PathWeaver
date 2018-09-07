@@ -36,7 +36,7 @@ public final class SaveManager {
    */
   public void saveAllChanges() {
     for (Path path : paths) {
-      saveChange(path);
+      saveChange(path, false);
     }
   }
 
