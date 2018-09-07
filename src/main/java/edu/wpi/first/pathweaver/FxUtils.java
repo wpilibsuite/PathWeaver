@@ -102,10 +102,10 @@ public final class FxUtils { // NOPMD util class name
       primaryStage.resizableProperty().setValue(true);
       primaryStage.setOnCloseRequest(value -> {
         // Prompt the user to save all changed paths, consuming the event if they cancel the close
-        if (!SaveManager.getInstance().promptSaveAll()) {
-          value.consume();
-        } else {
+        if (SaveManager.getInstance().promptSaveAll()) {
           ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
+        } else {
+          value.consume();
         }
       });
       ProgramPreferences.getInstance().setSizeAndPosition(primaryStage);

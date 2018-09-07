@@ -3,16 +3,14 @@ package edu.wpi.first.pathweaver;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
-public class SaveManager {
+public final class SaveManager {
 
   private static SaveManager instance;
 
-  private Set<Path> paths = new HashSet<>();
+  private final Set<Path> paths = new HashSet<>();
 
   private SaveManager() {
   }

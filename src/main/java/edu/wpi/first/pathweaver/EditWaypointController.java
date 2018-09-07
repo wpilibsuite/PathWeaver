@@ -65,7 +65,7 @@ public class EditWaypointController {
         bind(newValue);
       }
     });
-    enableSaving(wp, controller);
+    enableSaving(wp);
     lockTangentOnEdit();
   }
 
@@ -118,7 +118,7 @@ public class EditWaypointController {
     pointName.textProperty().addListener(nameListener);
   }
 
-  private void enableSaving(ObservableValue<Waypoint> wp, PathDisplayController controller) {
+  private void enableSaving(ObservableValue<Waypoint> wp) {
     // Save values when out of focus
     List.of(xPosition, yPosition, tangentX, tangentY, pointName)
         .forEach(textField -> textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
