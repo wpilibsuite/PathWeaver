@@ -262,7 +262,7 @@ public class MainController {
   private void duplicate() {
     Path newPath = pathDisplayController.duplicate(pathDirectory);
     TreeItem<String> stringTreeItem = MainIOUtil.addChild(pathRoot, newPath.getPathName());
-    PathIOUtil.export(pathDirectory, newPath);
+    SaveManager.getInstance().saveChange(newPath);
     paths.getSelectionModel().select(stringTreeItem);
   }
 
@@ -271,7 +271,7 @@ public class MainController {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);
     Path newPath = new Path(name);
-    PathIOUtil.export(pathDirectory, newPath);
+    SaveManager.getInstance().saveChange(newPath);
   }
 
   @FXML
