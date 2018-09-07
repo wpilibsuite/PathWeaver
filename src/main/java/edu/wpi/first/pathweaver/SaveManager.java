@@ -67,9 +67,10 @@ public final class SaveManager {
    * Saves the given path to the Project's Path directory.
    * @param path Path to save.
    */
-  private void saveChange(Path path) {
+  public void saveChange(Path path) {
     String pathDirectory = ProjectPreferences.getInstance().getDirectory() + "/Paths/";
     PathIOUtil.export(pathDirectory, path);
+    paths.remove(path);
   }
 
 }

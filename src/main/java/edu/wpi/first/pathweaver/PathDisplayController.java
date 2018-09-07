@@ -15,6 +15,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
@@ -201,9 +203,12 @@ public class PathDisplayController {
 
   @FXML
   private void keyPressed(KeyEvent event) {
+    KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
     if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
         && isDeletable(getSelectedWaypoint())) {
       delete(getSelectedWaypoint());
+    } else if (save.match(event) && currentPath.get() != null) {
+      SaveManager.getInstance().saveChange(currentPath.get());
     }
   }
 
