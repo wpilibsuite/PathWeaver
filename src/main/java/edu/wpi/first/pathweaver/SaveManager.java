@@ -54,7 +54,7 @@ public final class SaveManager {
       Optional<ButtonType> buttonType = alert.showAndWait();
       if (buttonType.isPresent()) {
         if (buttonType.get() == ButtonType.YES) {
-          saveChange(path);
+          saveChange(path, false);
         } else if (buttonType.get() == ButtonType.CANCEL) {
           return false;
         }
@@ -64,13 +64,25 @@ public final class SaveManager {
   }
 
   /**
-   * Saves the given path to the Project's Path directory.
+   * Saves the given path to the Project's Path directory. Removes the path from the set of modified paths.
    * @param path Path to save.
    */
   public void saveChange(Path path) {
+    saveChange(path, true);
+  }
+
+  /**
+   * Saves the given path to the Project's Path directory. Removes the path from the set of modified paths if remove is
+   * true.
+   * @param path Path to save.
+   * @param remove Whether to remove Path from set of modified paths.
+   */
+  private void saveChange(Path path, boolean remove) {
     String pathDirectory = ProjectPreferences.getInstance().getDirectory() + "/Paths/";
     PathIOUtil.export(pathDirectory, path);
-    paths.remove(path);
+    if (remove) {
+      paths.remove(path);
+    }
   }
 
 }
