@@ -101,7 +101,12 @@ public final class FxUtils { // NOPMD util class name
       Stage primaryStage = (Stage) scene.getWindow();
       primaryStage.resizableProperty().setValue(true);
       primaryStage.setOnCloseRequest(value -> {
-        ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
+        // Prompt the user to save all changed paths, consuming the event if they cancel the close
+        if (!SaveManager.getInstance().promptSaveAll()) {
+          value.consume();
+        } else {
+          ProgramPreferences.getInstance().saveSizeAndPosition(primaryStage);
+        }
       });
       ProgramPreferences.getInstance().setSizeAndPosition(primaryStage);
       scene.getStylesheets().add("/edu/wpi/first/pathweaver/style.css");

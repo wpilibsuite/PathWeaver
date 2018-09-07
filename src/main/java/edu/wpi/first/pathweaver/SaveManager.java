@@ -1,6 +1,7 @@
 package edu.wpi.first.pathweaver;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.control.Alert;
@@ -47,23 +48,18 @@ public class SaveManager {
    */
   public boolean promptSaveAll() {
     for (Path path : paths) {
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      Alert alert = new Alert(Alert.AlertType.NONE);
       alert.setTitle(path.getPathName() + " has been modified");
       alert.setContentText("Save " + path.getPathName() + "?");
-      ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-      ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-      ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-      alert.getButtonTypes().addAll(yesButton, noButton, cancelButton);
-      AtomicBoolean cancel = new AtomicBoolean(false);
-      alert.showAndWait().ifPresent(buttonType -> {
-        if (buttonType == ButtonType.YES) {
+      alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+
+      Optional<ButtonType> buttonType = alert.showAndWait();
+      if (buttonType.isPresent()) {
+        if (buttonType.get() == ButtonType.YES) {
           saveChange(path);
-        } else if (buttonType == ButtonType.CANCEL) {
-          cancel.set(true);
+        } else if (buttonType.get() == ButtonType.CANCEL) {
+          return false;
         }
-      });
-      if (cancel.get()) {
-        return false;
       }
     }
     return true;
