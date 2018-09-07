@@ -58,7 +58,7 @@ public class EditWaypointController {
     });
     wp.addListener((observable, oldValue, newValue) -> {
       if (oldValue != null) {
-        PathIOUtil.export(controller.getPathDirectory(), oldValue.getPath());
+        SaveManager.getInstance().addChange(oldValue.getPath());
         unbind(oldValue);
       }
       if (newValue != null) {
@@ -123,14 +123,14 @@ public class EditWaypointController {
     List.of(xPosition, yPosition, tangentX, tangentY, pointName)
         .forEach(textField -> textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
           if (!newValue && wp.getValue() != null) {
-            PathIOUtil.export(controller.getPathDirectory(), wp.getValue().getPath());
+            SaveManager.getInstance().addChange(wp.getValue().getPath());
           }
         }));
 
     lockedTangent.selectedProperty()
         .addListener(__ -> {
           if (wp.getValue() != null) {
-            PathIOUtil.export(controller.getPathDirectory(), wp.getValue().getPath());
+            SaveManager.getInstance().addChange(wp.getValue().getPath());
           }
         });
   }

@@ -1,9 +1,8 @@
 package edu.wpi.first.pathweaver;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -12,7 +11,7 @@ public class SaveManager {
 
   private static SaveManager instance;
 
-  private List<Path> paths = new ArrayList<>();
+  private Set<Path> paths = new HashSet<>();
 
   private SaveManager() {
   }
