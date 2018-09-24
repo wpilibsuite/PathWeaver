@@ -34,7 +34,7 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0);
+    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018);
     updateValues();
   }
 
@@ -95,7 +95,7 @@ public class ProjectPreferences {
     private final double maxAcceleration;
     private final double maxJerk;
     private final double wheelBase;
-    private final String game;
+    private final Game game;
 
     /**
      * Constructor for Values of ProjectPreferences.
@@ -104,15 +104,16 @@ public class ProjectPreferences {
      * @param maxAcceleration The maximum acceleration to use
      * @param maxJerk         The maximum jerk (acceleration per second) to use
      * @param wheelBase       The width between the individual sides of the drivebase
+     * @param game            The year/FRC game
      */
     public Values(double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
-                  double wheelBase) {
+                  double wheelBase, Game game) {
       this.timeStep = timeStep;
       this.maxVelocity = maxVelocity;
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
-      this.game  = "POWERUP";
+      this.game = game;
     }
 
     public double getTimeStep() {
@@ -133,6 +134,10 @@ public class ProjectPreferences {
 
     public double getWheelBase() {
       return wheelBase;
+    }
+
+    public Game getGame() {
+      return game;
     }
   }
 }

@@ -9,10 +9,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.util.StringConverter;
 
 public class CreateProjectController {
 
@@ -32,6 +34,8 @@ public class CreateProjectController {
   private TextField maxJerk;
   @FXML
   private TextField wheelBase;
+  @FXML
+  private ChoiceBox<Game> game;
 
   @FXML
   private void initialize() {
@@ -44,6 +48,7 @@ public class CreateProjectController {
     for (TextField field : allFields) {
       bind = bind.or(field.textProperty().isEmpty());
     }
+    bind = bind.or(game.valueProperty().isNull());
     create.disableProperty().bind(bind);
 
 
@@ -53,6 +58,19 @@ public class CreateProjectController {
     if (ProjectPreferences.getInstance() != null) {
       directory.setText(ProjectPreferences.getInstance().getDirectory());
     }
+
+    game.getItems().addAll(Game.values());
+    game.converterProperty().setValue(new StringConverter<>() {
+      @Override
+      public String toString(Game object) {
+        return object.toPrettyName();
+      }
+
+      @Override
+      public Game fromString(String string) {
+        return Game.fromPrettyName(string);
+      }
+    });
   }
 
   @FXML
@@ -65,7 +83,7 @@ public class CreateProjectController {
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
-        jerkMax, wheelBaseDistance);
+        jerkMax, wheelBaseDistance, game.getValue());
     ProjectPreferences prefs = ProjectPreferences.getInstance(folder);
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
