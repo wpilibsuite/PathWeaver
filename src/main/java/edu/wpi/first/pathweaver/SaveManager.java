@@ -32,15 +32,6 @@ public final class SaveManager {
   }
 
   /**
-   * Saves all changed Paths without prompting the user for feedback.
-   */
-  public void saveAllChanges() {
-    for (Path path : paths) {
-      saveChange(path, false);
-    }
-  }
-
-  /**
    * Saves all Paths the user confirms are valid changes. Prompts the user for feedback.
    * @return True if application should close, false otherwise.
    */
@@ -60,6 +51,7 @@ public final class SaveManager {
         }
       }
     }
+    paths.clear(); // User has taken action on all paths
     return true;
   }
 
@@ -72,8 +64,7 @@ public final class SaveManager {
   }
 
   /**
-   * Saves the given path to the Project's Path directory. Removes the path from the set of modified paths if remove is
-   * true.
+   * Saves the given path to the Project's Path directory.
    * @param path Path to save.
    * @param remove Whether to remove Path from set of modified paths.
    */
