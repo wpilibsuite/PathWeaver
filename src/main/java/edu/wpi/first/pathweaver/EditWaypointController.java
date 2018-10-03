@@ -58,7 +58,6 @@ public class EditWaypointController {
     });
     wp.addListener((observable, oldValue, newValue) -> {
       if (oldValue != null) {
-        SaveManager.getInstance().addChange(oldValue.getPath());
         unbind(oldValue);
       }
       if (newValue != null) {
@@ -121,8 +120,8 @@ public class EditWaypointController {
   private void enableSaving(ObservableValue<Waypoint> wp) {
     // Save values when out of focus
     List.of(xPosition, yPosition, tangentX, tangentY, pointName)
-        .forEach(textField -> textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-          if (!newValue && wp.getValue() != null) {
+        .forEach(textField -> textField.textProperty().addListener((observable, oldValue, newValue) -> {
+          if (!newValue.equals("") && wp.getValue() != null) {
             SaveManager.getInstance().addChange(wp.getValue().getPath());
           }
         }));
