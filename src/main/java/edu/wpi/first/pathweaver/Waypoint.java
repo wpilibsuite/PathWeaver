@@ -252,4 +252,8 @@ public class Waypoint {
   public DoubleProperty tangentYProperty() {
     return tangentY;
   }
+
+  public Waypoint copy() {
+    return new Waypoint(getCoords(), getTangent(), isLockTangent());
+  }
 }

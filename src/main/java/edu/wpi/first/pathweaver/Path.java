@@ -312,15 +312,10 @@ public class Path {
    * @return The new path.
    */
   public Path duplicate(String newName) {
-    Waypoint start = getStart();
-    Waypoint end = getEnd();
-    Path copy = new Path(start.getCoords(), end.getCoords(), start.getTangent(),
-        end.getTangent(), newName);
-    Waypoint insertPoint = copy.getStart();
-    for (Waypoint wp : waypoints) {
-      insertPoint = copy.addNewWaypoint(insertPoint, wp.getCoords(),
-          wp.getTangent(), wp.isLockTangent());
+    List<Waypoint> waypoints = new ArrayList<>();
+    for (Waypoint wp : getWaypoints()) {
+      waypoints.add(wp.copy());
     }
-    return copy;
+    return new Path(waypoints, newName);
   }
 }
