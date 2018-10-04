@@ -76,9 +76,6 @@ public class PathDisplayController {
   private void setupPathListeners() {
     pathList.addListener((ListChangeListener<Path>) change -> {
       while (change.next()) {
-        if (change.getRemovedSize() > 0) {
-          SaveManager.getInstance().promptSaveAll();
-        }
         for (Object o : change.getRemoved()) {
           Path path = (Path) o;
           removePathFromPane(path);

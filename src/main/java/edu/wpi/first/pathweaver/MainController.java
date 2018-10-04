@@ -3,6 +3,8 @@ package edu.wpi.first.pathweaver;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -195,39 +197,59 @@ public class MainController {
 
 
   private void setupClickablePaths() {
-    paths.getSelectionModel().selectedItemProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              selected = newValue;
-              if (newValue != pathRoot) {
-                pathDisplayController.removeAllPath();
-                pathDisplayController.addPath(pathDirectory, newValue);
-              }
-            });
+    ChangeListener<TreeItem<String>> selectionListener =
+        new ChangeListener<>() {
+          @Override
+          public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue,
+                              TreeItem<String> newValue) {
+            if (!SaveManager.getInstance().promptSaveAll()) {
+              paths.getSelectionModel().selectedItemProperty().removeListener(this);
+              paths.getSelectionModel().select(oldValue);
+              paths.getSelectionModel().selectedItemProperty().addListener(this);
+              return;
+            }
+            selected = newValue;
+            if (newValue != pathRoot) {
+              pathDisplayController.removeAllPath();
+              pathDisplayController.addPath(pathDirectory, newValue);
+            }
+          }
+        };
+    paths.getSelectionModel().selectedItemProperty().addListener(selectionListener);
   }
 
+  @SuppressWarnings("PMD.NcssCount")
   private void setupClickableAutons() {
-    autons.getSelectionModel().selectedItemProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              if (newValue == null) {
-                return;
-              }
-              selected = newValue;
-              pathDisplayController.removeAllPath();
-              if (newValue != autonRoot) {
-                if (newValue.getParent() == autonRoot) { //is an auton with children
-                  for (TreeItem<String> it : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
-                  }
-                } else { //has no children so try to display path
-                  Path path = pathDisplayController.addPath(pathDirectory, newValue);
-                  if (FxUtils.isSubChild(autons, newValue)) {
-                    path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
-                  }
-                }
-              }
-            });
+    ChangeListener<TreeItem<String>> selectionListener = new ChangeListener<>() {
+      @Override
+      public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue,
+                          TreeItem<String> newValue) {
+        if (newValue == null) {
+          return;
+        }
+        if (!SaveManager.getInstance().promptSaveAll()) {
+          autons.getSelectionModel().selectedItemProperty().removeListener(this);
+          autons.getSelectionModel().select(oldValue);
+          autons.getSelectionModel().selectedItemProperty().addListener(this);
+          return;
+        }
+        selected = newValue;
+        pathDisplayController.removeAllPath();
+        if (newValue != autonRoot) {
+          if (newValue.getParent() == autonRoot) { //is an auton with children
+            for (TreeItem<String> it : selected.getChildren()) {
+              pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
+            }
+          } else { //has no children so try to display path
+            Path path = pathDisplayController.addPath(pathDirectory, newValue);
+            if (FxUtils.isSubChild(autons, newValue)) {
+              path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
+            }
+          }
+        }
+      }
+    };
+    autons.getSelectionModel().selectedItemProperty().addListener(selectionListener);
   }
 
   private boolean validPathName(String oldName, String newName) {
