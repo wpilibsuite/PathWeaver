@@ -263,8 +263,8 @@ public class MainController {
 
   private void setupDrag() {
 
-    paths.setCellFactory(param -> new PathCell(pathRoot, true, false, this::validPathName));
-    autons.setCellFactory(param -> new PathCell(autonRoot, false, true, this::validAutonName));
+    paths.setCellFactory(param -> new PathCell(false, this::validPathName));
+    autons.setCellFactory(param -> new PathCell(true, this::validAutonName));
 
     autons.setOnDragDropped(event -> {
       //simpler than communicating which was updated from the cells
