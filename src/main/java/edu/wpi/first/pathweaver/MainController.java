@@ -210,6 +210,9 @@ public class MainController {
         .selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              if (newValue == null) {
+                return;
+              }
               selected = newValue;
               pathDisplayController.removeAllPath();
               if (newValue != autonRoot) {
