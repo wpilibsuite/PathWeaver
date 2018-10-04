@@ -56,6 +56,7 @@ public class MainController {
     pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
+    setupClickableAutons();
     loadAllAutons();
 
     autons.setEditable(true);
@@ -194,20 +195,19 @@ public class MainController {
 
 
   private void setupClickablePaths() {
-    paths.getSelectionModel()
-        .selectedItemProperty()
+    paths.getSelectionModel().selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
               selected = newValue;
-              if (newValue == pathRoot) {
-                //pathRoot.setExpanded(!pathRoot.isExpanded());
-              } else {
+              if (newValue != pathRoot) {
                 pathDisplayController.removeAllPath();
                 pathDisplayController.addPath(pathDirectory, newValue);
               }
             });
-    autons.getSelectionModel()
-        .selectedItemProperty()
+  }
+
+  private void setupClickableAutons() {
+    autons.getSelectionModel().selectedItemProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
               if (newValue == null) {
