@@ -20,6 +20,8 @@ import javafx.util.converter.DefaultStringConverter;
  */
 public class PathCell extends TextFieldTreeCell<String> {
   private final TreeCell<String> cell;
+  private final TreeItem<String> root;
+  private final boolean onlyChildrenOfRoot;
   private boolean editing = false;
   //having a single TEMP_ITEM you use for all dragging
   //means that any dragover call is able to remove the temporary
@@ -36,10 +38,15 @@ public class PathCell extends TextFieldTreeCell<String> {
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
    *
+   * @param root The root of the TreeView
+   * @param onlyChildrenOfRoot Only allow dragging of children of the root of the TreeView.
    * @param validDropTarget If this item should allow drag over and drag drop.
    */
-  public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validation) {
+  public PathCell(TreeItem<String> root, boolean onlyChildrenOfRoot, boolean validDropTarget,
+                  BiFunction<String, String, Boolean> validation) {
     super();
+    this.onlyChildrenOfRoot = onlyChildrenOfRoot;
+    this.root = root;
     cell = this;
     setupDragStart();
     renameIsValid = validation;
@@ -143,6 +150,9 @@ public class PathCell extends TextFieldTreeCell<String> {
     this.setOnDragDetected(event -> {
       TreeItem<String> item = cell.getTreeItem();
       if (item != null && item.isLeaf()) {
+        if (!onlyChildrenOfRoot && item.getParent() == root) {
+          return;
+        }
         Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
         ClipboardContent content = new ClipboardContent();
         content.putString(item.getValue());
