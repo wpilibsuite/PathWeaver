@@ -4,5 +4,5 @@
   "maxAcceleration": 60.0,
   "maxJerk": 60.0,
   "wheelBase": 2.0,
-  "game": "POWERUP"
+  "game": "POWER_UP_2018"
 }

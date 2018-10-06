@@ -36,7 +36,7 @@ public class PathDisplayController {
   private final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
-  private final Field field = new Field();
+  private final Field field = ProjectPreferences.getInstance().getField();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
