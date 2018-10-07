@@ -318,4 +318,32 @@ public class Path {
     }
     return new Path(waypoints, newName);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+    Path path = (Path) o;
+    if (!pathName.equals(path.pathName)) {
+      return false;
+    }
+    if (waypoints.size() != path.waypoints.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < waypoints.size(); i++) {
+      if (!waypoints.get(i).equals(path.waypoints.get(i))) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }

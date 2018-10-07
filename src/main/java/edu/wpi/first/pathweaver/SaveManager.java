@@ -31,6 +31,20 @@ public final class SaveManager {
     paths.add(path);
   }
 
+  public boolean hasChanges(Path path) {
+    return paths.contains(path);
+  }
+
+  /**
+   * Saves all changed Paths without prompts.
+   */
+  public void saveAll() {
+    for (Path path : paths) {
+      saveChange(path, false);
+    }
+    paths.clear();
+  }
+
   /**
    * Saves all Paths the user confirms are valid changes. Prompts the user for feedback.
    * @return True if application should close, false otherwise.
