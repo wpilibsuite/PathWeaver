@@ -45,17 +45,23 @@ public final class SaveManager {
     paths.clear();
   }
 
+  public boolean promptSaveAll() {
+    return promptSaveAll(true);
+  }
   /**
    * Saves all Paths the user confirms are valid changes. Prompts the user for feedback.
+   * @param allowCancel Whether to allow the user to cancel the save.
    * @return True if application should close, false otherwise.
    */
-  public boolean promptSaveAll() {
+  public boolean promptSaveAll(boolean allowCancel) {
     for (Path path : paths) {
       Alert alert = new Alert(Alert.AlertType.NONE);
       alert.setTitle(path.getPathName() + " has been modified");
       alert.setContentText("Save " + path.getPathName() + "?");
-      alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-
+      alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+      if (allowCancel) {
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+      }
       Optional<ButtonType> buttonType = alert.showAndWait();
       if (buttonType.isPresent()) {
         if (buttonType.get() == ButtonType.YES) {

@@ -84,7 +84,7 @@ public class MainController {
   private void setupEditable() {
     autons.setOnEditStart(event -> {
       if (event.getTreeItem().getParent() != autonRoot) {
-        SaveManager.getInstance().promptSaveAll();
+        SaveManager.getInstance().promptSaveAll(false);
       }
     });
     autons.setOnEditCommit((EventHandler) event -> {
@@ -99,7 +99,7 @@ public class MainController {
       saveAllAutons();
       loadAllAutons();
     });
-    paths.setOnEditStart(event -> SaveManager.getInstance().promptSaveAll());
+    paths.setOnEditStart(event -> SaveManager.getInstance().promptSaveAll(false));
     paths.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
 
