@@ -82,6 +82,11 @@ public class MainController {
 
   @SuppressWarnings("PMD.NcssCount")
   private void setupEditable() {
+    autons.setOnEditStart(event -> {
+      if (event.getTreeItem().getParent() != autonRoot) {
+        SaveManager.getInstance().promptSaveAll();
+      }
+    });
     autons.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
       if (edit.getTreeItem().getParent() == autonRoot) {
@@ -94,6 +99,7 @@ public class MainController {
       saveAllAutons();
       loadAllAutons();
     });
+    paths.setOnEditStart(event -> SaveManager.getInstance().promptSaveAll());
     paths.setOnEditCommit((EventHandler) event -> {
       TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
 
