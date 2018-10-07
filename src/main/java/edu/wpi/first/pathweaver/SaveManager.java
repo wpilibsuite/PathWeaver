@@ -48,6 +48,7 @@ public final class SaveManager {
   public boolean promptSaveAll() {
     return promptSaveAll(true);
   }
+  
   /**
    * Saves all Paths the user confirms are valid changes. Prompts the user for feedback.
    * @param allowCancel Whether to allow the user to cancel the save.
