@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 public class PathWeaver extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
-    System.out.println(PathWeaver.class.getPackage().getImplementationVersion());
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
     primaryStage.resizableProperty().setValue(false);
