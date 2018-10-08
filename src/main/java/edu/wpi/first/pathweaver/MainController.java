@@ -8,7 +8,6 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.modifiers.TankModifier;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -76,7 +75,7 @@ public class MainController {
     editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty(), pathDisplayController);
   }
 
-  private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {
+  private void setupTreeView(TreeView<String> treeView, TreeItem<String> treeRoot, MenuItem newItem) {
     treeView.setRoot(treeRoot);
     treeView.setContextMenu(new ContextMenu());
     treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", event -> delete()));
@@ -91,29 +90,26 @@ public class MainController {
         SaveManager.getInstance().promptSaveAll(false);
       }
     });
-    autons.setOnEditCommit((EventHandler) event -> {
-      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-      if (edit.getTreeItem().getParent() == autonRoot) {
-        MainIOUtil.rename(autonDirectory, edit.getTreeItem(), edit.getNewValue());
-        edit.getTreeItem().setValue(edit.getNewValue());
+    autons.setOnEditCommit(event -> {
+      if (event.getTreeItem().getParent() == autonRoot) {
+        MainIOUtil.rename(autonDirectory, event.getTreeItem(), event.getNewValue());
+        event.getTreeItem().setValue(event.getNewValue());
       } else {
-        MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
-        renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+        MainIOUtil.rename(pathDirectory, event.getTreeItem(), event.getNewValue());
+        renameAllPathInstances(event.getTreeItem(), event.getNewValue());
       }
       saveAllAutons();
       loadAllAutons();
     });
     paths.setOnEditStart(event -> SaveManager.getInstance().promptSaveAll(false));
-    paths.setOnEditCommit((EventHandler) event -> {
-      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-
-      MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
-      renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+    paths.setOnEditCommit(event -> {
+      MainIOUtil.rename(pathDirectory, event.getTreeItem(), event.getNewValue());
+      renameAllPathInstances(event.getTreeItem(), event.getNewValue());
 
       saveAllAutons();
       loadAllAutons();
       pathDisplayController.removeAllPath();
-      pathDisplayController.addPath(pathDirectory, edit.getTreeItem());
+      pathDisplayController.addPath(pathDirectory, event.getTreeItem());
     });
   }
 

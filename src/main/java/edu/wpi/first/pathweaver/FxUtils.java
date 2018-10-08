@@ -73,7 +73,7 @@ public final class FxUtils { // NOPMD util class name
    * @param item The item to check
    * @return Whether this is a sub child
    */
-  public static boolean isSubChild(TreeView view, TreeItem item) {
+  public static boolean isSubChild(TreeView<String> view, TreeItem<String> item) {
     return view.getTreeItemLevel(item) == 2;
   }
 
