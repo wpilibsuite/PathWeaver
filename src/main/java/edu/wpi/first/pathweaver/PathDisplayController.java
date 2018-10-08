@@ -275,6 +275,7 @@ public class PathDisplayController {
    */
   public void flip(boolean horizontal) {
     currentPath.get().flip(horizontal, drawPane);
+    SaveManager.getInstance().addChange(currentPath.get());
   }
 
   public void setPathDirectory(String pathDirectory) {
