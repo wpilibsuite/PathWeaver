@@ -48,9 +48,9 @@ public class MainController {
   private void initialize() {
     setupDrag();
 
-    setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", __ -> createAuton()));
+    setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
 
-    setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", __ -> createPath()));
+    setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
@@ -75,7 +75,7 @@ public class MainController {
   private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {
     treeView.setRoot(treeRoot);
     treeView.setContextMenu(new ContextMenu());
-    treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", __ -> delete()));
+    treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", event -> delete()));
     treeRoot.setExpanded(true);
     treeView.setShowRoot(false); // Don't show the roots "Paths" and "Autons" - cleaner appearance
   }

@@ -11,13 +11,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.util.Duration;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
@@ -60,8 +59,8 @@ public class Waypoint {
     setY(position.getY());
     icon = new Polygon();
     setupIcon();
-    x.addListener(__ -> update());
-    y.addListener(__ -> update());
+    x.addListener(listener -> update());
+    y.addListener(listener -> update());
 
     tangentLine = new Line();
     tangentLine.getStyleClass().add("tangent");

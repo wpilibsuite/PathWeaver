@@ -8,53 +8,64 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class SaveManagerTest {
 
-  private TemporaryFolder folder;
-
-  private String projectDirectory;
   private String pathDirectory;
 
   @BeforeEach
   public void initialize() throws IOException {
-    folder = new TemporaryFolder();
+    TemporaryFolder folder = new TemporaryFolder();
     folder.create();
-    projectDirectory = folder.getRoot().getAbsolutePath();
+    String projectDirectory = folder.getRoot().getAbsolutePath();
     pathDirectory = folder.newFolder("Paths").getAbsolutePath() + "/";
     ProjectPreferences.getInstance(projectDirectory);
   }
 
   @Test
-  void saveAndLoadDefaultPath() {
+  public void saveAndLoadDefaultPath() {
     Path path = new Path("default");
     SaveManager.getInstance().saveChange(path);
     Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
-    assertEquals(path, loadPath);
+    assertEquals(path, loadPath, "Path loaded from disk doesn't match original");
   }
 
   @Test
-  void saveAndLoadWithAddedWaypoint() {
+  public void saveAndLoadWithAddedWaypoint() {
     Path path = new Path("default");
     path.addNewWaypoint(path.getStart().getSpline());
     SaveManager.getInstance().saveChange(path);
     Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
-    assertEquals(path, loadPath);
+    assertEquals(path, loadPath, "Path loaded from disk with an added waypoint doesn't match original");
   }
 
   @Test
-  void addMultipleChangesAndSave() {
-    Path pathOne = new Path("one");
-    SaveManager.getInstance().addChange(pathOne);
-    Path pathTwo = new Path("two");
-    SaveManager.getInstance().addChange(pathTwo);
-    Path pathThree = new Path("three");
-    SaveManager.getInstance().addChange(pathThree);
+  public void addMultipleChangesAndSave() {
+    List<Path> paths = getThreeDefaultPaths();
+    paths.forEach(path -> SaveManager.getInstance().addChange(path));
     SaveManager.getInstance().saveAll();
-    for (Path path : List.of(pathOne, pathTwo, pathThree)) {
-      assertEquals(false, SaveManager.getInstance().hasChanges(path));
+    for (Path path : paths) {
       Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
-      assertEquals(path, loadPath);
+      assertEquals(path, loadPath, "Path loaded from disk doesn't match original");
     }
+  }
+
+  @Test
+  public void confirmPathsAreRemovedFromChangelist() {
+    List<Path> paths = getThreeDefaultPaths();
+    paths.forEach(path -> SaveManager.getInstance().addChange(path));
+    SaveManager.getInstance().saveAll();
+    for (Path path : paths) {
+      assertFalse(SaveManager.getInstance().hasChanges(path),
+          "Path change was not properly removed from SaveManager");
+    }
+  }
+
+  private List<Path> getThreeDefaultPaths() {
+    Path pathOne = new Path("one");
+    Path pathTwo = new Path("two");
+    Path pathThree = new Path("three");
+    return List.of(pathOne, pathTwo, pathThree);
   }
 }

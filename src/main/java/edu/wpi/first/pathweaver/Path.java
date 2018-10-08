@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class Path {
   private final List<Waypoint> waypoints = new ArrayList<>();
   private final String pathName;
