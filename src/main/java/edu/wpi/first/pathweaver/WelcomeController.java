@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -22,9 +23,13 @@ public class WelcomeController {
   private BorderPane borderPane;
   @FXML
   private ListView<String> projects;
+  @FXML
+  private Label version;
 
   @FXML
   private void initialize() {
+    version.setText(PathWeaver.getVersion());
+
     projects.getItems().setAll(ProgramPreferences.getInstance().getRecentProjects());
 
     projects.setOnMouseClicked(event -> {

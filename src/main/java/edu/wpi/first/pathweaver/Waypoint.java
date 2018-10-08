@@ -35,8 +35,6 @@ public class Waypoint {
   private Polygon icon;
 
   private static final double SIZE = 30.0;
-  private final Tooltip nameTip = new Tooltip();
-
 
   public Path getPath() {
     return path;
@@ -109,8 +107,6 @@ public class Waypoint {
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
                     tangentX, tangentY));
-    nameTip.setShowDelay(Duration.millis(200));
-    nameTip.textProperty().bind(name);
     icon.getStyleClass().add("waypoint");
   }
 
@@ -237,11 +233,6 @@ public class Waypoint {
    * @param name New name of Waypoint.
    */
   public void setName(String name) {
-    if (name.isEmpty()) {
-      Tooltip.uninstall(icon, nameTip);
-    } else if (this.name.get().isEmpty()) {
-      Tooltip.install(icon, nameTip);
-    }
     this.name.set(name);
   }
 
@@ -251,5 +242,27 @@ public class Waypoint {
 
   public DoubleProperty tangentYProperty() {
     return tangentY;
+  }
+
+  public Waypoint copy() {
+    return new Waypoint(getCoords(), getTangent(), isLockTangent());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+    Waypoint point = (Waypoint) o;
+
+    return x.get() == point.x.get() && y.get() == point.y.get() && tangentX.get() == point.tangentX.get()
+        && tangentY.get() == point.tangentY.get() && name.get().equals(point.name.get())
+        && isLockTangent() == point.isLockTangent();
   }
 }

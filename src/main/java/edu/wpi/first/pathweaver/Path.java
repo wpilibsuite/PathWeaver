@@ -312,15 +312,38 @@ public class Path {
    * @return The new path.
    */
   public Path duplicate(String newName) {
-    Waypoint start = getStart();
-    Waypoint end = getEnd();
-    Path copy = new Path(start.getCoords(), end.getCoords(), start.getTangent(),
-        end.getTangent(), newName);
-    Waypoint insertPoint = copy.getStart();
-    for (Waypoint wp : waypoints) {
-      insertPoint = copy.addNewWaypoint(insertPoint, wp.getCoords(),
-          wp.getTangent(), wp.isLockTangent());
+    List<Waypoint> waypoints = new ArrayList<>();
+    for (Waypoint wp : getWaypoints()) {
+      waypoints.add(wp.copy());
     }
-    return copy;
+    return new Path(waypoints, newName);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+    Path path = (Path) o;
+    if (!pathName.equals(path.pathName)) {
+      return false;
+    }
+    if (waypoints.size() != path.waypoints.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < waypoints.size(); i++) {
+      if (!waypoints.get(i).equals(path.waypoints.get(i))) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

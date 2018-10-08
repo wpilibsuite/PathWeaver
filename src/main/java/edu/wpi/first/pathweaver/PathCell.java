@@ -20,6 +20,7 @@ import javafx.util.converter.DefaultStringConverter;
  */
 public class PathCell extends TextFieldTreeCell<String> {
   private final TreeCell<String> cell;
+  private final boolean validDropTarget;
   private boolean editing = false;
   //having a single TEMP_ITEM you use for all dragging
   //means that any dragover call is able to remove the temporary
@@ -42,6 +43,7 @@ public class PathCell extends TextFieldTreeCell<String> {
     super();
     cell = this;
     setupDragStart();
+    this.validDropTarget = validDropTarget;
     renameIsValid = validation;
     if (validDropTarget) {
       setupDragOver();
@@ -143,6 +145,10 @@ public class PathCell extends TextFieldTreeCell<String> {
     this.setOnDragDetected(event -> {
       TreeItem<String> item = cell.getTreeItem();
       if (item != null && item.isLeaf()) {
+        // Don't allow dragging auton onto another auton
+        if (validDropTarget && item.getParent().getParent() == null) {
+          return;
+        }
         Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
         ClipboardContent content = new ClipboardContent();
         content.putString(item.getValue());
