@@ -10,8 +10,7 @@ import javafx.scene.shape.CubicCurve;
 import javafx.util.Pair;
 
 /**
- * A QuickSpline is represented by a JavaFX CubicCurve. A slow spline will be implemented using
- * Pathfinder V2.
+ * A QuickSpline is represented by a JavaFX CubicCurve.
  */
 public class QuickSpline implements Spline {
   private final Waypoint start;

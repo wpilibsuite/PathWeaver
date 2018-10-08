@@ -82,6 +82,7 @@ dependencies {
     compile("si.uom", "si-units", "0.9")
     compile("systems.uom", "systems-common", "0.8")
     compile("com.google.code.gson", "gson", "2.8.5")
+    compile(files("lib/Pathfinder-Java.jar"))
 
     fun junitJupiter(name: String, version: String = "5.2.0") =
         create(group = "org.junit.jupiter", name = name, version = version)

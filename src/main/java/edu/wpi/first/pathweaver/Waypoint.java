@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.util.Map;
 
+import jaci.pathfinder.Pathfinder;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -146,6 +147,10 @@ public class Waypoint {
       path.updateTheta(this);
     }
     path.updateSplines();
+  }
+
+  public jaci.pathfinder.Waypoint getPathfinderWaypoint() {
+    return new jaci.pathfinder.Waypoint(getX(), getY(), Math.atan2(getTangent().getY(), getTangent().getX()));
   }
 
   /**
