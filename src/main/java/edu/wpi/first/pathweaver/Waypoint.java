@@ -2,7 +2,6 @@ package edu.wpi.first.pathweaver;
 
 import java.util.Map;
 
-import jaci.pathfinder.Pathfinder;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
