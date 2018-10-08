@@ -114,6 +114,8 @@ pmd {
 tasks.withType<JavaCompile>().configureEach {
     // UTF-8 characters are used in menus
     options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
 jacoco {
