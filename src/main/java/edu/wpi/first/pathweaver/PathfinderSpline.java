@@ -8,9 +8,11 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 
 public class PathfinderSpline implements Spline {
@@ -20,6 +22,8 @@ public class PathfinderSpline implements Spline {
   private final Group group;
   private double strokeWidth = 1.0;
   private int subchildIdx = 0;
+
+  private final Queue<Line> lines = new ArrayDeque<>(); // Object pool of lines
 
 
   /**
@@ -40,7 +44,7 @@ public class PathfinderSpline implements Spline {
 
   @Override
   public void update() {
-    group.getChildren().clear();
+    removeAndFreeLines();
     TankModifier tank = start.getPath().getTankModifier();
     ArrayList<Trajectory.Segment> center = new ArrayList<>();
     ArrayList<Trajectory.Segment> left = new ArrayList<>();
@@ -84,7 +88,11 @@ public class PathfinderSpline implements Spline {
   private Line createLine(List<Trajectory.Segment> segments, int index, String... cssClass) {
     Trajectory.Segment current = segments.get(index - 1);
     Trajectory.Segment next = segments.get(index);
-    Line line = new Line(current.x, current.y, next.x, next.y);
+    Line line = getFreeLine();
+    line.setStartX(current.x);
+    line.setStartY(current.y);
+    line.setEndX(next.x);
+    line.setEndY(next.y);
     line.getStyleClass().addAll(cssClass);
     line.setStrokeWidth(strokeWidth);
     return line;
@@ -133,5 +141,21 @@ public class PathfinderSpline implements Spline {
     controller.setupWaypoint(newPoint);
     controller.selectWaypoint(newPoint, false);
     Waypoint.currentWaypoint = newPoint;
+  }
+
+  private Line getFreeLine() {
+    if (lines.isEmpty()) {
+      return new Line();
+    } else {
+      return lines.remove();
+    }
+  }
+
+  private void removeAndFreeLines() {
+    for (Node n : group.getChildren()) {
+      n.getStyleClass().clear();
+      lines.add((Line) n);
+    }
+    group.getChildren().clear();
   }
 }
