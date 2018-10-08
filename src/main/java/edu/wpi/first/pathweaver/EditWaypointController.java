@@ -1,6 +1,7 @@
 package edu.wpi.first.pathweaver;
 
 import java.util.List;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -127,7 +128,7 @@ public class EditWaypointController {
         }));
 
     lockedTangent.selectedProperty()
-        .addListener(__ -> {
+        .addListener(listener -> {
           if (wp.getValue() != null) {
             SaveManager.getInstance().addChange(wp.getValue().getPath());
           }

@@ -190,12 +190,14 @@ public class PathDisplayController {
     waypoint.getIcon().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
-        menu.getItems().add(FxUtils.menuItem("Delete", __ -> delete(waypoint)));
+        menu.getItems().add(FxUtils.menuItem("Delete", event -> delete(waypoint)));
       }
       if (waypoint.getTangentLine().isVisible()) {
-        menu.getItems().add(FxUtils.menuItem("Hide control vector", __ -> waypoint.getTangentLine().setVisible(false)));
+        menu.getItems().add(FxUtils.menuItem("Hide control vector",
+            event -> waypoint.getTangentLine().setVisible(false)));
       } else {
-        menu.getItems().add(FxUtils.menuItem("Show control vector", __ -> waypoint.getTangentLine().setVisible(true)));
+        menu.getItems().add(FxUtils.menuItem("Show control vector",
+            event -> waypoint.getTangentLine().setVisible(true)));
       }
       menu.show(drawPane.getScene().getWindow(), e.getScreenX(), e.getScreenY());
     });
