@@ -19,6 +19,6 @@ public class PathfinderTest {
         0.05, 1.7, 2.0, 60.0);
 
     Trajectory trajectory = Pathfinder.generate(points, config);
-    assertTrue(trajectory.length() > 0);
+    assertTrue(trajectory.length() > 0, "Pathfinder v1 could not be loaded");
   }
 }
