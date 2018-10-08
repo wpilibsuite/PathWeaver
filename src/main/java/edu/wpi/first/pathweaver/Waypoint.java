@@ -262,6 +262,7 @@ public class Waypoint {
     Waypoint point = (Waypoint) o;
 
     return x.get() == point.x.get() && y.get() == point.y.get() && tangentX.get() == point.tangentX.get()
-        && tangentY.get() == point.tangentY.get() && name.get().equals(point.name.get());
+        && tangentY.get() == point.tangentY.get() && name.get().equals(point.name.get())
+        && isLockTangent() == point.isLockTangent();
   }
 }
