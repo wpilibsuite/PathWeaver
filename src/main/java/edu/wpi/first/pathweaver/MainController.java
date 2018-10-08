@@ -1,8 +1,11 @@
 package edu.wpi.first.pathweaver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.modifiers.TankModifier;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -35,6 +38,7 @@ public class MainController {
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
   private final String autonDirectory = directory + "/Autons/";
+  private final String outputDirectory = directory + "/output/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -310,6 +314,19 @@ public class MainController {
     String name = MainIOUtil.getValidFileName(autonDirectory, "Unnamed", "");
     TreeItem<String> auton = MainIOUtil.addChild(autonRoot, name);
     MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
+  }
+
+  @FXML
+  private void buildPaths() {
+    new File(outputDirectory).mkdir();
+    for (TreeItem<String> pathName : pathRoot.getChildren()) {
+      Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
+      TankModifier tank = path.getTankModifier();
+      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_left.csv"),
+          tank.getLeftTrajectory());
+      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_right.csv"),
+          tank.getRightTrajectory());
+    }
   }
 
   public void setDirectory(String directory) {

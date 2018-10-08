@@ -213,7 +213,14 @@ public class Path {
     }
   }
 
+  /**
+   * Returns the tankModifier for Pathfinder v1. If it is null, it generates it.
+   * @return Pathfinder v1 TankModifier for this Path.
+   */
   public TankModifier getTankModifier() {
+    if (tankModifier == null) {
+      generatePathfinder();
+    }
     return tankModifier;
   }
 
