@@ -314,6 +314,9 @@ public class MainController {
 
   @FXML
   private void buildPaths() {
+    if(!SaveManager.getInstance().promptSaveAll()) {
+      return;
+    }
     new File(outputDirectory).mkdir();
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
       Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
