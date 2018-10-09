@@ -192,8 +192,6 @@ public class Path {
     if (pathName.endsWith(extension)) {
       filename = filename.substring(0, filename.length() - extension.length());
     }
-    // remove version number
-    filename = filename.replaceFirst("_[0-9]+", "");
     return filename;
   }
 
