@@ -32,6 +32,10 @@ public class CreateProjectController {
   private TextField maxJerk;
   @FXML
   private TextField wheelBase;
+  @FXML
+  private TextField robotWidth;
+  @FXML
+  private TextField robotLength;
 
   @FXML
   private void initialize() {
@@ -64,8 +68,10 @@ public class CreateProjectController {
     double accelerationMax = Double.parseDouble(maxAcceleration.getText());
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
+    double robotWidthValue = Double.parseDouble(robotWidth.getText());
+    double robotLengthValue = Double.parseDouble(robotLength.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
-        jerkMax, wheelBaseDistance);
+        jerkMax, wheelBaseDistance, robotWidthValue, robotLengthValue);
     ProjectPreferences prefs = ProjectPreferences.getInstance(folder);
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());

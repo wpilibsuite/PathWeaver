@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class Waypoint {
@@ -30,7 +31,7 @@ public class Waypoint {
   private Path path;
   public static Waypoint currentWaypoint = null;
 
-
+  private final Rectangle robotOutline;
   private final Line tangentLine;
   private Polygon icon;
 
@@ -64,6 +65,8 @@ public class Waypoint {
     x.addListener(__ -> update());
     y.addListener(__ -> update());
 
+    ProjectPreferences.Values values = ProjectPreferences.getInstance().getValues();
+
     tangentLine = new Line();
     tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
@@ -71,6 +74,19 @@ public class Waypoint {
     setTangent(tangentVector);
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangentX, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangentY, y));
+
+    double robotWidth = values.getRobotWidth() / 12;
+    double robotLength = values.getRobotLength() / 12;
+
+    robotOutline = new Rectangle();
+    robotOutline.setHeight(robotWidth);
+    robotOutline.setWidth(robotLength);
+    robotOutline.xProperty().bind(x.subtract(robotLength / 2));
+    robotOutline.yProperty().bind(y.subtract(robotWidth / 2));
+    robotOutline.rotateProperty().bind(
+            Bindings.createObjectBinding(() ->
+                    getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
+                    tangentX, tangentY));
 
     this.spline = new NullSpline();
 
@@ -182,6 +198,10 @@ public class Waypoint {
   public void setTangent(Point2D tangent) {
     this.tangentX.set(tangent.getX());
     this.tangentY.set(tangent.getY());
+  }
+
+  public Rectangle getRobotOutline() {
+    return robotOutline;
   }
 
   public Polygon getIcon() {

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
+<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
    <children>
       <Label text="Create Project...">
          <font>
@@ -43,6 +43,8 @@
             <Label text="Max Acceleration" GridPane.rowIndex="3" />
             <Label text="Max Jerk" GridPane.rowIndex="4" />
             <Label text="Wheel Base" GridPane.rowIndex="5" />
+            <Label text="Robot Width" GridPane.rowIndex="6" />
+            <Label text="Robot Length" GridPane.rowIndex="7" />
             <TextField fx:id="directory" editable="false" GridPane.columnIndex="1" />
             <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse" GridPane.columnIndex="2" />
             <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -50,12 +52,16 @@
             <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="robotWidth" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="robotLength" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="Maximum capable velocity of robot" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label text="Maximum acceleration (velocity per second)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="Maximum jerk (acceleration per second)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Distance between left and right of wheel base" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="6">
+            <Label text="Width of the robot (in inches)" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label text="Length of the robot (in inches)" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
               <buttons>
                 <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="create" mnemonicParsing="false" onAction="#createProject" text="Create Project" />
