@@ -314,7 +314,7 @@ public class MainController {
 
   @FXML
   private void buildPaths() {
-    if(!SaveManager.getInstance().promptSaveAll()) {
+    if (!SaveManager.getInstance().promptSaveAll()) {
       return;
     }
     new File(outputDirectory).mkdir();
