@@ -231,6 +231,7 @@ public class PathDisplayController {
     previous.update();
     Waypoint next = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) + 1);
     next.update();
+    path.swapToPathfinderSplines();
     SaveManager.getInstance().addChange(path);
   }
 
