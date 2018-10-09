@@ -22,7 +22,12 @@
                   <Font size="40.0" />
                </font>
             </Label>
-            <Label text="Version 0.1" />
+            <HBox alignment="CENTER">
+               <children>
+                  <Label text="Version: " />
+                  <Label fx:id="version" />
+               </children>
+            </HBox>
             <TitledPane animated="false" collapsible="false" text="Recent Projects">
                <content>
                   <ListView fx:id="projects" />

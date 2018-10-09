@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -32,12 +33,18 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <padding>
             <Insets bottom="20.0" left="40.0" right="40.0" top="10.0" />
          </padding>
          <children>
             <Label text="Project Directory" />
+            <Label text="Time Step" GridPane.rowIndex="2" />
+            <Label text="Max Velocity" GridPane.rowIndex="3" />
+            <Label text="Max Acceleration" GridPane.rowIndex="4" />
+            <Label text="Max Jerk" GridPane.rowIndex="5" />
+            <Label text="Wheel Base" GridPane.rowIndex="6" />
             <Label text="Time Step" GridPane.rowIndex="1" />
             <Label text="Max Velocity" GridPane.rowIndex="2" />
             <Label text="Max Acceleration" GridPane.rowIndex="3" />
@@ -47,6 +54,18 @@
             <Label text="Robot Length" GridPane.rowIndex="7" />
             <TextField fx:id="directory" editable="false" GridPane.columnIndex="1" />
             <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse" GridPane.columnIndex="2" />
+            <ChoiceBox fx:id="game" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Maximum capable velocity of robot" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="Maximum acceleration (velocity per second)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label text="Maximum jerk (acceleration per second)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label text="Distance between left and right of wheel base" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
             <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -67,6 +86,7 @@
                   <Button fx:id="create" mnemonicParsing="false" onAction="#createProject" text="Create Project" />
               </buttons>
             </ButtonBar>
+            <Label text="Game" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

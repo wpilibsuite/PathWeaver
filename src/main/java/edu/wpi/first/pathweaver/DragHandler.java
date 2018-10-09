@@ -29,7 +29,7 @@ public class DragHandler {
   }
 
   private void finishDrag() {
-    PathIOUtil.export(controller.getPathDirectory(), Waypoint.currentWaypoint.getPath());
+    SaveManager.getInstance().addChange(Waypoint.currentWaypoint.getPath());
     splineDragStarted = false;
   }
 

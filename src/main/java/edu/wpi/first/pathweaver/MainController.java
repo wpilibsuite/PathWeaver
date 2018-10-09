@@ -3,7 +3,8 @@ package edu.wpi.first.pathweaver;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -46,9 +47,9 @@ public class MainController {
   private void initialize() {
     setupDrag();
 
-    setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", __ -> createAuton()));
+    setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
 
-    setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", __ -> createPath()));
+    setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
@@ -56,6 +57,7 @@ public class MainController {
     pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
+    setupClickableAutons();
     loadAllAutons();
 
     autons.setEditable(true);
@@ -69,38 +71,41 @@ public class MainController {
     editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty(), pathDisplayController);
   }
 
-  private void setupTreeView(TreeView treeView, TreeItem<String> treeRoot, MenuItem newItem) {
+  private void setupTreeView(TreeView<String> treeView, TreeItem<String> treeRoot, MenuItem newItem) {
     treeView.setRoot(treeRoot);
     treeView.setContextMenu(new ContextMenu());
-    treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", __ -> delete()));
+    treeView.getContextMenu().getItems().addAll(newItem, FxUtils.menuItem("Delete", event -> delete()));
     treeRoot.setExpanded(true);
     treeView.setShowRoot(false); // Don't show the roots "Paths" and "Autons" - cleaner appearance
   }
 
   @SuppressWarnings("PMD.NcssCount")
   private void setupEditable() {
-    autons.setOnEditCommit((EventHandler) event -> {
-      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-      if (edit.getTreeItem().getParent() == autonRoot) {
-        MainIOUtil.rename(autonDirectory, edit.getTreeItem(), edit.getNewValue());
-        edit.getTreeItem().setValue(edit.getNewValue());
+    autons.setOnEditStart(event -> {
+      if (event.getTreeItem().getParent() != autonRoot) {
+        SaveManager.getInstance().promptSaveAll(false);
+      }
+    });
+    autons.setOnEditCommit(event -> {
+      if (event.getTreeItem().getParent() == autonRoot) {
+        MainIOUtil.rename(autonDirectory, event.getTreeItem(), event.getNewValue());
+        event.getTreeItem().setValue(event.getNewValue());
       } else {
-        MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
-        renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+        MainIOUtil.rename(pathDirectory, event.getTreeItem(), event.getNewValue());
+        renameAllPathInstances(event.getTreeItem(), event.getNewValue());
       }
       saveAllAutons();
       loadAllAutons();
     });
-    paths.setOnEditCommit((EventHandler) event -> {
-      TreeView.EditEvent<String> edit = (TreeView.EditEvent<String>) event;
-
-      MainIOUtil.rename(pathDirectory, edit.getTreeItem(), edit.getNewValue());
-      renameAllPathInstances(edit.getTreeItem(), edit.getNewValue());
+    paths.setOnEditStart(event -> SaveManager.getInstance().promptSaveAll(false));
+    paths.setOnEditCommit(event -> {
+      MainIOUtil.rename(pathDirectory, event.getTreeItem(), event.getNewValue());
+      renameAllPathInstances(event.getTreeItem(), event.getNewValue());
 
       saveAllAutons();
       loadAllAutons();
       pathDisplayController.removeAllPath();
-      pathDisplayController.addPath(pathDirectory, edit.getTreeItem());
+      pathDisplayController.addPath(pathDirectory, event.getTreeItem());
     });
   }
 
@@ -194,37 +199,59 @@ public class MainController {
 
 
   private void setupClickablePaths() {
-    paths.getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              selected = newValue;
-              if (newValue == pathRoot) {
-                //pathRoot.setExpanded(!pathRoot.isExpanded());
-              } else {
-                pathDisplayController.removeAllPath();
-                pathDisplayController.addPath(pathDirectory, newValue);
-              }
-            });
-    autons.getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              selected = newValue;
+    ChangeListener<TreeItem<String>> selectionListener =
+        new ChangeListener<>() {
+          @Override
+          public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue,
+                              TreeItem<String> newValue) {
+            if (!SaveManager.getInstance().promptSaveAll()) {
+              paths.getSelectionModel().selectedItemProperty().removeListener(this);
+              paths.getSelectionModel().select(oldValue);
+              paths.getSelectionModel().selectedItemProperty().addListener(this);
+              return;
+            }
+            selected = newValue;
+            if (newValue != pathRoot) {
               pathDisplayController.removeAllPath();
-              if (newValue != autonRoot) {
-                if (newValue.getParent() == autonRoot) { //is an auton with children
-                  for (TreeItem<String> it : selected.getChildren()) {
-                    pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
-                  }
-                } else { //has no children so try to display path
-                  Path path = pathDisplayController.addPath(pathDirectory, newValue);
-                  if (FxUtils.isSubChild(autons, newValue)) {
-                    path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
-                  }
-                }
-              }
-            });
+              pathDisplayController.addPath(pathDirectory, newValue);
+            }
+          }
+        };
+    paths.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+  }
+
+  @SuppressWarnings("PMD.NcssCount")
+  private void setupClickableAutons() {
+    ChangeListener<TreeItem<String>> selectionListener = new ChangeListener<>() {
+      @Override
+      public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue,
+                          TreeItem<String> newValue) {
+        if (newValue == null) {
+          return;
+        }
+        if (!SaveManager.getInstance().promptSaveAll()) {
+          autons.getSelectionModel().selectedItemProperty().removeListener(this);
+          autons.getSelectionModel().select(oldValue);
+          autons.getSelectionModel().selectedItemProperty().addListener(this);
+          return;
+        }
+        selected = newValue;
+        pathDisplayController.removeAllPath();
+        if (newValue != autonRoot) {
+          if (newValue.getParent() == autonRoot) { //is an auton with children
+            for (TreeItem<String> it : selected.getChildren()) {
+              pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
+            }
+          } else { //has no children so try to display path
+            Path path = pathDisplayController.addPath(pathDirectory, newValue);
+            if (FxUtils.isSubChild(autons, newValue)) {
+              path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
+            }
+          }
+        }
+      }
+    };
+    autons.getSelectionModel().selectedItemProperty().addListener(selectionListener);
   }
 
   private boolean validPathName(String oldName, String newName) {
@@ -262,7 +289,7 @@ public class MainController {
   private void duplicate() {
     Path newPath = pathDisplayController.duplicate(pathDirectory);
     TreeItem<String> stringTreeItem = MainIOUtil.addChild(pathRoot, newPath.getPathName());
-    PathIOUtil.export(pathDirectory, newPath);
+    SaveManager.getInstance().saveChange(newPath);
     paths.getSelectionModel().select(stringTreeItem);
   }
 
@@ -271,7 +298,7 @@ public class MainController {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);
     Path newPath = new Path(name);
-    PathIOUtil.export(pathDirectory, newPath);
+    SaveManager.getInstance().saveChange(newPath);
   }
 
   @FXML

@@ -15,6 +15,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -35,7 +37,7 @@ public class PathDisplayController {
   private final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
-  private final Field field = new Field();
+  private final Field field = ProjectPreferences.getInstance().getField();
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
@@ -111,7 +113,7 @@ public class PathDisplayController {
     Path newPath = PathIOUtil.importPath(fileLocations, fileName);
     if (newPath == null) {
       newPath = new Path(fileName);
-      PathIOUtil.export(fileLocations, newPath);
+      SaveManager.getInstance().saveChange(newPath);
     }
     pathList.add(newPath);
     return newPath;
@@ -200,12 +202,14 @@ public class PathDisplayController {
     waypoint.getIcon().setOnContextMenuRequested(e -> {
       ContextMenu menu = new ContextMenu();
       if (isDeletable(waypoint)) {
-        menu.getItems().add(FxUtils.menuItem("Delete", __ -> delete(waypoint)));
+        menu.getItems().add(FxUtils.menuItem("Delete", event -> delete(waypoint)));
       }
       if (waypoint.getTangentLine().isVisible()) {
-        menu.getItems().add(FxUtils.menuItem("Hide control vector", __ -> waypoint.getTangentLine().setVisible(false)));
+        menu.getItems().add(FxUtils.menuItem("Hide control vector",
+            event -> waypoint.getTangentLine().setVisible(false)));
       } else {
-        menu.getItems().add(FxUtils.menuItem("Show control vector", __ -> waypoint.getTangentLine().setVisible(true)));
+        menu.getItems().add(FxUtils.menuItem("Show control vector",
+            event -> waypoint.getTangentLine().setVisible(true)));
       }
       menu.show(drawPane.getScene().getWindow(), e.getScreenX(), e.getScreenY());
     });
@@ -213,9 +217,12 @@ public class PathDisplayController {
 
   @FXML
   private void keyPressed(KeyEvent event) {
+    KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
     if ((event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
         && isDeletable(getSelectedWaypoint())) {
       delete(getSelectedWaypoint());
+    } else if (save.match(event) && currentPath.get() != null) {
+      SaveManager.getInstance().saveChange(currentPath.get());
     }
   }
 
@@ -237,7 +244,7 @@ public class PathDisplayController {
     previous.update();
     Waypoint next = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) + 1);
     next.update();
-    PathIOUtil.export(pathDirectory, path);
+    SaveManager.getInstance().addChange(path);
   }
 
   /**
@@ -283,6 +290,7 @@ public class PathDisplayController {
    */
   public void flip(boolean horizontal) {
     currentPath.get().flip(horizontal, drawPane);
+    SaveManager.getInstance().addChange(currentPath.get());
   }
 
   public void setPathDirectory(String pathDirectory) {

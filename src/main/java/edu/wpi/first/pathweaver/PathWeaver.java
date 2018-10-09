@@ -18,4 +18,16 @@ public class PathWeaver extends Application {
     primaryStage.show();
     Loggers.setupLoggers();
   }
+
+  /**
+   * The version of this build of PathWeaver.
+   * @return String representing the version of PathWeaver.
+   */
+  public static String getVersion() {
+    String version = PathWeaver.class.getPackage().getImplementationVersion();
+    if (version == null) {
+      return "Development";
+    }
+    return version;
+  }
 }

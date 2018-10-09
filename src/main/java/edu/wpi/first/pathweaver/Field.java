@@ -10,21 +10,15 @@ import javax.measure.Quantity;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
-import static edu.wpi.first.pathweaver.PathUnits.FOOT;
-
 
 public class Field {
-  private Image image = new Image("edu/wpi/first/pathweaver/2018-field.jpg");
-  private Quantity<Length> rWidth = Quantities.getQuantity(54, FOOT);
-  private Quantity<Length> rLength = Quantities.getQuantity(27, FOOT);
-  private double scale = 16.5;
-  private Point2D coord = new Point2D.Double(450, 175);
-  public Unit<Length> unit = FOOT;
+  private Image image;
+  private Quantity<Length> rWidth;
+  private Quantity<Length> rLength;
+  private double scale;
+  private Point2D coord;
+  public Unit<Length> unit;
   public Unit<Length> pixel;
-
-  public Field() {
-    pixel = PathUnits.addUnit(unit.multiply(scale), "Pixel", "px");
-  }
 
   /**
    * Creates a new Field Object.
@@ -46,7 +40,7 @@ public class Field {
     setImage(image);
     setRealWidth(Quantities.getQuantity(realWidth, unit));
     setRealLength(Quantities.getQuantity(realLength, unit));
-    setCoord(new Point2D.Double(xPixel + pixelWidth / 2, yPixel + pixelLength / 2));
+    setCoord(new Point2D.Double(xPixel + pixelWidth / 2 - realWidth / 2, yPixel + pixelLength / 2 - realLength / 2));
     setScale(((pixelWidth / realWidth) + (pixelLength / realLength)) / 2); //NOPMD Useless Parentheses
     setUnit(unit);
     pixel = PathUnits.addUnit(unit.multiply(scale), "Pixel", "px");

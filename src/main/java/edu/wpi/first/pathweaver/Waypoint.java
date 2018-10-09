@@ -10,7 +10,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
@@ -18,6 +17,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+@SuppressWarnings("PMD.TooManyMethods")
 public class Waypoint {
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
@@ -36,8 +36,6 @@ public class Waypoint {
   private Polygon icon;
 
   private static final double SIZE = 30.0;
-  private final Tooltip nameTip = new Tooltip();
-
 
   public Path getPath() {
     return path;
@@ -62,8 +60,8 @@ public class Waypoint {
     setY(position.getY());
     icon = new Polygon();
     setupIcon();
-    x.addListener(__ -> update());
-    y.addListener(__ -> update());
+    x.addListener(listener -> update());
+    y.addListener(listener -> update());
 
     ProjectPreferences.Values values = ProjectPreferences.getInstance().getValues();
 
@@ -125,8 +123,6 @@ public class Waypoint {
             Bindings.createObjectBinding(() ->
                     getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
                     tangentX, tangentY));
-    nameTip.setShowDelay(Duration.millis(200));
-    nameTip.textProperty().bind(name);
     icon.getStyleClass().add("waypoint");
   }
 
@@ -257,11 +253,6 @@ public class Waypoint {
    * @param name New name of Waypoint.
    */
   public void setName(String name) {
-    if (name.isEmpty()) {
-      Tooltip.uninstall(icon, nameTip);
-    } else if (this.name.get().isEmpty()) {
-      Tooltip.install(icon, nameTip);
-    }
     this.name.set(name);
   }
 
@@ -271,5 +262,27 @@ public class Waypoint {
 
   public DoubleProperty tangentYProperty() {
     return tangentY;
+  }
+
+  public Waypoint copy() {
+    return new Waypoint(getCoords(), getTangent(), isLockTangent());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+    Waypoint point = (Waypoint) o;
+
+    return x.get() == point.x.get() && y.get() == point.y.get() && tangentX.get() == point.tangentX.get()
+        && tangentY.get() == point.tangentY.get() && name.get().equals(point.name.get())
+        && isLockTangent() == point.isLockTangent();
   }
 }
