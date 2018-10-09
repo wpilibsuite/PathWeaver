@@ -145,6 +145,7 @@ public class Path {
     for (Waypoint wp : waypoints) {
       wp.update();
     }
+    swapToPathfinderSplines();
   }
 
   private Point2D reflectPoint(Waypoint start, Waypoint point, boolean horizontal, boolean tangent) {

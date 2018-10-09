@@ -121,9 +121,7 @@ public class Waypoint {
       tangentLine.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
     });
-    tangentLine.setOnMouseClicked(event -> {
-      resetOnDoubleClick(event);
-    });
+    tangentLine.setOnMouseClicked(this::resetOnDoubleClick);
   }
 
   /**
