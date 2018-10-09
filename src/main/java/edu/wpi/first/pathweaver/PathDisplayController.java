@@ -41,8 +41,8 @@ public class PathDisplayController {
   private String pathDirectory;
 
   private final double circleScale = .75; //NOPMD should be static, will be modified later
-  private final double splineScale = 8; //NOPMD should be static, will be modified later
   private final double lineScale = 2; //NOPMD should be static, will be modified later
+  private final double minSplineScale = 1; //NOPMD should be static, will be modified later
 
   @FXML
   private Group splineGroup;
@@ -140,21 +140,25 @@ public class PathDisplayController {
    * @param current The waypoint
    */
   public void addWaypointToPane(Waypoint current) {
+    Double splineScale = current.getRobotOutline().getHeight();
+
+    if (splineScale < minSplineScale) {
+      splineScale = minSplineScale;
+    }
+
     waypointGroup.getChildren().add(current.getIcon());
     waypointGroup.getChildren().add(current.getRobotOutline());
     vectorGroup.getChildren().add(current.getTangentLine());
     current.getIcon().setScaleX(circleScale / field.getScale());
     current.getIcon().setScaleY(circleScale / field.getScale());
+    current.getIcon().toFront();
     current.getRobotOutline().getStyleClass().add("robotOutline");
     current.getRobotOutline().setStroke(Paint.valueOf("lightgray"));
     current.getRobotOutline().setStrokeWidth(lineScale / field.getScale());
-    current.getRobotOutline().toBack();
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().toFront();
-    current.getSpline().addToGroup(splineGroup, current.getRobotOutline().getHeight());
-    current.getSpline().addToGroup(splineGroup, 40);
+    current.getSpline().addToGroup(splineGroup, splineScale);
   }
-
 
   private void removePathFromPane(Path newPath) {
     for (Waypoint wp : newPath.getWaypoints()) {
