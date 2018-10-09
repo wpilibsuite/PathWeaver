@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.util.Map;
 
+import edu.wpi.first.pathweaver.spline.Spline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;

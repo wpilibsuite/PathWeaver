@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import edu.wpi.first.pathweaver.spline.Spline;
+import edu.wpi.first.pathweaver.spline.SwappingSpline;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.modifiers.TankModifier;
@@ -30,7 +32,7 @@ public class Path {
     for (int i = 1; i < waypoints.size(); i++) {
       Waypoint current = waypoints.get(i - 1);
       Waypoint next = waypoints.get(i);
-      current.setSpline(new PathfinderSpline(current, next));
+      current.setSpline(new SwappingSpline(current, next));
     }
     getEnd().setSpline(new NullSpline());
     for (Waypoint wp : waypoints) {
@@ -58,7 +60,7 @@ public class Path {
     pathName = name;
     Waypoint start = new Waypoint(startPos, startTangent, true, this);
     Waypoint end = new Waypoint(endPos, endTangent, true, this);
-    start.setSpline(new PathfinderSpline(start, end));
+    start.setSpline(new SwappingSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
     updateSplines();
@@ -81,14 +83,14 @@ public class Path {
   public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
     if (previous == getEnd()) {
-      previous.setSpline(new PathfinderSpline(previous, newPoint));
+      previous.setSpline(new SwappingSpline(previous, newPoint));
     } else {
       previous.getSpline().setEnd(newPoint);
     }
     waypoints.add(waypoints.indexOf(previous) + 1, newPoint);
     int nextPointIndex = waypoints.indexOf(newPoint) + 1;
     if (nextPointIndex < waypoints.size()) {
-      newPoint.setSpline(new PathfinderSpline(newPoint, waypoints.get(nextPointIndex)));
+      newPoint.setSpline(new SwappingSpline(newPoint, waypoints.get(nextPointIndex)));
     }
     newPoint.update();
     this.enableSubchildSelector(this.subchildIdx);
@@ -207,9 +209,35 @@ public class Path {
    * Calls update on all the Path's splines.
    */
   public void updateSplines() {
-    generatePathfinder();
     for (Waypoint wp : waypoints) {
       wp.getSpline().update();
+    }
+  }
+
+  /**
+   * This forces all SwappingSpline's to display the PathfinderSpline (Pathfinder V1 curves).
+   */
+  public void swapToPathfinderSplines() {
+    generatePathfinder();
+    for (Waypoint wp : waypoints) {
+      if (wp == getEnd()) {
+        break;
+      }
+      SwappingSpline spline = (SwappingSpline) wp.getSpline();
+      spline.swapToPathfinder();
+    }
+  }
+
+  /**
+   * This forces all SwappingSpline's to display the QuickSpline (Java FX Cubic Curve).
+   */
+  public void swapToQuick() {
+    for (Waypoint wp : waypoints) {
+      if (wp == getEnd()) {
+        break;
+      }
+      SwappingSpline spline = (SwappingSpline) wp.getSpline();
+      spline.swapToQuick();
     }
   }
 

@@ -1,5 +1,10 @@
-package edu.wpi.first.pathweaver;
+package edu.wpi.first.pathweaver.spline;
 
+import edu.wpi.first.pathweaver.DataFormats;
+import edu.wpi.first.pathweaver.DragHandler;
+import edu.wpi.first.pathweaver.FxUtils;
+import edu.wpi.first.pathweaver.PathDisplayController;
+import edu.wpi.first.pathweaver.Waypoint;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.modifiers.TankModifier;
 import javafx.scene.Group;
@@ -18,6 +23,7 @@ import java.util.Queue;
 public class PathfinderSpline implements Spline {
 
   private final Waypoint start;
+  private Spline parent;
   private Waypoint end;
   private final Group group;
   private double strokeWidth = 1.0;
@@ -32,14 +38,31 @@ public class PathfinderSpline implements Spline {
    * @param end The waypoint at the end of spline.
    */
   public PathfinderSpline(Waypoint start, Waypoint end) {
+    this(start, end, true);
+  }
+
+  private PathfinderSpline(Waypoint start, Waypoint end, boolean allowDragging) {
     this.start = start;
     this.end = end;
     group = new Group();
-    group.setOnDragDetected(event -> {
-      Dragboard board = group.startDragAndDrop(TransferMode.ANY);
-      board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
-      DragHandler.setCurrentSpline(this);
-    });
+    if (allowDragging) {
+      group.setOnDragDetected(event -> {
+        Dragboard board = group.startDragAndDrop(TransferMode.ANY);
+        board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
+        DragHandler.setCurrentSpline(this);
+      });
+    }
+  }
+
+  /**
+   * Constructs a spline that is represented by a Pathfinder V1 path.
+   * @param start The waypoint at the start of spline.
+   * @param end The waypoint at the end of spline.
+   * @param parent The parent of this spline (i.e. a SwappingSpline).
+   */
+  public PathfinderSpline(Waypoint start, Waypoint end, Spline parent) {
+    this(start, end, false);
+    this.parent = parent;
   }
 
   @Override
@@ -136,7 +159,8 @@ public class PathfinderSpline implements Spline {
 
   @Override
   public void addPathWaypoint(PathDisplayController controller) {
-    Waypoint newPoint = start.getPath().addNewWaypoint(this);
+    Spline spline = parent == null ? this : parent;
+    Waypoint newPoint = start.getPath().addNewWaypoint(spline);
     controller.addWaypointToPane(newPoint);
     controller.setupWaypoint(newPoint);
     controller.selectWaypoint(newPoint, false);
