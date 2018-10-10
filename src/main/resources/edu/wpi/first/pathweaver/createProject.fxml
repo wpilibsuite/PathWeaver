@@ -54,10 +54,10 @@
             <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="Maximum capable velocity of robot" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Maximum acceleration (velocity per second)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label text="Maximum jerk (acceleration per second)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <Label text="Distance between left and right of wheel base" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label text="Maximum capable velocity of robot (ft/s)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="Maximum acceleration (ft/s/s)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label text="Maximum jerk (acceleration per second) (ft/s/s/s)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label text="Distance between left and right of wheel base (ft)" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
               <buttons>
                 <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
