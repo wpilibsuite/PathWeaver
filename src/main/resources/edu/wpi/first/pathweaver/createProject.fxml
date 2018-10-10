@@ -14,7 +14,7 @@
 
 <VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
    <children>
-      <Label text="Create Project...">
+      <Label fx:id="title" text="Create Project...">
          <font>
             <Font size="18.0" />
          </font>

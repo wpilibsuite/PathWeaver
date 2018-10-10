@@ -53,6 +53,7 @@
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
                 <Button mnemonicParsing="false" onAction="#buildPaths" text="Build Pathfinder" />
+                  <Button mnemonicParsing="false" onAction="#editProject" text="Edit Project..." />
               </items>
             </ToolBar>
          </children>

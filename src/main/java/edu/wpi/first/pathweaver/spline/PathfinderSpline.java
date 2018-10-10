@@ -73,7 +73,7 @@ public class PathfinderSpline implements Spline {
     ArrayList<Trajectory.Segment> left = new ArrayList<>();
     ArrayList<Trajectory.Segment> right = new ArrayList<>();
     // filter points relevant to this spline
-    boolean foundStart = start.getPath().getStart() == start; // We have found the start if the start is the beginning of path
+    boolean foundStart = start.getPath().getStart() == start; // foundStart if Waypoint is first in Path
     for (int i = 0; i < tank.getSourceTrajectory().length(); i++) {
       Trajectory.Segment source = tank.getSourceTrajectory().get(i);
       if (fuzzyEquals(source, start)) {

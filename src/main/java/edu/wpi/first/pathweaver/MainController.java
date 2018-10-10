@@ -1,14 +1,19 @@
 package edu.wpi.first.pathweaver;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.modifiers.TankModifier;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -18,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 @SuppressWarnings("PMD.TooManyMethods")
 //With the creation of a project many of these functions should be moved out of here
@@ -325,6 +331,21 @@ public class MainController {
           tank.getLeftTrajectory());
       Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_right.csv"),
           tank.getRightTrajectory());
+    }
+  }
+
+  @FXML
+  private void editProject() {
+    try {
+      Pane root = FXMLLoader.load(getClass().getResource("createProject.fxml"));
+      Scene scene = pathDisplay.getScene();
+      Stage primaryStage = (Stage) scene.getWindow();
+      primaryStage.setMaximized(false);
+      primaryStage.setResizable(false);
+      scene.setRoot(root);
+    } catch (IOException e) {
+      Logger log = Logger.getLogger(getClass().getName());
+      log.log(Level.WARNING, "Couldn't load create project screen", e);
     }
   }
 
