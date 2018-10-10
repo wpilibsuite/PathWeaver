@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
@@ -145,4 +148,19 @@ public final class FxUtils { // NOPMD util class name
     return new TextFormatter<>(formatter);
   }
 
+  /**
+   * Asks user if they want to delete value.
+   * @param value The file to delete
+   * @return True if user confirms deletion, false otherwise.
+   */
+  public static boolean promptDelete(String value) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Delete " + value + "?");
+    alert.setContentText("Are you sure you want to delete: " + value + "?");
+    Optional<ButtonType> buttonType = alert.showAndWait();
+    if (buttonType.isPresent()) {
+      return buttonType.get().equals(ButtonType.OK);
+    }
+    return false;
+  }
 }
