@@ -136,6 +136,7 @@ public class MainController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void delete() {
     if (selected == null) {
       // have nothing selected
