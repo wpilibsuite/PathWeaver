@@ -156,6 +156,7 @@ public final class FxUtils { // NOPMD util class name
   public static boolean promptDelete(String value) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Delete " + value + "?");
+    alert.setHeaderText("Delete " + value + "?");
     alert.setContentText("Are you sure you want to delete: " + value + "?");
     Optional<ButtonType> buttonType = alert.showAndWait();
     if (buttonType.isPresent()) {
