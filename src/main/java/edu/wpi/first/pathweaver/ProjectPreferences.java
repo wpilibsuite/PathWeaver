@@ -123,10 +123,6 @@ public class ProjectPreferences {
     }
   }
 
-  public Values getValues() {
-    return values;
-  }
-
   public static class Values {
     private final double timeStep;
     private final double maxVelocity;

@@ -16,7 +16,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 @SuppressWarnings("PMD.TooManyMethods")
 public class Waypoint {
@@ -54,6 +53,7 @@ public class Waypoint {
    * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
    * @param myPath        the path this waypoint belongs to
    */
+  @SuppressWarnings("PMD.NcssCount")
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
     path = myPath;
     lockTangent.set(fixedAngle);
