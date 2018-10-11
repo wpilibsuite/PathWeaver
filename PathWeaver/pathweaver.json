@@ -1,5 +1,5 @@
 {
-  "timeStep": 0.2,
+  "timeStep": 0.02,
   "maxVelocity": 10.0,
   "maxAcceleration": 60.0,
   "maxJerk": 60.0,

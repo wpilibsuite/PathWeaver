@@ -1,5 +1,7 @@
-package edu.wpi.first.pathweaver;
+package edu.wpi.first.pathweaver.spline;
 
+import edu.wpi.first.pathweaver.PathDisplayController;
+import edu.wpi.first.pathweaver.Waypoint;
 import javafx.scene.Group;
 
 /**

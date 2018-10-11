@@ -39,7 +39,7 @@
                   <Button fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import Project" />
                </children>
             </HBox>
-            <Button fx:id="help" mnemonicParsing="false" text="Help" />
+            <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
