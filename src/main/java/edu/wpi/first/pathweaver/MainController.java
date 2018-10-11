@@ -146,6 +146,7 @@ public class MainController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void delete() {
     if (selected == null) {
       // have nothing selected
@@ -158,7 +159,9 @@ public class MainController {
     }
     if (autonRoot == root) {
       if (selected.getParent() == autonRoot) {
-        MainIOUtil.deleteItem(autonDirectory, selected);
+        if (FxUtils.promptDelete(selected.getValue())) {
+          MainIOUtil.deleteItem(autonDirectory, selected);
+        }
       } else {
         removePath(selected);
       }
@@ -166,7 +169,9 @@ public class MainController {
       for (TreeItem<String> path : getAllInstances(selected)) {
         removePath(path);
       }
-      MainIOUtil.deleteItem(pathDirectory, selected);
+      if (FxUtils.promptDelete(selected.getValue())) {
+        MainIOUtil.deleteItem(pathDirectory, selected);
+      }
       saveAllAutons();
       loadAllAutons();
     }
