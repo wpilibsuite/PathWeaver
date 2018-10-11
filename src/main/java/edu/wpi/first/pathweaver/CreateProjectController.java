@@ -81,8 +81,10 @@ public class CreateProjectController {
 
   @FXML
   private void createProject() {
-    String folder = directory.getText().trim();
-    ProgramPreferences.getInstance().addProject(folder);
+    String folderString = directory.getText().trim();
+    File directory = new File(folderString, "PathWeaver");
+    directory.mkdir();
+    ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
     double timeDelta = Double.parseDouble(timeStep.getText());
     double velocityMax = Double.parseDouble(maxVelocity.getText());
     double accelerationMax = Double.parseDouble(maxAcceleration.getText());
@@ -90,7 +92,7 @@ public class CreateProjectController {
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
         jerkMax, wheelBaseDistance, game.getValue());
-    ProjectPreferences prefs = ProjectPreferences.getInstance(folder);
+    ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
   }

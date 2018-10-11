@@ -17,7 +17,7 @@ import static edu.wpi.first.pathweaver.PathUnits.FOOT;
 
 public class ProjectPreferences {
 
-  private static final String FILENAME = "/pathweaver.project";
+  private static final String FILENAME = "/pathweaver.json";
 
   private static ProjectPreferences instance;
 
