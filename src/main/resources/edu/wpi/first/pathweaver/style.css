@@ -62,7 +62,7 @@
 }
 
 .robotOutline {
-    -fx-fill: derive(my-color, -25%);
+    -fx-fill: null;
     -fx-stroke: "lightgray";
 }
 

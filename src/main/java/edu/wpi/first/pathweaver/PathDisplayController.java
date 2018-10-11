@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
 import javafx.scene.transform.Scale;
 
 @SuppressWarnings("PMD.TooManyMethods")
@@ -149,7 +148,6 @@ public class PathDisplayController {
     current.getIcon().setScaleY(circleScale / field.getScale());
     current.getIcon().toFront();
     current.getRobotOutline().getStyleClass().add("robotOutline");
-    current.getRobotOutline().setStroke(Paint.valueOf("lightgray"));
     current.getRobotOutline().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().toFront();
