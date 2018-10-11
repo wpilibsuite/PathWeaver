@@ -66,6 +66,10 @@
     -fx-stroke: "lightgray";
 }
 
+.tank {
+    -fx-opacity: 0.7;
+}
+
 .tangent {
     -fx-stroke: cyan;
     -fx-cursor: hand;

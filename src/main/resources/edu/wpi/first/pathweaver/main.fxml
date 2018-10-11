@@ -50,6 +50,12 @@
                   <Button fx:id="duplicate" mnemonicParsing="false" onAction="#duplicate" text="Duplicate" />
                </items>
             </ToolBar>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" onAction="#buildPaths" text="Build Pathfinder" />
+                  <Button mnemonicParsing="false" onAction="#editProject" text="Edit Project..." />
+              </items>
+            </ToolBar>
          </children>
       </VBox>
     </right>

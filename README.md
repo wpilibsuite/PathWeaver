@@ -1,7 +1,7 @@
 [![Build Status](https://dev.azure.com/wpilib/DesktopTools/_apis/build/status/wpilibsuite.PathWeaver)](https://dev.azure.com/wpilib/DesktopTools/_build/latest?definitionId=10)
 # PathWeaver
 
-PathWeaver is an under-development front end motion planning program. It is primarily designed for FRC teams using Pathfinder. PathWeaver will be available for the 2019 FIRST Robotics Competition game with support for the 2019 version of Pathfinder. Currently Pathfinder is not used as a dependency and splines are generated using native JavaFX functionality.
+PathWeaver is an under-development front end motion planning program. It is primarily designed for FRC teams using [Pathfinder v1](https://github.com/JacisNonsense/Pathfinder). PathWeaver will be available for the 2019 FIRST Robotics Competition game with support for [Pathfinder v2](https://github.com/GrappleRobotics/Pathfinder).
 
 The two primary design criteria are
 1. Creating and modifying paths should be as natural as possible.

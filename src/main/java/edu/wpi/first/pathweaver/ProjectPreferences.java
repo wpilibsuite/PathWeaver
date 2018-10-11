@@ -17,7 +17,7 @@ import static edu.wpi.first.pathweaver.PathUnits.FOOT;
 
 public class ProjectPreferences {
 
-  private static final String FILENAME = "/pathweaver.project";
+  private static final String FILENAME = "/pathweaver.json";
 
   private static ProjectPreferences instance;
 
@@ -121,6 +121,10 @@ public class ProjectPreferences {
         double pixelLength = 370 - yPixel;
         return new Field(image, FOOT, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
     }
+  }
+
+  public Values getValues() {
+    return values;
   }
 
   public static class Values {

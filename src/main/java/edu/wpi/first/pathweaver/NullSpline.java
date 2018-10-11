@@ -1,5 +1,6 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.spline.Spline;
 import javafx.scene.Group;
 
 public class NullSpline implements Spline {

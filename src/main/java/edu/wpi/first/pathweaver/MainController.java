@@ -1,11 +1,19 @@
 package edu.wpi.first.pathweaver;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.modifiers.TankModifier;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -15,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 @SuppressWarnings("PMD.TooManyMethods")
 //With the creation of a project many of these functions should be moved out of here
@@ -34,6 +43,7 @@ public class MainController {
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
   private final String autonDirectory = directory + "/Autons/";
+  private final String outputDirectory = directory + "/output/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -136,6 +146,7 @@ public class MainController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void delete() {
     if (selected == null) {
       // have nothing selected
@@ -148,7 +159,9 @@ public class MainController {
     }
     if (autonRoot == root) {
       if (selected.getParent() == autonRoot) {
-        MainIOUtil.deleteItem(autonDirectory, selected);
+        if (FxUtils.promptDelete(selected.getValue())) {
+          MainIOUtil.deleteItem(autonDirectory, selected);
+        }
       } else {
         removePath(selected);
       }
@@ -156,7 +169,9 @@ public class MainController {
       for (TreeItem<String> path : getAllInstances(selected)) {
         removePath(path);
       }
-      MainIOUtil.deleteItem(pathDirectory, selected);
+      if (FxUtils.promptDelete(selected.getValue())) {
+        MainIOUtil.deleteItem(pathDirectory, selected);
+      }
       saveAllAutons();
       loadAllAutons();
     }
@@ -306,6 +321,37 @@ public class MainController {
     String name = MainIOUtil.getValidFileName(autonDirectory, "Unnamed", "");
     TreeItem<String> auton = MainIOUtil.addChild(autonRoot, name);
     MainIOUtil.saveAuton(autonDirectory, auton.getValue(), auton);
+  }
+
+  @FXML
+  private void buildPaths() {
+    if (!SaveManager.getInstance().promptSaveAll()) {
+      return;
+    }
+    new File(outputDirectory).mkdir();
+    for (TreeItem<String> pathName : pathRoot.getChildren()) {
+      Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
+      TankModifier tank = path.getTankModifier();
+      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_left.csv"),
+          tank.getLeftTrajectory());
+      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_right.csv"),
+          tank.getRightTrajectory());
+    }
+  }
+
+  @FXML
+  private void editProject() {
+    try {
+      Pane root = FXMLLoader.load(getClass().getResource("createProject.fxml"));
+      Scene scene = pathDisplay.getScene();
+      Stage primaryStage = (Stage) scene.getWindow();
+      primaryStage.setMaximized(false);
+      primaryStage.setResizable(false);
+      scene.setRoot(root);
+    } catch (IOException e) {
+      Logger log = Logger.getLogger(getClass().getName());
+      log.log(Level.WARNING, "Couldn't load create project screen", e);
+    }
   }
 
   public void setDirectory(String directory) {
