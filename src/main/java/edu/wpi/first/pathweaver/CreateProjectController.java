@@ -130,5 +130,7 @@ public class CreateProjectController {
     maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
     maxJerk.setText(String.valueOf(values.getMaxJerk()));
     wheelBase.setText(String.valueOf(values.getWheelBase()));
+    robotWidth.setText(String.valueOf(values.getRobotWidth()));
+    robotLength.setText(String.valueOf(values.getRobotLength()));
   }
 }
