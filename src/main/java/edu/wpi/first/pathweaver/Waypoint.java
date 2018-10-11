@@ -74,8 +74,8 @@ public class Waypoint {
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangentX, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangentY, y));
 
-    double robotWidth = values.getRobotWidth() / 12;
-    double robotLength = values.getRobotLength() / 12;
+    double robotWidth = values.getRobotWidth();
+    double robotLength = values.getRobotLength();
 
     robotOutline = new Rectangle();
     robotOutline.setHeight(robotWidth);
