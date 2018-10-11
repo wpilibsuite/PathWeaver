@@ -44,9 +44,11 @@ public final class MainIOUtil {
    * @return
    */
   public static String getValidFileName(String directory, String filename, String extension) {
-    File file = new File(directory, filename + extension);
+    // remove the _number following the file name
+    String nameNoVersion = filename.replaceFirst("_[0-9]+", "");
+    File file = new File(directory, nameNoVersion + extension);
     for (int num = 0; file.exists(); num++) {
-      file = new File(directory, filename + "_" + num + extension);
+      file = new File(directory, nameNoVersion + "_" + num + extension);
     }
     return file.getName();
   }

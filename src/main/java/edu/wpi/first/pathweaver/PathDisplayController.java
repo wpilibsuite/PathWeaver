@@ -43,7 +43,7 @@ public class PathDisplayController {
 
   private final double circleScale = .75; //NOPMD should be static, will be modified later
   private final double splineScale = 6; //NOPMD should be static, will be modified later
-  private final double lineScale = 2; //NOPMD should be static, will be modified later
+  private final double lineScale = 4; //NOPMD should be static, will be modified later
 
   @FXML
   private Group splineGroup;
@@ -231,6 +231,7 @@ public class PathDisplayController {
     previous.update();
     Waypoint next = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) + 1);
     next.update();
+    path.swapToPathfinderSplines();
     SaveManager.getInstance().addChange(path);
   }
 

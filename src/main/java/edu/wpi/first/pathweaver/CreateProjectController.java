@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -18,6 +19,10 @@ import javafx.util.StringConverter;
 
 public class CreateProjectController {
 
+  @FXML
+  private Label title;
+  @FXML
+  private Button browse;
   @FXML
   private Button create;
   @FXML
@@ -55,8 +60,9 @@ public class CreateProjectController {
     // Validate that numericFields contain decimal numbers
     numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
+    // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
-      directory.setText(ProjectPreferences.getInstance().getDirectory());
+      setupEditProject();
     }
 
     game.getItems().addAll(Game.values());
@@ -104,5 +110,19 @@ public class CreateProjectController {
   private void cancel() throws IOException {
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     vBox.getScene().setRoot(root);
+  }
+
+  private void setupEditProject() {
+    ProjectPreferences.Values values = ProjectPreferences.getInstance().getValues();
+    directory.setText(ProjectPreferences.getInstance().getDirectory());
+    create.setText("Edit Project");
+    title.setText("Edit Project");
+    browse.setVisible(false);
+    game.setValue(values.getGame());
+    timeStep.setText(String.valueOf(values.getTimeStep()));
+    maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
+    maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
+    maxJerk.setText(String.valueOf(values.getMaxJerk()));
+    wheelBase.setText(String.valueOf(values.getWheelBase()));
   }
 }

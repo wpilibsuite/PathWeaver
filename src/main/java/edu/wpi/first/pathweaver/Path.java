@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import edu.wpi.first.pathweaver.spline.Spline;
+import edu.wpi.first.pathweaver.spline.SwappingSpline;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.modifiers.TankModifier;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -14,6 +19,7 @@ public class Path {
   private final List<Waypoint> waypoints = new ArrayList<>();
   private final String pathName;
   private int subchildIdx = 0;
+  private TankModifier tankModifier;
 
   /**
    * Path constructor based on a known list of points.
@@ -26,7 +32,7 @@ public class Path {
     for (int i = 1; i < waypoints.size(); i++) {
       Waypoint current = waypoints.get(i - 1);
       Waypoint next = waypoints.get(i);
-      current.setSpline(new QuickSpline(current, next));
+      current.setSpline(new SwappingSpline(current, next));
     }
     getEnd().setSpline(new NullSpline());
     for (Waypoint wp : waypoints) {
@@ -54,7 +60,7 @@ public class Path {
     pathName = name;
     Waypoint start = new Waypoint(startPos, startTangent, true, this);
     Waypoint end = new Waypoint(endPos, endTangent, true, this);
-    start.setSpline(new QuickSpline(start, end));
+    start.setSpline(new SwappingSpline(start, end));
     waypoints.add(start);
     waypoints.add(end);
     updateSplines();
@@ -77,14 +83,14 @@ public class Path {
   public Waypoint addNewWaypoint(Waypoint previous, Point2D position, Point2D tangent, boolean locked) {
     Waypoint newPoint = new Waypoint(position, tangent, locked, this);
     if (previous == getEnd()) {
-      previous.setSpline(new QuickSpline(previous, newPoint));
+      previous.setSpline(new SwappingSpline(previous, newPoint));
     } else {
       previous.getSpline().setEnd(newPoint);
     }
     waypoints.add(waypoints.indexOf(previous) + 1, newPoint);
     int nextPointIndex = waypoints.indexOf(newPoint) + 1;
     if (nextPointIndex < waypoints.size()) {
-      newPoint.setSpline(new QuickSpline(newPoint, waypoints.get(nextPointIndex)));
+      newPoint.setSpline(new SwappingSpline(newPoint, waypoints.get(nextPointIndex)));
     }
     newPoint.update();
     this.enableSubchildSelector(this.subchildIdx);
@@ -139,6 +145,7 @@ public class Path {
     for (Waypoint wp : waypoints) {
       wp.update();
     }
+    swapToPathfinderSplines();
   }
 
   private Point2D reflectPoint(Waypoint start, Waypoint point, boolean horizontal, boolean tangent) {
@@ -186,8 +193,6 @@ public class Path {
     if (pathName.endsWith(extension)) {
       filename = filename.substring(0, filename.length() - extension.length());
     }
-    // remove version number
-    filename = filename.replaceFirst("_[0-9]+", "");
     return filename;
   }
 
@@ -206,6 +211,60 @@ public class Path {
     for (Waypoint wp : waypoints) {
       wp.getSpline().update();
     }
+  }
+
+  /**
+   * This forces all SwappingSpline's to display the PathfinderSpline (Pathfinder V1 curves).
+   */
+  public void swapToPathfinderSplines() {
+    generatePathfinder();
+    for (Waypoint wp : waypoints) {
+      if (wp == getEnd()) {
+        break;
+      }
+      SwappingSpline spline = (SwappingSpline) wp.getSpline();
+      spline.swapToPathfinder();
+    }
+  }
+
+  /**
+   * This forces all SwappingSpline's to display the QuickSpline (Java FX Cubic Curve).
+   */
+  public void swapToQuick() {
+    for (Waypoint wp : waypoints) {
+      if (wp == getEnd()) {
+        break;
+      }
+      SwappingSpline spline = (SwappingSpline) wp.getSpline();
+      spline.swapToQuick();
+    }
+  }
+
+  /**
+   * Returns the tankModifier for Pathfinder v1. If it is null, it generates it.
+   * @return Pathfinder v1 TankModifier for this Path.
+   */
+  public TankModifier getTankModifier() {
+    if (tankModifier == null) {
+      generatePathfinder();
+    }
+    return tankModifier;
+  }
+
+  private void generatePathfinder() {
+    ArrayList<jaci.pathfinder.Waypoint> points = new ArrayList<>();
+    for (Waypoint wp : waypoints) {
+      points.add(wp.getPathfinderWaypoint());
+    }
+    ProjectPreferences.Values prefs = ProjectPreferences.getInstance().getValues();
+    Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST,
+        prefs.getTimeStep(), prefs.getMaxVelocity(), prefs.getMaxAcceleration(), prefs.getMaxJerk());
+
+    jaci.pathfinder.Waypoint[] pointsArray = points.toArray(new jaci.pathfinder.Waypoint[points.size()]);
+    Trajectory trajectory = Pathfinder.generate(pointsArray, config);
+    TankModifier tank = new TankModifier(trajectory);
+    tank.modify(prefs.getWheelBase());
+    this.tankModifier = tank;
   }
 
   /**

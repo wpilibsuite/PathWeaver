@@ -1,5 +1,6 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.spline.Spline;
 import javafx.geometry.Point2D;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -30,6 +31,7 @@ public class DragHandler {
 
   private void finishDrag() {
     SaveManager.getInstance().addChange(Waypoint.currentWaypoint.getPath());
+    Waypoint.currentWaypoint.getPath().swapToPathfinderSplines();
     splineDragStarted = false;
   }
 
@@ -56,6 +58,9 @@ public class DragHandler {
     drawPane.setOnDragOver(this::handleDrag);
     drawPane.setOnDragDetected(event -> {
       isShiftDown = event.isShiftDown();
+      if (Waypoint.currentWaypoint != null) {
+        Waypoint.currentWaypoint.getPath().swapToQuick();
+      }
     });
   }
 
@@ -79,9 +84,8 @@ public class DragHandler {
     if (splineDragStarted) {
       handleWaypointDrag(event, wp);
     } else {
-      Spline current = currentSpline;
-      current.addPathWaypoint(controller);
-      current = new NullSpline();
+      currentSpline.addPathWaypoint(controller);
+      currentSpline = new NullSpline();
       splineDragStarted = true;
     }
   }

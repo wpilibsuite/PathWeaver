@@ -2,10 +2,11 @@
 .gradle
 build/
 out/
-
+*.csv
 # Important that this is above the inclusion of the gradle-wrapper.jar
 *.jar
 
+!Pathfinder-Java.jar
 !gradle-wrapper.jar
 
 # Ignore Gradle GUI config

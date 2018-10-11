@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.util.Map;
 
+import edu.wpi.first.pathweaver.spline.Spline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -120,9 +121,7 @@ public class Waypoint {
       tangentLine.startDragAndDrop(TransferMode.MOVE)
           .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
     });
-    tangentLine.setOnMouseClicked(event -> {
-      resetOnDoubleClick(event);
-    });
+    tangentLine.setOnMouseClicked(this::resetOnDoubleClick);
   }
 
   /**
@@ -145,6 +144,10 @@ public class Waypoint {
       path.updateTheta(this);
     }
     path.updateSplines();
+  }
+
+  public jaci.pathfinder.Waypoint getPathfinderWaypoint() {
+    return new jaci.pathfinder.Waypoint(getX(), getY(), Math.atan2(getTangent().getY(), getTangent().getX()));
   }
 
   /**

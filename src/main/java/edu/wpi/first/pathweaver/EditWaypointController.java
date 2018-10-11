@@ -28,14 +28,16 @@ public class EditWaypointController {
 
   private List<Control> controls;
 
+  private List<TextField> textFields;
+
   private ChangeListener<String> nameListener;
 
   @FXML
   private void initialize() {
     controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName);
     controls.forEach(control -> control.setDisable(true));
-    List.of(xPosition, yPosition, tangentX, tangentY)
-        .forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
+    textFields = List.of(xPosition, yPosition, tangentX, tangentY);
+    textFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
   }
 
   /**
@@ -109,6 +111,7 @@ public class EditWaypointController {
     } else {
       lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
     }
+    textFields.forEach(textField -> textField.setOnKeyTyped(event -> newValue.getPath().swapToPathfinderSplines()));
     enableDoubleBinding(xPosition, newValue.xProperty());
     enableDoubleBinding(yPosition, newValue.yProperty());
     enableDoubleBinding(tangentX, newValue.tangentXProperty());
