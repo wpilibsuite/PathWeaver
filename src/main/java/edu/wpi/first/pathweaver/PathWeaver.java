@@ -13,6 +13,7 @@ public class PathWeaver extends Application {
   public void start(Stage primaryStage) throws IOException {
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
+    primaryStage.setTitle("PathWeaver - " + getVersion());
     primaryStage.resizableProperty().setValue(false);
     primaryStage.setScene(scene);
     primaryStage.show();
