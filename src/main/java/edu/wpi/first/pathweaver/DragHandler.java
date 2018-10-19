@@ -65,11 +65,13 @@ public class DragHandler {
   }
 
   private void handleWaypointDrag(DragEvent event, Waypoint wp) {
-    if (controller.checkBounds(event.getX(), event.getY())) {
+    if (controller.checkBounds(event.getX(), 0)) {
       wp.setX(event.getX());
-      wp.setY(event.getY());
-      wp.getPath().getWaypoints().forEach(Waypoint::update);
     }
+    if (controller.checkBounds(0, event.getY())) {
+      wp.setY(event.getY());
+    }
+    wp.getPath().getWaypoints().forEach(Waypoint::update);
     controller.selectWaypoint(wp, false);
   }
 
