@@ -45,7 +45,7 @@ public class Field {
     setCoord(new Point2D(xPixel + pixelWidth / 2 - realWidth / 2, yPixel + pixelLength / 2 - realLength / 2));
     setScale(((pixelWidth / realWidth) + (pixelLength / realLength)) / 2); //NOPMD Useless Parentheses
     setUnit(unit);
-    pixel = PathUnits.addUnit(unit.multiply(scale), "Pixel", "px");
+    pixel = unit.multiply(scale);
   }
 
   /**
