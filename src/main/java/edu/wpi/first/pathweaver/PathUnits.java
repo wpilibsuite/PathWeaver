@@ -68,15 +68,21 @@ public final class PathUnits extends AbstractSystemOfUnits {
     switch (unit.toLowerCase(Locale.US)) {
       // Metric
       case "meter":
+      case "metre":
       case "meters":
+      case "metres":
       case "m":
         return METER;
       case "centimeter":
+      case "centimetre":
       case "centimeters":
+      case "centimetres":
       case "cm":
         return CENTIMETER;
       case "millimeter":
+      case "millimetre":
       case "millimeters":
+      case "millimetres":
       case "mm":
         return MILLIMETER;
       // Imperial
