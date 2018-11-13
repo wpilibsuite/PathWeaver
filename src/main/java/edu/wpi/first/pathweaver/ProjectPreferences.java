@@ -11,9 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.image.Image;
-
-import static edu.wpi.first.pathweaver.PathUnits.FOOT;
 
 public class ProjectPreferences {
 
@@ -37,7 +34,7 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018);
+    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName());
     updateValues();
   }
 
@@ -97,22 +94,15 @@ public class ProjectPreferences {
    * @return Field for project's game year.
    */
   public Field getField() {
-    if (values.getGame() == null) {
-      values.game = Game.POWER_UP_2018;
+    if (values.getGameName() == null) {
+      values.gameName = Game.POWER_UP_2018.getName();
       updateValues();
     }
-    switch (values.getGame()) {
-      case POWER_UP_2018:
-      default:
-        Image image = new Image("edu/wpi/first/pathweaver/2018-field.jpg");
-        double realWidth = 54;
-        double realLength = 27;
-        double xPixel = 125;
-        double yPixel = 20;
-        double pixelWidth = 827 - xPixel;
-        double pixelLength = 370 - yPixel;
-        return new Field(image, FOOT, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
+    Game game = Game.fromPrettyName(values.gameName);
+    if (game == null) {
+      throw new UnsupportedOperationException("The referenced game is unknown: \"" + values.gameName + "\"");
     }
+    return game.getField();
   }
 
   public Values getValues() {
@@ -125,7 +115,7 @@ public class ProjectPreferences {
     private final double maxAcceleration;
     private final double maxJerk;
     private final double wheelBase;
-    private Game game;
+    private String gameName;
 
     /**
      * Constructor for Values of ProjectPreferences.
@@ -134,16 +124,16 @@ public class ProjectPreferences {
      * @param maxAcceleration The maximum acceleration to use
      * @param maxJerk         The maximum jerk (acceleration per second) to use
      * @param wheelBase       The width between the individual sides of the drivebase
-     * @param game            The year/FRC game
+     * @param gameName            The year/FRC game
      */
     public Values(double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
-                  double wheelBase, Game game) {
+                  double wheelBase, String gameName) {
       this.timeStep = timeStep;
       this.maxVelocity = maxVelocity;
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
-      this.game = game;
+      this.gameName = gameName;
     }
 
     public double getTimeStep() {
@@ -166,8 +156,8 @@ public class ProjectPreferences {
       return wheelBase;
     }
 
-    public Game getGame() {
-      return game;
+    public String getGameName() {
+      return gameName;
     }
   }
 }

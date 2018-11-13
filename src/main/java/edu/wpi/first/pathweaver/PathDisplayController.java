@@ -1,5 +1,7 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.extensions.ExtensionManager;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -36,7 +38,7 @@ public class PathDisplayController {
   private final ObjectProperty<Waypoint> selectedWaypoint = new SimpleObjectProperty<>();
 
   private final ObjectProperty<Path> currentPath = new SimpleObjectProperty<>();
-  private final Field field = ProjectPreferences.getInstance().getField();
+  private Field field;
 
   private final ObservableList<Path> pathList = FXCollections.observableArrayList();
   private String pathDirectory;
@@ -54,7 +56,8 @@ public class PathDisplayController {
 
   @FXML
   private void initialize() {
-
+    ExtensionManager.getInstance().refresh();
+    field = ProjectPreferences.getInstance().getField();
     Image image = field.getImage();
     backgroundImage.setImage(image);
     topPane.getStyleClass().add("pane");

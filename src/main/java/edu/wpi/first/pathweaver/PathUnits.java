@@ -5,10 +5,11 @@ import tec.units.ri.AbstractSystemOfUnits;
 import tec.units.ri.AbstractUnit;
 import tec.units.ri.format.SimpleUnitFormat;
 
+import java.util.Locale;
+
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Time;
-import javax.measure.spi.SystemOfUnits;
 
 public final class PathUnits extends AbstractSystemOfUnits {
   private static final String SYSTEM_NAME = "PathWeaver Units";
@@ -36,7 +37,7 @@ public final class PathUnits extends AbstractSystemOfUnits {
     return SYSTEM_NAME;
   }
 
-  public static SystemOfUnits getInstance() {
+  public static PathUnits getInstance() {
     return INSTANCE;
   }
 
@@ -55,4 +56,49 @@ public final class PathUnits extends AbstractSystemOfUnits {
     }
     return unit;
   }
+
+  /**
+   * Gets the unit of length with the given name, case-insensitive.
+   *
+   * @param unit the name of the unit of length to get
+   *
+   * @throws IllegalArgumentException if no such unit exists
+   */
+  public Unit<Length> length(String unit) { // NOPMD it's a giant switch statement
+    switch (unit.toLowerCase(Locale.US)) {
+      // Metric
+      case "meter":
+      case "meters":
+      case "m":
+        return METER;
+      case "centimeter":
+      case "centimeters":
+      case "cm":
+        return CENTIMETER;
+      case "millimeter":
+      case "millimeters":
+      case "mm":
+        return MILLIMETER;
+      // Imperial
+      case "inch":
+      case "inches":
+      case "in":
+        return INCH;
+      case "foot":
+      case "feet":
+      case "ft":
+        return FOOT;
+      case "yard":
+      case "yards":
+      case "yd":
+        return YARD;
+      case "mile":
+      case "miles":
+      case "mi":
+        return MILE;
+      default:
+        throw new IllegalArgumentException("Unsupported length unit: " + unit);
+    }
+  }
+
 }
