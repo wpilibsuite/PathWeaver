@@ -20,7 +20,6 @@ public class Field {
   private double scale;
   private Point2D coord;
   public Unit<Length> unit;
-  public Unit<Length> pixel;
 
   /**
    * Creates a new Field Object.
@@ -45,7 +44,6 @@ public class Field {
     setCoord(new Point2D(xPixel + pixelWidth / 2 - realWidth / 2, yPixel + pixelLength / 2 - realLength / 2));
     setScale(((pixelWidth / realWidth) + (pixelLength / realLength)) / 2); //NOPMD Useless Parentheses
     setUnit(unit);
-    pixel = unit.multiply(scale);
   }
 
   /**
