@@ -1,13 +1,15 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.extensions.ExtensionLoader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import javafx.scene.image.Image;
-
-import static edu.wpi.first.pathweaver.PathUnits.FOOT;
 
 public final class Game {
 
@@ -15,7 +17,7 @@ public final class Game {
   private final Field field;
 
   private static final Set<Game> games = new LinkedHashSet<>(); // NOPMD constant name
-  public static final Game POWER_UP_2018 = create("FIRST Power Up", createPowerupField());
+  public static final Game POWER_UP_2018 = loadPowerupGame();
 
   private Game(String name, Field field) {
     this.name = name;
@@ -84,14 +86,17 @@ public final class Game {
     return games;
   }
 
-  private static Field createPowerupField() {
-    Supplier<Image> imageSupplier = () -> new Image("edu/wpi/first/pathweaver/2018-field.jpg");
-    double realWidth = 54;
-    double realLength = 27;
-    double xPixel = 125;
-    double yPixel = 20;
-    double pixelWidth = 827 - xPixel;
-    double pixelLength = 370 - yPixel;
-    return new Field(imageSupplier, FOOT, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
+  private static Game loadPowerupGame() {
+    String jsonText;
+    try (var reader = new InputStreamReader(Game.class.getResourceAsStream("2018-powerup.json"))) {
+      StringWriter writer = new StringWriter();
+      reader.transferTo(writer);
+      jsonText = writer.toString();
+      writer.close();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not load the Powerup game definition", e);
+    }
+    ExtensionLoader loader = new ExtensionLoader();
+    return loader.loadFromJsonString(name -> new Image(Game.class.getResourceAsStream("2018-field.jpg")), jsonText);
   }
 }
