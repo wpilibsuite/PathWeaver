@@ -237,8 +237,12 @@ public final class ExtensionLoader {
       Point2D fieldSize = jsonArrayToPoint(jsonObject.get(FIELD_SIZE_KEY).getAsJsonArray());
       String fieldUnit = jsonObject.get(FIELD_UNITS_KEY).getAsString();
 
+      Image image = imageProvider.apply(imagePath);
+      if (image.isError()) {
+        throw new JsonParseException("Invalid or nonexistent image: " + imagePath, image.getException());
+      }
       Field field = new Field(
-          imageProvider.apply(imagePath),
+          image,
           PathUnits.getInstance().length(fieldUnit),
           fieldSize.getX(),
           fieldSize.getY(),
