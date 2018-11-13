@@ -133,7 +133,7 @@ public final class FxUtils { // NOPMD util class name
    * @return TextFormatter with only Numeric text.
    */
   public static TextFormatter<Object> onlyPositiveDoubleText() {
-    return textRestriction("^\\d*\\.?\\d*$");
+    return textRestriction("^\\d+\\.?\\d*$");
   }
 
   private static TextFormatter<Object> textRestriction(String regex) {

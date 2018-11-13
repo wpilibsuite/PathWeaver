@@ -101,16 +101,34 @@ public class ProjectPreferences {
       values.game = Game.POWER_UP_2018;
       updateValues();
     }
+
+    Image image;
+    double realWidth;
+    double realLength;
+    double xPixel;
+    double yPixel;
+    double pixelWidth;
+    double pixelLength;
+
     switch (values.getGame()) {
+      case TURNING_POINT_2018_19:
+        image = new Image("edu/wpi/first/pathweaver/2018-19_Turning_Point.png");
+        realWidth = 12;
+        realLength = 12;
+        xPixel = 0;
+        yPixel = 3;
+        pixelWidth = 949 - xPixel;
+        pixelLength = 952 - yPixel;
+        return new Field(image, FOOT, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
       case POWER_UP_2018:
       default:
-        Image image = new Image("edu/wpi/first/pathweaver/2018-field.jpg");
-        double realWidth = 54;
-        double realLength = 27;
-        double xPixel = 125;
-        double yPixel = 20;
-        double pixelWidth = 827 - xPixel;
-        double pixelLength = 370 - yPixel;
+        image = new Image("edu/wpi/first/pathweaver/2018-field.jpg");
+        realWidth = 54;
+        realLength = 27;
+        xPixel = 125;
+        yPixel = 20;
+        pixelWidth = 827 - xPixel;
+        pixelLength = 370 - yPixel;
         return new Field(image, FOOT, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
     }
   }

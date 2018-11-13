@@ -1,7 +1,9 @@
 package edu.wpi.first.pathweaver;
 
 public enum Game {
-  POWER_UP_2018("FIRST Power Up");
+  POWER_UP_2018("FIRST Power Up"),
+  TURNING_POINT_2018_19("VEX Turning Point"); // what am i doing wrong here
+
   private String prettyName;
 
   Game(String prettyName) {
