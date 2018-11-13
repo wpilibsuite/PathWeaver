@@ -222,12 +222,18 @@ public final class ExtensionLoader {
     @Override
     public Game deserialize(JsonElement element, Type t, JsonDeserializationContext c) throws JsonParseException {
       var jsonObject = element.getAsJsonObject();
-      String gameName = jsonObject
-          .get(GAME_NAME_KEY)
-          .getAsString();
 
       String imagePath = jsonObject
           .get(FIELD_IMAGE_KEY)
+          .getAsString();
+
+      Image image = imageProvider.apply(imagePath);
+      if (image != null && image.isError()) {
+        throw new JsonParseException("Invalid or nonexistent image: " + imagePath, image.getException());
+      }
+
+      String gameName = jsonObject
+          .get(GAME_NAME_KEY)
           .getAsString();
 
       var corners = jsonObject.get(FIELD_CORNERS_KEY).getAsJsonObject();
@@ -236,11 +242,6 @@ public final class ExtensionLoader {
 
       Point2D fieldSize = jsonArrayToPoint(jsonObject.get(FIELD_SIZE_KEY).getAsJsonArray());
       String fieldUnit = jsonObject.get(FIELD_UNITS_KEY).getAsString();
-
-      Image image = imageProvider.apply(imagePath);
-      if (image.isError()) {
-        throw new JsonParseException("Invalid or nonexistent image: " + imagePath, image.getException());
-      }
       Field field = new Field(
           image,
           PathUnits.getInstance().length(fieldUnit),
