@@ -244,8 +244,8 @@ public final class ExtensionLoader {
           fieldSize.getY(),
           topLeftPoint.getX(),
           topLeftPoint.getY(),
-          bottomRightPoint.getX(),
-          bottomRightPoint.getY()
+          bottomRightPoint.getX() - topLeftPoint.getX(),
+          bottomRightPoint.getY() - topLeftPoint.getY()
       );
 
       return Game.create(gameName, field);
