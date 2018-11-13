@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -69,6 +71,8 @@ public final class ExtensionLoader {
   public static final String BOTTOM_RIGHT_KEY = "bottom-right";
   public static final String FIELD_SIZE_KEY = "field-size";
   public static final String FIELD_UNITS_KEY = "field-unit";
+
+  private static final Logger log = Logger.getLogger(ExtensionLoader.class.getName());
 
   /**
    * Loads a game + field image extension from a JSON file.
@@ -157,7 +161,27 @@ public final class ExtensionLoader {
       }
     }
 
-    return loadFromDir(dir);
+    try {
+      return loadFromDir(dir);
+    } finally {
+      // Make sure to clean up the temp files, even if an exception is thrown when attempting to load from the temp dir
+      try {
+        deleteDir(dir);
+      } catch (IOException e) {
+        log.log(Level.WARNING, "Could not delete temp directory " + dir, e);
+      }
+    }
+  }
+
+  private static void deleteDir(Path dir) throws IOException {
+    for (Path child : Files.list(dir).collect(Collectors.toList())) {
+      if (Files.isDirectory(child)) {
+        deleteDir(child);
+      } else {
+        Files.delete(child);
+      }
+    }
+    Files.delete(dir);
   }
 
   /**

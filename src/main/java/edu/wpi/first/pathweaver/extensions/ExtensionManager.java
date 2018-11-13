@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public final class ExtensionManager {
 
-  private static final Logger log = Logger.getLogger(ExtensionManager.class.getName()); // NOPMD constant name
+  private static final Logger log = Logger.getLogger(ExtensionManager.class.getName());
 
   private final String directory = System.getProperty("user.home") + "/PathWeaver/Games";
   private final ExtensionLoader loader = new ExtensionLoader();
