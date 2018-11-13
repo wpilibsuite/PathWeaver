@@ -97,6 +97,6 @@ public final class Game {
       throw new IllegalStateException("Could not load the Powerup game definition", e);
     }
     ExtensionLoader loader = new ExtensionLoader();
-    return loader.loadFromJsonString(name -> new Image(Game.class.getResourceAsStream("2018-field.jpg")), jsonText);
+    return loader.loadFromJsonString(name -> new Image(Game.class.getResourceAsStream(name)), jsonText);
   }
 }
