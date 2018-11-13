@@ -36,7 +36,7 @@ import javafx.scene.image.Image;
  * <h3>JSON structure</h3>
  * <pre>{@code
  * {
- *   "game": "gane name",
+ *   "game": "game name",
  *   "field-image": "relative/path/to/img.png",
  *   "field-corners": {
  *     "top-left": [x, y],
