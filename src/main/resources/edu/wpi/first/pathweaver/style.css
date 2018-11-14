@@ -55,10 +55,15 @@
 }
 
 .path {
-    -fx-stroke-line-cap: round;
+    -fx-stroke-line-cap: butt;
     -fx-fill: null;
     -fx-cursor: hand;
     -fx-stroke: derive(my-color, -25%);
+}
+
+.robotOutline {
+    -fx-fill: null;
+    -fx-stroke: "lightgray";
 }
 
 .tank {

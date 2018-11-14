@@ -43,7 +43,7 @@ public class PathDisplayController {
 
   private final double circleScale = .75; //NOPMD should be static, will be modified later
   private final double splineScale = 6; //NOPMD should be static, will be modified later
-  private final double lineScale = 4; //NOPMD should be static, will be modified later
+  private final double lineScale = 2; //NOPMD should be static, will be modified later
 
   @FXML
   private Group splineGroup;
@@ -142,14 +142,17 @@ public class PathDisplayController {
    */
   public void addWaypointToPane(Waypoint current) {
     waypointGroup.getChildren().add(current.getIcon());
+    waypointGroup.getChildren().add(current.getRobotOutline());
     vectorGroup.getChildren().add(current.getTangentLine());
     current.getIcon().setScaleX(circleScale / field.getScale());
     current.getIcon().setScaleY(circleScale / field.getScale());
+    current.getIcon().toFront();
+    current.getRobotOutline().getStyleClass().add("robotOutline");
+    current.getRobotOutline().setStrokeWidth(lineScale / field.getScale());
     current.getTangentLine().setStrokeWidth(lineScale / field.getScale());
-    current.getTangentLine().toBack();
+    current.getTangentLine().toFront();
     current.getSpline().addToGroup(splineGroup, splineScale / field.getScale());
   }
-
 
   private void removePathFromPane(Path newPath) {
     for (Waypoint wp : newPath.getWaypoints()) {
@@ -157,6 +160,7 @@ public class PathDisplayController {
     }
     for (Waypoint wp : newPath.getWaypoints()) {
       waypointGroup.getChildren().remove(wp.getIcon());
+      waypointGroup.getChildren().remove(wp.getRobotOutline());
       vectorGroup.getChildren().remove(wp.getTangentLine());
     }
   }
@@ -225,6 +229,7 @@ public class PathDisplayController {
     Path path = waypoint.getPath();
     Waypoint previous = path.getWaypoints().get(path.getWaypoints().indexOf(waypoint) - 1);
     waypointGroup.getChildren().remove(waypoint.getIcon());
+    waypointGroup.getChildren().remove(waypoint.getRobotOutline());
     vectorGroup.getChildren().remove(waypoint.getTangentLine());
     waypoint.getSpline().removeFromGroup(splineGroup);
     path.remove(waypoint);

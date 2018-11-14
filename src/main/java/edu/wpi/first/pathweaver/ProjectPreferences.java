@@ -37,7 +37,7 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018);
+    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, 28.0, 38.0, Game.POWER_UP_2018);
     updateValues();
   }
 
@@ -60,6 +60,14 @@ public class ProjectPreferences {
   public void setValues(Values values) {
     this.values = values;
     updateValues();
+  }
+
+  /**
+   * Gets the preferences for the current project.
+   * @return the preference values for this project.
+   */
+  public Values getValues() {
+    return values;
   }
 
   public String getDirectory() {
@@ -115,16 +123,14 @@ public class ProjectPreferences {
     }
   }
 
-  public Values getValues() {
-    return values;
-  }
-
   public static class Values {
     private final double timeStep;
     private final double maxVelocity;
     private final double maxAcceleration;
     private final double maxJerk;
     private final double wheelBase;
+    private final double robotWidth;
+    private final double robotLength;
     private Game game;
 
     /**
@@ -134,15 +140,19 @@ public class ProjectPreferences {
      * @param maxAcceleration The maximum acceleration to use
      * @param maxJerk         The maximum jerk (acceleration per second) to use
      * @param wheelBase       The width between the individual sides of the drivebase
+     * @param robotWidth      The width of the robot (in inches)
+     * @param robotLength     The length of the robot (in inches)
      * @param game            The year/FRC game
      */
     public Values(double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
-                  double wheelBase, Game game) {
+                  double wheelBase, double robotWidth, double robotLength, Game game) {
       this.timeStep = timeStep;
       this.maxVelocity = maxVelocity;
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
+      this.robotWidth = robotWidth;
+      this.robotLength = robotLength;
       this.game = game;
     }
 
@@ -164,6 +174,14 @@ public class ProjectPreferences {
 
     public double getWheelBase() {
       return wheelBase;
+    }
+
+    public double getRobotWidth() {
+      return robotWidth;
+    }
+
+    public double getRobotLength() {
+      return robotLength;
     }
 
     public Game getGame() {

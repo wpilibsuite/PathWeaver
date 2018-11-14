@@ -40,6 +40,10 @@ public class CreateProjectController {
   @FXML
   private TextField wheelBase;
   @FXML
+  private TextField robotWidth;
+  @FXML
+  private TextField robotLength;
+  @FXML
   private ChoiceBox<Game> game;
 
   @FXML
@@ -90,8 +94,10 @@ public class CreateProjectController {
     double accelerationMax = Double.parseDouble(maxAcceleration.getText());
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
+    double robotWidthValue = Double.parseDouble(robotWidth.getText());
+    double robotLengthValue = Double.parseDouble(robotLength.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
-        jerkMax, wheelBaseDistance, game.getValue());
+        jerkMax, wheelBaseDistance, robotWidthValue, robotLengthValue, game.getValue());
     ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
@@ -124,5 +130,7 @@ public class CreateProjectController {
     maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
     maxJerk.setText(String.valueOf(values.getMaxJerk()));
     wheelBase.setText(String.valueOf(values.getWheelBase()));
+    robotWidth.setText(String.valueOf(values.getRobotWidth()));
+    robotLength.setText(String.valueOf(values.getRobotLength()));
   }
 }
