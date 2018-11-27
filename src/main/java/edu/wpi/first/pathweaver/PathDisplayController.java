@@ -1,7 +1,5 @@
 package edu.wpi.first.pathweaver;
 
-import edu.wpi.first.pathweaver.extensions.ExtensionManager;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -56,7 +54,6 @@ public class PathDisplayController {
 
   @FXML
   private void initialize() {
-    ExtensionManager.getInstance().refresh();
     field = ProjectPreferences.getInstance().getField();
     Image image = field.getImage();
     backgroundImage.setImage(image);

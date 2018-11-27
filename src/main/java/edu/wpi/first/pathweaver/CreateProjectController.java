@@ -1,7 +1,5 @@
 package edu.wpi.first.pathweaver;
 
-import edu.wpi.first.pathweaver.extensions.ExtensionManager;
-
 import java.io.File;
 import java.io.IOException;
 import javafx.beans.binding.BooleanBinding;
@@ -44,8 +42,6 @@ public class CreateProjectController {
   @FXML
   private ChoiceBox<Game> game;
 
-  private final ExtensionManager extensionManager = ExtensionManager.getInstance();
-
   @FXML
   @SuppressWarnings("PMD.NcssCount")
   private void initialize() {
@@ -71,7 +67,6 @@ public class CreateProjectController {
     }
 
     game.getItems().addAll(Game.getGames());
-    game.getItems().addAll(extensionManager.refresh());
     game.converterProperty().setValue(new StringConverter<>() {
       @Override
       public String toString(Game object) {
