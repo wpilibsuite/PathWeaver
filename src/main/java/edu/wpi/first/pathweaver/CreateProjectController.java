@@ -17,6 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
 
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
+
 public class CreateProjectController {
 
   @FXML
@@ -43,6 +46,8 @@ public class CreateProjectController {
   private TextField wheelBase;
   @FXML
   private ChoiceBox<Game> game;
+  @FXML
+  private ChoiceBox<Unit<Length>> length;
 
   private boolean editing = false;
 
@@ -78,6 +83,9 @@ public class CreateProjectController {
       }
     });
 
+    length.getItems().addAll(PathUnits.LENGTHS);
+    length.getSelectionModel().selectFirst();
+
     // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
       setupEditProject();
@@ -92,13 +100,14 @@ public class CreateProjectController {
     editing = false;
     directory.mkdir();
     ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
+    String lengthUnit = length.getValue().getName();
     double timeDelta = Double.parseDouble(timeStep.getText());
     double velocityMax = Double.parseDouble(maxVelocity.getText());
     double accelerationMax = Double.parseDouble(maxAcceleration.getText());
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
-    ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
-        jerkMax, wheelBaseDistance, game.getValue().getName());
+    ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, timeDelta, velocityMax,
+        accelerationMax, jerkMax, wheelBaseDistance, game.getValue().getName());
     ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
@@ -127,6 +136,7 @@ public class CreateProjectController {
     browse.setVisible(false);
     cancel.setVisible(false);
     game.setValue(Game.fromPrettyName(values.getGameName()));
+    length.setValue(values.getLengthUnit());
     timeStep.setText(String.valueOf(values.getTimeStep()));
     maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
     maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));

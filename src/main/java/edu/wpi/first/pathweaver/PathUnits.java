@@ -5,6 +5,7 @@ import tec.units.ri.AbstractSystemOfUnits;
 import tec.units.ri.AbstractUnit;
 import tec.units.ri.format.SimpleUnitFormat;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.measure.Unit;
@@ -17,12 +18,14 @@ public final class PathUnits extends AbstractSystemOfUnits {
   private static final PathUnits INSTANCE = new PathUnits();
 
   public static final Unit<Length> METER = addUnit(USCustomary.METER, "Meter", "m");
+  public static final Unit<Length> CENTIMETER = addUnit(METER.divide(100), "Centimeter", "cm");
+  public static final Unit<Length> MILLIMETER = addUnit(METER.divide(1000), "Millimeter", "mm");
   public static final Unit<Length> INCH = addUnit(USCustomary.INCH, "Inch", "in");
   public static final Unit<Length> FOOT = addUnit(USCustomary.FOOT, "Foot", "ft");
   public static final Unit<Length> YARD = addUnit(USCustomary.YARD, "Yard", "yd");
   public static final Unit<Length> MILE = addUnit(USCustomary.MILE, "Mile", "mi");
-  public static final Unit<Length> CENTIMETER = addUnit(METER.divide(100), "Centimeter", "cm");
-  public static final Unit<Length> MILLIMETER = addUnit(METER.divide(100), "Millimeter", "mm");
+
+  public static final List<Unit<Length>> LENGTHS = List.of(METER, CENTIMETER, MILLIMETER, INCH, FOOT, YARD, MILE);
 
   public static final Unit<Time> MINUTE = addUnit(USCustomary.MINUTE, "Minute", "min");
   public static final Unit<Time> HOUR = addUnit(USCustomary.HOUR, "Hour", "hr");

@@ -14,6 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
+
 @SuppressWarnings("PMD.TooManyMethods")
 public class Path {
   private final List<Waypoint> waypoints = new ArrayList<>();
@@ -377,6 +380,17 @@ public class Path {
       waypoints.add(wp.copy());
     }
     return new Path(waypoints, newName);
+  }
+
+  /**
+   * Converts the unit system of a this Path.
+   * @param from Unit to convert from.
+   * @param to Unit to convert to.
+   */
+  public void convertUnit(Unit<Length> from, Unit<Length> to) {
+    for (Waypoint wp : waypoints) {
+      wp.convertUnit(from, to);
+    }
   }
 
   @Override
