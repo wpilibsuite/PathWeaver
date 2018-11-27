@@ -60,7 +60,7 @@
             <Label text="Distance between left and right of wheel base (ft)" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
               <buttons>
-                <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="create" mnemonicParsing="false" onAction="#createProject" text="Create Project" />
               </buttons>
             </ButtonBar>
