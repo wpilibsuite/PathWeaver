@@ -1,5 +1,7 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.extensions.ExtensionManager;
+
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -11,6 +13,7 @@ import javafx.stage.Stage;
 public class PathWeaver extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
+    ExtensionManager.getInstance().refresh();
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
     primaryStage.setTitle("PathWeaver - " + getVersion());

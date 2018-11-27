@@ -43,6 +43,7 @@ public class CreateProjectController {
   private ChoiceBox<Game> game;
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void initialize() {
     ObservableList<TextField> numericFields = FXCollections.observableArrayList(timeStep, maxVelocity,
         maxAcceleration, maxJerk, wheelBase);
@@ -65,11 +66,11 @@ public class CreateProjectController {
       setupEditProject();
     }
 
-    game.getItems().addAll(Game.values());
+    game.getItems().addAll(Game.getGames());
     game.converterProperty().setValue(new StringConverter<>() {
       @Override
       public String toString(Game object) {
-        return object.toPrettyName();
+        return object.getName();
       }
 
       @Override
@@ -91,7 +92,7 @@ public class CreateProjectController {
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(timeDelta, velocityMax, accelerationMax,
-        jerkMax, wheelBaseDistance, game.getValue());
+        jerkMax, wheelBaseDistance, game.getValue().getName());
     ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
@@ -118,7 +119,7 @@ public class CreateProjectController {
     create.setText("Edit Project");
     title.setText("Edit Project");
     browse.setVisible(false);
-    game.setValue(values.getGame());
+    game.setValue(Game.fromPrettyName(values.getGameName()));
     timeStep.setText(String.valueOf(values.getTimeStep()));
     maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
     maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));

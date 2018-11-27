@@ -25,6 +25,11 @@
         <exclude name="ShortVariable"/>
         <exclude name="TooManyStaticImports"/>
     </rule>
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+        <properties>
+            <property name="constantPattern" value="log|logger|[A-Z][A-Z_0-9]*"/>
+        </properties>
+    </rule>
     <rule ref="category/java/design.xml/TooManyMethods">
         <properties>
             <property name="maxmethods" value="11"></property>
