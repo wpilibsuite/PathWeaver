@@ -90,8 +90,7 @@ public final class ExtensionLoader {
   }
 
   private static Image loadImage(Path dir, String fileName) {
-    String url = "file://" + dir.resolve(fileName).toAbsolutePath().toString();
-    return new Image(url);
+    return new Image(dir.resolve(fileName).toAbsolutePath().toUri().toString());
   }
 
   /**
