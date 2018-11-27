@@ -26,6 +26,8 @@ public class CreateProjectController {
   @FXML
   private Button create;
   @FXML
+  private Button cancel;
+  @FXML
   private VBox vBox;
   @FXML
   private TextField directory;
@@ -41,6 +43,8 @@ public class CreateProjectController {
   private TextField wheelBase;
   @FXML
   private ChoiceBox<Game> game;
+
+  private boolean editing = false;
 
   @FXML
   @SuppressWarnings("PMD.NcssCount")
@@ -61,11 +65,6 @@ public class CreateProjectController {
     // Validate that numericFields contain decimal numbers
     numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
-    // We are editing a project
-    if (ProjectPreferences.getInstance() != null) {
-      setupEditProject();
-    }
-
     game.getItems().addAll(Game.getGames());
     game.converterProperty().setValue(new StringConverter<>() {
       @Override
@@ -78,12 +77,19 @@ public class CreateProjectController {
         return Game.fromPrettyName(string);
       }
     });
+
+    // We are editing a project
+    if (ProjectPreferences.getInstance() != null) {
+      setupEditProject();
+    }
   }
 
   @FXML
   private void createProject() {
     String folderString = directory.getText().trim();
-    File directory = new File(folderString, "PathWeaver");
+    // create a "PathWeaver" subdirectory if not editing an existing project
+    File directory = editing ? new File(folderString) : new File(folderString, "PathWeaver");
+    editing = false;
     directory.mkdir();
     ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
     double timeDelta = Double.parseDouble(timeStep.getText());
@@ -119,11 +125,13 @@ public class CreateProjectController {
     create.setText("Edit Project");
     title.setText("Edit Project");
     browse.setVisible(false);
+    cancel.setVisible(false);
     game.setValue(Game.fromPrettyName(values.getGameName()));
     timeStep.setText(String.valueOf(values.getTimeStep()));
     maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
     maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
     maxJerk.setText(String.valueOf(values.getMaxJerk()));
     wheelBase.setText(String.valueOf(values.getWheelBase()));
+    editing = true;
   }
 }
