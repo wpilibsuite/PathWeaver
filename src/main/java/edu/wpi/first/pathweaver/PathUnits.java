@@ -48,9 +48,9 @@ public final class PathUnits extends AbstractSystemOfUnits {
     return addUnit(unit, name, label, true);
   }
 
-  private static <U extends Unit<?>> U addUnit(U unit, String name, String text, boolean isLabel) {
+  private static <U extends Unit<?>> U addUnit(U unit, String name, String label, boolean isLabel) {
     if (isLabel) {
-      SimpleUnitFormat.getInstance().label(unit, text);
+      SimpleUnitFormat.getInstance().label(unit, label);
     }
     if (name != null && unit instanceof AbstractUnit) {
       return Helper.addUnit(INSTANCE.units, unit, name);
@@ -108,6 +108,27 @@ public final class PathUnits extends AbstractSystemOfUnits {
       default:
         throw new IllegalArgumentException("Unsupported length unit: " + unit);
     }
+  }
+
+  /**
+   * Generates a velocity string for {unit} per second such as m/s, ft/s, etc.
+   */
+  public static String velocity(Unit<Length> unit) {
+    return SimpleUnitFormat.getInstance().format(unit) + "/s";
+  }
+
+  /**
+   * Generates an acceleration string for {unit} per second per second such as m/s², ft/s², etc.
+   */
+  public static String acceleration(Unit<Length> unit) {
+    return SimpleUnitFormat.getInstance().format(unit) + "/s²";
+  }
+
+  /**
+   * Generates a jerk string for {unit} per second per second per second such as m/s³, ft/s³, etc.
+   */
+  public static String jerk(Unit<Length> unit) {
+    return SimpleUnitFormat.getInstance().format(unit) + "/s³";
   }
 
 }

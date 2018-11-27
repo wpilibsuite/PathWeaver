@@ -1,7 +1,11 @@
 package edu.wpi.first.pathweaver;
 
+import org.fxmisc.easybind.EasyBind;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
+
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +24,7 @@ import javafx.util.StringConverter;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
+@SuppressWarnings("PMD.TooManyFields")
 public class CreateProjectController {
 
   @FXML
@@ -48,6 +53,14 @@ public class CreateProjectController {
   private ChoiceBox<Game> game;
   @FXML
   private ChoiceBox<Unit<Length>> length;
+  @FXML
+  private Label velocityLabel;
+  @FXML
+  private Label accelerationLabel;
+  @FXML
+  private Label jerkLabel;
+  @FXML
+  private Label wheelBaseLabel;
 
   private boolean editing = false;
 
@@ -85,6 +98,31 @@ public class CreateProjectController {
 
     length.getItems().addAll(PathUnits.LENGTHS);
     length.getSelectionModel().selectFirst();
+    length.setConverter(new StringConverter<>() {
+      @Override
+      public String toString(Unit<Length> object) {
+        return object.getName();
+      }
+
+      @Override
+      public Unit<Length> fromString(String string) {
+        throw new UnsupportedOperationException();
+      }
+    });
+
+    var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
+    velocityLabel.textProperty().bind(lengthUnit.map(unit -> {
+      return "Maximum velocity (" + PathUnits.velocity(unit) + ")";
+    }));
+    accelerationLabel.textProperty().bind(lengthUnit.map(unit -> {
+      return "Maximum acceleration (" + PathUnits.acceleration(unit) + ")";
+    }));
+    jerkLabel.textProperty().bind(lengthUnit.map(unit -> {
+      return "Maximum jerk (" + PathUnits.jerk(unit) + ")";
+    }));
+    wheelBaseLabel.textProperty().bind(lengthUnit.map(unit -> {
+      return "Distance between the left and right of the wheel base (" + unit.getName().toLowerCase(Locale.US) + ")";
+    }));
 
     // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
