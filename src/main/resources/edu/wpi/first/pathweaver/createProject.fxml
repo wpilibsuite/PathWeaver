@@ -21,9 +21,9 @@
       </Label>
       <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" vgap="10.0">
          <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -41,11 +41,11 @@
          </padding>
          <children>
             <Label text="Project Directory" />
-            <Label text="Time Step" GridPane.rowIndex="3" />
-            <Label text="Max Velocity" GridPane.rowIndex="4" />
-            <Label text="Max Acceleration" GridPane.rowIndex="5" />
-            <Label text="Max Jerk" GridPane.rowIndex="6" />
-            <Label text="Wheel Base" GridPane.rowIndex="7" />
+            <Label fx:id="timeLabel" text="Time Step" GridPane.rowIndex="3" />
+            <Label fx:id="velocityLabel" text="Max Velocity" GridPane.rowIndex="4" />
+            <Label fx:id="accelerationLabel" text="Max Acceleration" GridPane.rowIndex="5" />
+            <Label fx:id="jerkLabel" text="Max Jerk" GridPane.rowIndex="6" />
+            <Label fx:id="wheelBaseLabel" text="Wheel Base" GridPane.rowIndex="7" />
             <TextField fx:id="directory" editable="false" GridPane.columnIndex="1" />
             <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse" GridPane.columnIndex="2" />
             <ChoiceBox fx:id="game" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -54,11 +54,11 @@
             <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label fx:id="velocityLabel" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label fx:id="accelerationLabel" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <Label fx:id="jerkLabel" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <Label fx:id="wheelBaseLabel" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Label fx:id="timeUnits" text="seconds" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label fx:id="velocityUnits" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="accelerationUnits" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label fx:id="jerkUnits" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label fx:id="wheelBaseUnits" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
               <buttons>
                 <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />

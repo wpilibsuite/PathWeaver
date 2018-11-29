@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -11,6 +12,7 @@ import org.fxmisc.easybind.EasyBind;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
+import tec.units.ri.format.SimpleUnitFormat;
 
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
@@ -55,6 +58,8 @@ public class CreateProjectController {
   @FXML
   private ChoiceBox<Unit<Length>> length;
   @FXML
+  private Label timeLabel;
+  @FXML
   private Label velocityLabel;
   @FXML
   private Label accelerationLabel;
@@ -62,6 +67,24 @@ public class CreateProjectController {
   private Label jerkLabel;
   @FXML
   private Label wheelBaseLabel;
+  @FXML
+  private Label timeUnits;
+  @FXML
+  private Label velocityUnits;
+  @FXML
+  private Label accelerationUnits;
+  @FXML
+  private Label jerkUnits;
+  @FXML
+  private Label wheelBaseUnits;
+
+  private ObservableList<Control> timeControls;
+  private ObservableList<Control> velocityControls;
+  private ObservableList<Control> accelerationControls;
+  private ObservableList<Control> jerkControls;
+  private ObservableList<Control> wheelBaseControls;
+
+  private ObservableList<Control> allTooltipControls = FXCollections.observableArrayList();
 
   private boolean editing = false;
 
@@ -72,6 +95,15 @@ public class CreateProjectController {
         maxAcceleration, maxJerk, wheelBase);
     ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
     allFields.add(directory);
+
+    timeControls = FXCollections.observableArrayList(timeLabel, timeStep, timeUnits);
+    velocityControls = FXCollections.observableArrayList(velocityLabel, maxVelocity, velocityUnits);
+    accelerationControls = FXCollections.observableArrayList(accelerationLabel, maxAcceleration, accelerationUnits);
+    jerkControls = FXCollections.observableArrayList(jerkLabel, maxJerk, jerkUnits);
+    wheelBaseControls = FXCollections.observableArrayList(wheelBaseLabel, wheelBase, wheelBaseUnits);
+
+    List.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
+        .forEach(controls -> allTooltipControls.addAll(controls));
 
     BooleanBinding bind = new SimpleBooleanProperty(true).not();
     for (TextField field : allFields) {
@@ -85,6 +117,7 @@ public class CreateProjectController {
     numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
     game.getItems().addAll(Game.getGames());
+    game.getSelectionModel().selectFirst();
     game.converterProperty().setValue(new StringConverter<>() {
       @Override
       public String toString(Game object) {
@@ -112,22 +145,22 @@ public class CreateProjectController {
     });
 
     var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
-    List.of(velocityLabel, maxVelocity).forEach(control -> control.tooltipProperty()
+    timeControls.forEach(control -> control.tooltipProperty().setValue(new Tooltip("Time delta between points")));
+    velocityControls.forEach(control -> control.tooltipProperty()
         .setValue(new Tooltip("The maximum velocity your robot can travel.")));
-    velocityLabel.textProperty().bind(lengthUnit.map(PathUnits::velocity));
-    List.of(accelerationLabel, maxAcceleration).forEach(control -> control.tooltipProperty()
+    velocityUnits.textProperty().bind(lengthUnit.map(PathUnits::velocity));
+    accelerationControls.forEach(control -> control.tooltipProperty()
         .setValue(new Tooltip("The maximum capable acceleration of your robot.")));
-    accelerationLabel.textProperty().bind(lengthUnit.map(PathUnits::acceleration));
-    List.of(jerkLabel, maxJerk).forEach(control -> control.tooltipProperty()
+    accelerationUnits.textProperty().bind(lengthUnit.map(PathUnits::acceleration));
+    jerkControls.forEach(control -> control.tooltipProperty()
         .setValue(new Tooltip("The maximum jerk to use when calculating motion profiles."
             + " This is user preference.")));
-    jerkLabel.textProperty().bind(lengthUnit.map(PathUnits::jerk));
-    List.of(wheelBaseLabel, wheelBase).forEach(control -> control.tooltipProperty()
+    jerkUnits.textProperty().bind(lengthUnit.map(PathUnits::jerk));
+    wheelBaseControls.forEach(control -> control.tooltipProperty()
         .setValue(new Tooltip("Distance between the left and right of the wheel base.")));
-    wheelBaseLabel.textProperty().bind(lengthUnit.map(Unit::getSymbol));
+    wheelBaseUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
 
-    List.of(velocityLabel, maxVelocity, accelerationLabel, maxAcceleration, jerkLabel, maxJerk, wheelBaseLabel,
-        wheelBase).forEach(label -> label.tooltipProperty().get().setShowDelay(new Duration(300)));
+    allTooltipControls.forEach(control -> control.tooltipProperty().get().setShowDelay(new Duration(300)));
 
     // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
