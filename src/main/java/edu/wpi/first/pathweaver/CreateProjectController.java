@@ -1,21 +1,22 @@
 package edu.wpi.first.pathweaver;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 import org.fxmisc.easybind.EasyBind;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-
+import java.util.List;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -111,18 +112,22 @@ public class CreateProjectController {
     });
 
     var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
-    velocityLabel.textProperty().bind(lengthUnit.map(unit -> {
-      return "Maximum velocity (" + PathUnits.velocity(unit) + ")";
-    }));
-    accelerationLabel.textProperty().bind(lengthUnit.map(unit -> {
-      return "Maximum acceleration (" + PathUnits.acceleration(unit) + ")";
-    }));
-    jerkLabel.textProperty().bind(lengthUnit.map(unit -> {
-      return "Maximum jerk (" + PathUnits.jerk(unit) + ")";
-    }));
-    wheelBaseLabel.textProperty().bind(lengthUnit.map(unit -> {
-      return "Distance between the left and right of the wheel base (" + unit.getName().toLowerCase(Locale.US) + ")";
-    }));
+    List.of(velocityLabel, maxVelocity).forEach(control -> control.tooltipProperty()
+        .setValue(new Tooltip("The maximum velocity your robot can travel.")));
+    velocityLabel.textProperty().bind(lengthUnit.map(PathUnits::velocity));
+    List.of(accelerationLabel, maxAcceleration).forEach(control -> control.tooltipProperty()
+        .setValue(new Tooltip("The maximum capable acceleration of your robot.")));
+    accelerationLabel.textProperty().bind(lengthUnit.map(PathUnits::acceleration));
+    List.of(jerkLabel, maxJerk).forEach(control -> control.tooltipProperty()
+        .setValue(new Tooltip("The maximum jerk to use when calculating motion profiles."
+            + " This is user preference.")));
+    jerkLabel.textProperty().bind(lengthUnit.map(PathUnits::jerk));
+    List.of(wheelBaseLabel, wheelBase).forEach(control -> control.tooltipProperty()
+        .setValue(new Tooltip("Distance between the left and right of the wheel base.")));
+    wheelBaseLabel.textProperty().bind(lengthUnit.map(Unit::getSymbol));
+
+    List.of(velocityLabel, maxVelocity, accelerationLabel, maxAcceleration, jerkLabel, maxJerk, wheelBaseLabel,
+        wheelBase).forEach(label -> label.tooltipProperty().get().setShowDelay(new Duration(300)));
 
     // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
