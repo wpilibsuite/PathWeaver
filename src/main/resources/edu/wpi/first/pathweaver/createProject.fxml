@@ -12,14 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
+<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
    <children>
       <Label fx:id="title" text="Create Project...">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" vgap="10.0">
+      <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0">
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
@@ -59,7 +59,7 @@
             <Label fx:id="accelerationUnits" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <Label fx:id="jerkUnits" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <Label fx:id="wheelBaseUnits" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
+            <ButtonBar GridPane.columnIndex="2" GridPane.rowIndex="8">
               <buttons>
                 <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="create" mnemonicParsing="false" onAction="#createProject" text="Create Project" />
