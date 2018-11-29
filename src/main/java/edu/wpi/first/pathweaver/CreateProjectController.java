@@ -195,6 +195,7 @@ public class CreateProjectController {
     File selectedDirectory = chooser.showDialog(vBox.getScene().getWindow());
     if (selectedDirectory != null) {
       directory.setText(selectedDirectory.getPath());
+      directory.positionCaret(selectedDirectory.getPath().length());
     }
   }
 
