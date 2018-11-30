@@ -11,6 +11,7 @@ import org.fxmisc.easybind.EasyBind;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.binding.BooleanBinding;
@@ -78,14 +79,6 @@ public class CreateProjectController {
   @FXML
   private Label wheelBaseUnits;
 
-  private ObservableList<Control> timeControls;
-  private ObservableList<Control> velocityControls;
-  private ObservableList<Control> accelerationControls;
-  private ObservableList<Control> jerkControls;
-  private ObservableList<Control> wheelBaseControls;
-
-  private ObservableList<Control> allTooltipControls = FXCollections.observableArrayList();
-
   private boolean editing = false;
 
   @FXML
@@ -96,14 +89,15 @@ public class CreateProjectController {
     ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
     allFields.add(directory);
 
-    timeControls = FXCollections.observableArrayList(timeLabel, timeStep, timeUnits);
-    velocityControls = FXCollections.observableArrayList(velocityLabel, maxVelocity, velocityUnits);
-    accelerationControls = FXCollections.observableArrayList(accelerationLabel, maxAcceleration, accelerationUnits);
-    jerkControls = FXCollections.observableArrayList(jerkLabel, maxJerk, jerkUnits);
-    wheelBaseControls = FXCollections.observableArrayList(wheelBaseLabel, wheelBase, wheelBaseUnits);
+    var timeControls = List.of(timeLabel, timeStep, timeUnits);
+    var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
+    var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
+    var jerkControls = List.of(jerkLabel, maxJerk, jerkUnits);
+    var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
 
+    var allTooltipControls = new ArrayList<Control>();
     List.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
-        .forEach(controls -> allTooltipControls.addAll(controls));
+        .forEach(allTooltipControls::addAll);
 
     BooleanBinding bind = new SimpleBooleanProperty(true).not();
     for (TextField field : allFields) {
