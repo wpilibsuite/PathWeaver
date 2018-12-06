@@ -91,11 +91,11 @@ public class CreateProjectController {
 
     var timeControls = List.of(timeLabel, timeStep, timeUnits);
     var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
-    var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
+    var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits); // NOPMD
     var jerkControls = List.of(jerkLabel, maxJerk, jerkUnits);
     var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
 
-    var allTooltipControls = new ArrayList<Control>();
+    var allTooltipControls = new ArrayList<Control>(); // NOPMD
     List.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
         .forEach(allTooltipControls::addAll);
 
