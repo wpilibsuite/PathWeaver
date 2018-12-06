@@ -1,17 +1,10 @@
 package edu.wpi.first.pathweaver;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.util.Duration;
+
 import org.fxmisc.easybind.EasyBind;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,8 +16,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
+import javafx.util.Duration;
 import tec.units.ri.format.SimpleUnitFormat;
 
 import javax.measure.Unit;
@@ -136,19 +135,20 @@ public class CreateProjectController {
     });
 
     var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
-    timeControls.forEach(control -> control.tooltipProperty().setValue(new Tooltip("Time delta between points")));
-    velocityControls.forEach(control -> control.tooltipProperty()
-        .setValue(new Tooltip("The maximum velocity your robot can travel.")));
+    timeControls.forEach(control -> control
+        .setTooltip(new Tooltip("Time delta between points")));
+    velocityControls.forEach(control -> control
+        .setTooltip(new Tooltip("The maximum velocity your robot can travel.")));
     velocityUnits.textProperty().bind(lengthUnit.map(PathUnits::velocity));
-    accelerationControls.forEach(control -> control.tooltipProperty()
-        .setValue(new Tooltip("The maximum capable acceleration of your robot.")));
+    accelerationControls.forEach(control -> control
+        .setTooltip(new Tooltip("The maximum capable acceleration of your robot.")));
     accelerationUnits.textProperty().bind(lengthUnit.map(PathUnits::acceleration));
-    jerkControls.forEach(control -> control.tooltipProperty()
-        .setValue(new Tooltip("The maximum jerk to use when calculating motion profiles."
-            + " This is user preference.")));
+    jerkControls.forEach(control -> control
+        .setTooltip(new Tooltip("The maximum jerk to use when calculating motion profiles. "
+            + "This is user preference.")));
     jerkUnits.textProperty().bind(lengthUnit.map(PathUnits::jerk));
-    wheelBaseControls.forEach(control -> control.tooltipProperty()
-        .setValue(new Tooltip("Distance between the left and right of the wheel base.")));
+    wheelBaseControls.forEach(control -> control
+        .setTooltip(new Tooltip("Distance between the left and right of the wheel base.")));
     wheelBaseUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
     Stream.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
         .flatMap(List::stream)
