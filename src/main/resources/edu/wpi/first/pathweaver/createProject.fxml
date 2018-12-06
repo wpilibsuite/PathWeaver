@@ -22,7 +22,7 @@
       <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0">
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="38.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
