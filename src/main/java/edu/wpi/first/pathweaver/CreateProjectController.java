@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -95,10 +96,6 @@ public class CreateProjectController {
     var jerkControls = List.of(jerkLabel, maxJerk, jerkUnits);
     var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
 
-    var allTooltipControls = new ArrayList<Control>(); // NOPMD
-    List.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
-        .forEach(allTooltipControls::addAll);
-
     BooleanBinding bind = new SimpleBooleanProperty(true).not();
     for (TextField field : allFields) {
       bind = bind.or(field.textProperty().isEmpty());
@@ -153,8 +150,9 @@ public class CreateProjectController {
     wheelBaseControls.forEach(control -> control.tooltipProperty()
         .setValue(new Tooltip("Distance between the left and right of the wheel base.")));
     wheelBaseUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
-
-    allTooltipControls.forEach(control -> control.tooltipProperty().get().setShowDelay(new Duration(300)));
+    Stream.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
+        .flatMap(List::stream)
+        .forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
     // We are editing a project
     if (ProjectPreferences.getInstance() != null) {
