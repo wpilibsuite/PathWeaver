@@ -50,6 +50,9 @@ application {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://dev.imjac.in/maven/")
+    }
 }
 
 // Spotless is used to lint and reformat source files.
@@ -82,7 +85,12 @@ dependencies {
     compile("si.uom", "si-units", "0.9")
     compile("systems.uom", "systems-common", "0.8")
     compile("com.google.code.gson", "gson", "2.8.5")
-    compile(files("lib/Pathfinder-Java.jar"))
+    compile("jaci.pathfinder", "Pathfinder-Java", "2019.1.10")
+    compile("jaci.jniloader", "JNILoader", "1.0.1")
+    forEachPlatform {
+        add(it, "jaci.pathfinder:Pathfinder-JNI:2019.1.10:${wpilibClassifier(it)}")
+        add(it, "jaci.pathfinder:Pathfinder-CoreJNI:2019.1.10:${wpilibClassifier(it)}")
+    }
 
     fun junitJupiter(name: String, version: String = "5.2.0") =
         create(group = "org.junit.jupiter", name = name, version = version)
