@@ -347,7 +347,8 @@ public class MainController {
     try {
       alert.setContentText("Paths exported to: " + output.getCanonicalPath());
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger log = Logger.getLogger(MainController.class.getName());
+      log.log(Level.WARNING, "Could not export to " + output.getPath(), e);
     }
     alert.show();
   }

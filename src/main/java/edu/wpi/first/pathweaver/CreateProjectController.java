@@ -186,6 +186,7 @@ public class CreateProjectController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void createProject() {
     String folderString = directory.getText().trim();
     // create a "PathWeaver" subdirectory if not editing an existing project
