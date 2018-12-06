@@ -17,6 +17,10 @@ public class Field {
   private Image image;
   private Quantity<Length> rWidth;
   private Quantity<Length> rLength;
+  private double xPixel;
+  private double yPixel;
+  private double pixelWidth;
+  private double pixelLength;
   private double scale;
   private Point2D coord;
   public Unit<Length> unit;
@@ -39,10 +43,14 @@ public class Field {
                double xPixel, double yPixel,
                double pixelWidth, double pixelLength) {
     this.imageSupplier = imageSupplier;
+    this.xPixel = xPixel;
+    this.yPixel = yPixel;
+    this.pixelWidth = pixelWidth;
+    this.pixelLength = pixelLength;
     setRealWidth(Quantities.getQuantity(realWidth, unit));
     setRealLength(Quantities.getQuantity(realLength, unit));
-    setCoord(new Point2D(xPixel + pixelWidth / 2 - realWidth / 2, yPixel + pixelLength / 2 - realLength / 2));
-    setScale(((pixelWidth / realWidth) + (pixelLength / realLength)) / 2); //NOPMD Useless Parentheses
+    updateCoord();
+    updateScale();
     setUnit(unit);
   }
 
@@ -97,16 +105,26 @@ public class Field {
     return scale;
   }
 
-  private void setScale(double scale) {
-    this.scale = scale;
-  }
 
   public Point2D getCoord() {
     return coord;
   }
 
-  private void setCoord(Point2D coord) {
-    this.coord = coord;
+
+  private double realWidth() {
+    return rWidth.getValue().doubleValue();
+  }
+
+  private double realLength() {
+    return rLength.getValue().doubleValue();
+  }
+
+  private void updateCoord() {
+    this.coord = new Point2D(xPixel + pixelWidth / 2 - realWidth() / 2, yPixel + pixelLength / 2 - realLength() / 2);
+  }
+
+  private void updateScale() {
+    this.scale = ((pixelWidth / realWidth()) + (pixelLength / realLength())) / 2; //NOPMD Useless parentheses
   }
 
   public Unit<Length> getUnit() {
@@ -115,5 +133,17 @@ public class Field {
 
   private void setUnit(Unit<Length> unit) {
     this.unit = unit;
+  }
+
+  /**
+   * Converts the Field from the current Unit systems to the supplied Unit system.
+   * @param unit The unit system to convert the Field to.
+   */
+  public void convertUnit(Unit<Length> unit) {
+    setUnit(unit);
+    setRealWidth(rWidth.to(unit));
+    setRealLength(rLength.to(unit));
+    updateCoord();
+    updateScale();
   }
 }

@@ -12,20 +12,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
+<VBox fx:id="vBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.CreateProjectController">
    <children>
       <Label fx:id="title" text="Create Project...">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" vgap="10.0">
+      <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="10.0">
          <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="38.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -40,31 +41,33 @@
          </padding>
          <children>
             <Label text="Project Directory" />
-            <Label text="Time Step" GridPane.rowIndex="2" />
-            <Label text="Max Velocity" GridPane.rowIndex="3" />
-            <Label text="Max Acceleration" GridPane.rowIndex="4" />
-            <Label text="Max Jerk" GridPane.rowIndex="5" />
-            <Label text="Wheel Base" GridPane.rowIndex="6" />
+            <Label fx:id="timeLabel" text="Time Step" GridPane.rowIndex="3" />
+            <Label fx:id="velocityLabel" text="Max Velocity" GridPane.rowIndex="4" />
+            <Label fx:id="accelerationLabel" text="Max Acceleration" GridPane.rowIndex="5" />
+            <Label fx:id="jerkLabel" text="Max Jerk" GridPane.rowIndex="6" />
+            <Label fx:id="wheelBaseLabel" text="Wheel Base" GridPane.rowIndex="7" />
             <TextField fx:id="directory" editable="false" GridPane.columnIndex="1" />
             <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse" GridPane.columnIndex="2" />
             <ChoiceBox fx:id="game" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label text="Time delta between points (seconds)" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="Maximum capable velocity of robot (ft/s)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Maximum acceleration (ft/s/s)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label text="Maximum jerk (acceleration per second) (ft/s/s/s)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <Label text="Distance between left and right of wheel base (ft)" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
+            <TextField fx:id="timeStep" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="maxJerk" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="timeUnits" text="seconds" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label fx:id="velocityUnits" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="accelerationUnits" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label fx:id="jerkUnits" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label fx:id="wheelBaseUnits" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <ButtonBar GridPane.columnIndex="2" GridPane.rowIndex="8">
               <buttons>
                 <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                   <Button fx:id="create" mnemonicParsing="false" onAction="#createProject" text="Create Project" />
               </buttons>
             </ButtonBar>
             <Label text="Game" GridPane.rowIndex="1" />
+            <ChoiceBox fx:id="length" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Length Unit" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

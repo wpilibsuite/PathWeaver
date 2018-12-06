@@ -3,6 +3,8 @@ package edu.wpi.first.pathweaver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +36,7 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values(0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName());
+    values = new Values("FOOT", 0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName());
     updateValues();
   }
 
@@ -102,7 +104,13 @@ public class ProjectPreferences {
     if (game == null) {
       throw new UnsupportedOperationException("The referenced game is unknown: \"" + values.gameName + "\"");
     }
-    return game.getField();
+    if (values.getLengthUnit() == null) {
+      values.lengthUnit = "FOOT";
+      updateValues();
+    }
+    Field field = game.getField();
+    field.convertUnit(values.getLengthUnit());
+    return field;
   }
 
   public Values getValues() {
@@ -110,6 +118,7 @@ public class ProjectPreferences {
   }
 
   public static class Values {
+    private String lengthUnit;
     private final double timeStep;
     private final double maxVelocity;
     private final double maxAcceleration;
@@ -119,6 +128,7 @@ public class ProjectPreferences {
 
     /**
      * Constructor for Values of ProjectPreferences.
+     * @param lengthUnit      The unit to use for distances
      * @param timeStep        The time delta between points (in seconds)
      * @param maxVelocity     The maximum velocity the body is capable of travelling at
      * @param maxAcceleration The maximum acceleration to use
@@ -126,14 +136,19 @@ public class ProjectPreferences {
      * @param wheelBase       The width between the individual sides of the drivebase
      * @param gameName            The year/FRC game
      */
-    public Values(double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
+    public Values(String lengthUnit, double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
                   double wheelBase, String gameName) {
+      this.lengthUnit = lengthUnit;
       this.timeStep = timeStep;
       this.maxVelocity = maxVelocity;
       this.maxAcceleration = maxAcceleration;
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
       this.gameName = gameName;
+    }
+
+    public Unit<Length> getLengthUnit() {
+      return lengthUnit == null ? PathUnits.FOOT : PathUnits.getInstance().length(lengthUnit);
     }
 
     public double getTimeStep() {

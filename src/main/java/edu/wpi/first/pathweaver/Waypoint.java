@@ -15,6 +15,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import tec.units.ri.quantity.Quantities;
+
+import javax.measure.Unit;
+import javax.measure.quantity.Length;
 
 @SuppressWarnings("PMD.TooManyMethods")
 public class Waypoint {
@@ -244,6 +248,18 @@ public class Waypoint {
 
   public DoubleProperty tangentYProperty() {
     return tangentY;
+  }
+
+  /**
+   * Converts the unit system of a this Waypoint.
+   * @param from Unit to convert from.
+   * @param to Unit to convert to.
+   */
+  public void convertUnit(Unit<Length> from, Unit<Length> to) {
+    x.set(Quantities.getQuantity(x.get(), from).to(to).getValue().doubleValue());
+    y.set(Quantities.getQuantity(y.get(), from).to(to).getValue().doubleValue());
+    tangentX.set(Quantities.getQuantity(tangentX.get(), from).to(to).getValue().doubleValue());
+    tangentY.set(Quantities.getQuantity(tangentY.get(), from).to(to).getValue().doubleValue());
   }
 
   public Waypoint copy() {

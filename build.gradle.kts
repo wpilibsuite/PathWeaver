@@ -85,6 +85,7 @@ dependencies {
     compile("si.uom", "si-units", "0.9")
     compile("systems.uom", "systems-common", "0.8")
     compile("com.google.code.gson", "gson", "2.8.5")
+    compile(group = "org.fxmisc.easybind", name = "easybind", version = "1.0.3")
     compile("jaci.pathfinder", "Pathfinder-Java", "2019.1.10")
     compile("jaci.jniloader", "JNILoader", "1.0.1")
     forEachPlatform {

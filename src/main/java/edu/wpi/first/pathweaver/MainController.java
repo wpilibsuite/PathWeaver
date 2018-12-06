@@ -313,6 +313,8 @@ public class MainController {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);
     Path newPath = new Path(name);
+    // The default path defaults to FEET
+    newPath.convertUnit(PathUnits.FOOT, ProjectPreferences.getInstance().getValues().getLengthUnit());
     SaveManager.getInstance().saveChange(newPath);
   }
 
