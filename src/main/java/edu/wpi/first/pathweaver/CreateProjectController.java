@@ -199,7 +199,6 @@ public class CreateProjectController {
       // Find the relative path for the output directory to the project directory, using / file separators
       outputPath = directory.toPath().relativize(new File(outputString).toPath()).toString()
           .replace("\\", "/");
-      directory.toPath().relativize(directory.toPath());
     }
     ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
     String lengthUnit = length.getValue().getName();
