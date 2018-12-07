@@ -335,11 +335,11 @@ public class MainController {
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
       Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
       TankModifier tank = path.getTankModifier();
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".v1.csv"),
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".pf1.csv"),
           tank.getSourceTrajectory());
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.v1.csv"),
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
           tank.getLeftTrajectory());
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.v1.csv"),
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.pf1.csv"),
           tank.getRightTrajectory());
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
