@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -43,7 +44,6 @@ public class MainController {
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
   private final String autonDirectory = directory + "/Autons/";
-  private final String outputDirectory = directory + "/output/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -330,15 +330,27 @@ public class MainController {
     if (!SaveManager.getInstance().promptSaveAll()) {
       return;
     }
-    new File(outputDirectory).mkdir();
+    File output = ProjectPreferences.getInstance().getOutputDir();
+    output.mkdirs();
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
       Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
       TankModifier tank = path.getTankModifier();
-      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_left.csv"),
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".pf1.csv"),
+          tank.getSourceTrajectory());
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
           tank.getLeftTrajectory());
-      Pathfinder.writeToCSV(new File(outputDirectory + path.getPathNameNoExtension() + "_right.csv"),
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.pf1.csv"),
           tank.getRightTrajectory());
     }
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Paths exported!");
+    try {
+      alert.setContentText("Paths exported to: " + output.getCanonicalPath());
+    } catch (IOException e) {
+      Logger log = Logger.getLogger(MainController.class.getName());
+      log.log(Level.WARNING, "Could not export to " + output.getPath(), e);
+    }
+    alert.show();
   }
 
   @FXML

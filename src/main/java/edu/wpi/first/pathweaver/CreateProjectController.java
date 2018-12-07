@@ -37,6 +37,8 @@ public class CreateProjectController {
   @FXML
   private Button browse;
   @FXML
+  private Button browseOutput;
+  @FXML
   private Button create;
   @FXML
   private Button cancel;
@@ -44,6 +46,8 @@ public class CreateProjectController {
   private VBox vBox;
   @FXML
   private TextField directory;
+  @FXML
+  private TextField outputDirectory;
   @FXML
   private TextField timeStep;
   @FXML
@@ -59,7 +63,11 @@ public class CreateProjectController {
   @FXML
   private ChoiceBox<Unit<Length>> length;
   @FXML
+  private Label browseLabel;
+  @FXML
   private Label timeLabel;
+  @FXML
+  private Label outputLabel;
   @FXML
   private Label velocityLabel;
   @FXML
@@ -89,6 +97,8 @@ public class CreateProjectController {
     ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
     allFields.add(directory);
 
+    var directoryControls = List.of(browseLabel, directory, browse);
+    var outputControls = List.of(outputLabel, outputDirectory, browseOutput);
     var timeControls = List.of(timeLabel, timeStep, timeUnits);
     var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
     var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits); // NOPMD
@@ -135,6 +145,16 @@ public class CreateProjectController {
     });
 
     var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
+    directoryControls.forEach(control -> control
+        .setTooltip(new Tooltip("The directory to store your project.\n"
+            + "It will be stored at a PathWeaver subdirectory of this location.\n"
+            + "It is recommended this be the root folder of your robot code\n"
+            + "to simplify version control and path deployment.")));
+    outputControls.forEach(control -> control
+        .setTooltip(new Tooltip("(Optional) The directory to output paths to.\n"
+            + "If it is the root folder of your FRC robot project,\nthe paths will automatically be copied to the "
+            + "robot at deploy time.\nDefault: will search relative to your project directory,\n"
+            + "attempting to find deploy folder.")));
     timeControls.forEach(control -> control
         .setTooltip(new Tooltip("Time delta between points")));
     velocityControls.forEach(control -> control
@@ -150,7 +170,12 @@ public class CreateProjectController {
     wheelBaseControls.forEach(control -> control
         .setTooltip(new Tooltip("Distance between the left and right of the wheel base.")));
     wheelBaseUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
-    Stream.of(timeControls, velocityControls, accelerationControls, jerkControls, wheelBaseControls)
+    // Show longer text for an extended period of time
+    Stream.of(directoryControls, outputControls)
+        .flatMap(List::stream)
+        .forEach(control -> control.getTooltip().setShowDuration(Duration.seconds(10)));
+    Stream.of(directoryControls, outputControls, timeControls, velocityControls, accelerationControls, jerkControls,
+        wheelBaseControls)
         .flatMap(List::stream)
         .forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
@@ -161,12 +186,20 @@ public class CreateProjectController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void createProject() {
     String folderString = directory.getText().trim();
     // create a "PathWeaver" subdirectory if not editing an existing project
     File directory = editing ? new File(folderString) : new File(folderString, "PathWeaver");
     editing = false;
     directory.mkdir();
+    String outputString = outputDirectory.getText().trim();
+    String outputPath = null;
+    if (!outputString.isEmpty()) {
+      // Find the relative path for the output directory to the project directory, using / file separators
+      outputPath = directory.toPath().relativize(new File(outputString).toPath()).toString()
+          .replace("\\", "/");
+    }
     ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
     String lengthUnit = length.getValue().getName();
     double timeDelta = Double.parseDouble(timeStep.getText());
@@ -175,7 +208,7 @@ public class CreateProjectController {
     double jerkMax = Double.parseDouble(maxJerk.getText());
     double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
     ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, timeDelta, velocityMax,
-        accelerationMax, jerkMax, wheelBaseDistance, game.getValue().getName());
+        accelerationMax, jerkMax, wheelBaseDistance, game.getValue().getName(), outputPath);
     ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
@@ -183,11 +216,20 @@ public class CreateProjectController {
 
   @FXML
   private void browseDirectory() {
+    browse(directory);
+  }
+
+  @FXML
+  private void browseOutput() {
+    browse(outputDirectory);
+  }
+
+  private void browse(TextField location) {
     DirectoryChooser chooser = new DirectoryChooser();
     File selectedDirectory = chooser.showDialog(vBox.getScene().getWindow());
     if (selectedDirectory != null) {
-      directory.setText(selectedDirectory.getPath());
-      directory.positionCaret(selectedDirectory.getPath().length());
+      location.setText(selectedDirectory.getPath());
+      location.positionCaret(selectedDirectory.getPath().length());
     }
   }
 
@@ -200,6 +242,7 @@ public class CreateProjectController {
   private void setupEditProject() {
     ProjectPreferences.Values values = ProjectPreferences.getInstance().getValues();
     directory.setText(ProjectPreferences.getInstance().getDirectory());
+    outputDirectory.setText(ProjectPreferences.getInstance().getValues().getOutputDir());
     create.setText("Edit Project");
     title.setText("Edit Project");
     browse.setVisible(false);

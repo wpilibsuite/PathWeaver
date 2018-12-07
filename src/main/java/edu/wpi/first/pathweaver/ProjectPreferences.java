@@ -36,13 +36,14 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values("FOOT", 0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName());
+    values = new Values("FOOT", 0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName(), null);
     updateValues();
   }
 
   private void updateValues() {
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
+      new File(directory).mkdirs();
       FileWriter writer = new FileWriter(directory + FILENAME);
       gson.toJson(values, writer);
       writer.close();
@@ -113,6 +114,42 @@ public class ProjectPreferences {
     return field;
   }
 
+  /**
+   * Returns the folder to output the generated paths to.
+   * @return File object of Folder to output generated paths to.
+   */
+  public File getOutputDir() {
+    if (values.getOutputDir() == null) {
+      File parentDirectory = new File(directory).getParentFile();
+      return getOutputDir(parentDirectory);
+    } else {
+      File output = new File(directory, values.getOutputDir());
+      return getOutputDir(output);
+    }
+  }
+
+  /**
+   * Returns the output directory relative to a specified directory. If the directory is an FRC project, it returns
+   * the proper deploy directory. Otherwise it simply returns the output subdirectory.
+   * @param directory Directory to return output directory for.
+   * @return A File that is the output directory.
+   */
+  private File getOutputDir(File directory) {
+    if (isFRCProject(directory)) {
+      return getDeployDirectory(directory);
+    } else {
+      return new File(directory, "output");
+    }
+  }
+
+  private File getDeployDirectory(File directory) {
+    return new File(directory, "src/main/deploy/paths");
+  }
+
+  private boolean isFRCProject(File directory) {
+    return new File(directory, "build.gradle").exists();
+  }
+
   public Values getValues() {
     return values;
   }
@@ -125,6 +162,7 @@ public class ProjectPreferences {
     private final double maxJerk;
     private final double wheelBase;
     private String gameName;
+    private final String outputDir;
 
     /**
      * Constructor for Values of ProjectPreferences.
@@ -137,7 +175,7 @@ public class ProjectPreferences {
      * @param gameName            The year/FRC game
      */
     public Values(String lengthUnit, double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
-                  double wheelBase, String gameName) {
+                  double wheelBase, String gameName, String outputDir) {
       this.lengthUnit = lengthUnit;
       this.timeStep = timeStep;
       this.maxVelocity = maxVelocity;
@@ -145,6 +183,7 @@ public class ProjectPreferences {
       this.maxJerk = maxJerk;
       this.wheelBase = wheelBase;
       this.gameName = gameName;
+      this.outputDir = outputDir;
     }
 
     public Unit<Length> getLengthUnit() {
@@ -173,6 +212,10 @@ public class ProjectPreferences {
 
     public String getGameName() {
       return gameName;
+    }
+
+    public String getOutputDir() {
+      return outputDir;
     }
   }
 }
