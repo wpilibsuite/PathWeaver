@@ -43,7 +43,7 @@ public class MainController {
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
-  private final String autonDirectory = directory + "/Autons/";
+  private final String autonDirectory = directory + "/Groups/";
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
