@@ -25,7 +25,7 @@
    <right>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <TitledPane animated="false" collapsible="false" text="Autons">
+            <TitledPane animated="false" collapsible="false" text="Path Groups">
                <content>
                       <TreeView fx:id="autons" />
                </content>
@@ -52,8 +52,8 @@
             </ToolBar>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button mnemonicParsing="false" onAction="#buildPaths" text="Build Pathfinder" />
-                  <Button mnemonicParsing="false" onAction="#editProject" text="Edit Project..." />
+                <Button mnemonicParsing="false" onAction="#buildPaths" text="Build Paths" />
+                  <Button mnemonicParsing="false" onAction="#editProject" text="Edit Project" />
               </items>
             </ToolBar>
          </children>
