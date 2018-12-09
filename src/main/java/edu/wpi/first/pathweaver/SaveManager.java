@@ -97,4 +97,12 @@ public final class SaveManager {
     }
   }
 
+  /**
+   * Removes a saved path from the list of saved paths.
+   * @param path The Path to no longer save.
+   */
+  public void removeChange(Path path) {
+    paths.remove(path);
+  }
+
 }
