@@ -165,12 +165,12 @@ public class MainController {
       } else {
         removePath(selected);
       }
-    } else if (pathRoot == root) {
+    } else if (pathRoot == root && FxUtils.promptDelete(selected.getValue())) {
+      pathDisplayController.removeAllPath();
+      SaveManager.getInstance().removeChange(pathDisplayController.currentPathProperty().get());
+      MainIOUtil.deleteItem(pathDirectory, selected);
       for (TreeItem<String> path : getAllInstances(selected)) {
         removePath(path);
-      }
-      if (FxUtils.promptDelete(selected.getValue())) {
-        MainIOUtil.deleteItem(pathDirectory, selected);
       }
       saveAllAutons();
       loadAllAutons();
@@ -226,7 +226,7 @@ public class MainController {
               return;
             }
             selected = newValue;
-            if (newValue != pathRoot) {
+            if (newValue != pathRoot && newValue != null) {
               pathDisplayController.removeAllPath();
               pathDisplayController.addPath(pathDirectory, newValue);
             }
