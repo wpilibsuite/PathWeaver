@@ -6,6 +6,7 @@ import org.fxmisc.easybind.EasyBind;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import javafx.beans.binding.BooleanBinding;
@@ -191,13 +192,14 @@ public class CreateProjectController {
     String folderString = directory.getText().trim();
     // create a "PathWeaver" subdirectory if not editing an existing project
     File directory = editing ? new File(folderString) : new File(folderString, "PathWeaver");
-    editing = false;
     directory.mkdir();
-    String outputString = outputDirectory.getText().trim();
-    String outputPath = null;
-    if (!outputString.isEmpty()) {
+    String outputString = outputDirectory.getText();
+    String outputPath = outputString;
+    boolean newOutput = !editing
+        || !Objects.equals(outputString, ProjectPreferences.getInstance().getValues().getOutputDir());
+    if (outputString != null && !outputString.isEmpty() && newOutput) {
       // Find the relative path for the output directory to the project directory, using / file separators
-      outputPath = directory.toPath().relativize(new File(outputString).toPath()).toString()
+      outputPath = directory.toPath().relativize(new File(outputString.trim()).toPath()).toString()
           .replace("\\", "/");
     }
     ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
@@ -211,6 +213,7 @@ public class CreateProjectController {
         accelerationMax, jerkMax, wheelBaseDistance, game.getValue().getName(), outputPath);
     ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
     prefs.setValues(values);
+    editing = false;
     FxUtils.loadMainScreen(vBox.getScene(), getClass());
   }
 
