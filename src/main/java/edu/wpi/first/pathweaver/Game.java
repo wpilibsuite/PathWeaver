@@ -87,15 +87,15 @@ public final class Game {
     return games;
   }
 
-  private static Game loadGameFromResource(String gameJson) {
+  private static Game loadGameFromResource(String gameJsonPath) {
     String jsonText;
-    try (var reader = new InputStreamReader(Game.class.getResourceAsStream(gameJson))) {
+    try (var reader = new InputStreamReader(Game.class.getResourceAsStream(gameJsonPath))) {
       StringWriter writer = new StringWriter();
       reader.transferTo(writer);
       jsonText = writer.toString();
       writer.close();
     } catch (IOException e) {
-      throw new IllegalStateException("Could not load the resource game definition", e);
+      throw new IllegalStateException("Could not load the resource game definition: " + gameJsonPath, e);
     }
     ExtensionLoader loader = new ExtensionLoader();
     return loader.loadFromJsonString(name -> new Image(Game.class.getResourceAsStream(name)), jsonText);
