@@ -36,7 +36,7 @@ public class ProjectPreferences {
   }
 
   private void setDefaults() {
-    values = new Values("FOOT", 0.2, 10.0, 60.0, 60.0, 2.0, Game.POWER_UP_2018.getName(), null);
+    values = new Values("FOOT", 0.2, 10.0, 60.0, 60.0, 2.0, Game.DEEP_SPACE_2019.getName(), null);
     updateValues();
   }
 
@@ -98,7 +98,7 @@ public class ProjectPreferences {
    */
   public Field getField() {
     if (values.getGameName() == null) {
-      values.gameName = Game.POWER_UP_2018.getName();
+      values.gameName = Game.DEEP_SPACE_2019.getName();
       updateValues();
     }
     Game game = Game.fromPrettyName(values.gameName);

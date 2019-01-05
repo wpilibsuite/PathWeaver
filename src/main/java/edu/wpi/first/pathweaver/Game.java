@@ -17,7 +17,8 @@ public final class Game {
   private final Field field;
 
   private static final Set<Game> games = new LinkedHashSet<>(); // NOPMD constant name
-  public static final Game POWER_UP_2018 = loadPowerupGame();
+  public static final Game DEEP_SPACE_2019 = loadGameFromResource("2019-deepspace.json");
+  public static final Game POWER_UP_2018 = loadGameFromResource("2018-powerup.json");
 
   private Game(String name, Field field) {
     this.name = name;
@@ -86,15 +87,15 @@ public final class Game {
     return games;
   }
 
-  private static Game loadPowerupGame() {
+  private static Game loadGameFromResource(String gameJsonPath) {
     String jsonText;
-    try (var reader = new InputStreamReader(Game.class.getResourceAsStream("2018-powerup.json"))) {
+    try (var reader = new InputStreamReader(Game.class.getResourceAsStream(gameJsonPath))) {
       StringWriter writer = new StringWriter();
       reader.transferTo(writer);
       jsonText = writer.toString();
       writer.close();
     } catch (IOException e) {
-      throw new IllegalStateException("Could not load the Powerup game definition", e);
+      throw new IllegalStateException("Could not load the resource game definition: " + gameJsonPath, e);
     }
     ExtensionLoader loader = new ExtensionLoader();
     return loader.loadFromJsonString(name -> new Image(Game.class.getResourceAsStream(name)), jsonText);
