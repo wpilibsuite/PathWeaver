@@ -162,8 +162,6 @@ public class PathDisplayController {
   }
 
   private void setupDrawPaneSizing(Image image) {
-    drawPane.setMaxWidth(image.getWidth());
-    drawPane.setMaxHeight(image.getHeight());
     drawPane.setPrefHeight(field.getRealLength().getValue().doubleValue());
     drawPane.setPrefWidth(field.getRealWidth().getValue().doubleValue());
     drawPane.setLayoutX(field.getCoord().getX());
