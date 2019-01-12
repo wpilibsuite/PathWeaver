@@ -67,7 +67,7 @@ public class PathDisplayController {
         topPane.widthProperty(), topPane.heightProperty()));
 
     group.getTransforms().add(scale);
-    setupDrawPaneSizing(image);
+    setupDrawPaneSizing();
     new DragHandler(this, drawPane); // Handler doesn't need to be kept around by this, so just do setup
     setupPress();
     setupPathListeners();
@@ -161,7 +161,7 @@ public class PathDisplayController {
     }
   }
 
-  private void setupDrawPaneSizing(Image image) {
+  private void setupDrawPaneSizing() {
     drawPane.setPrefHeight(field.getRealLength().getValue().doubleValue());
     drawPane.setPrefWidth(field.getRealWidth().getValue().doubleValue());
     drawPane.setLayoutX(field.getCoord().getX());
