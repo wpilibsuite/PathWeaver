@@ -337,9 +337,9 @@ public class MainController {
       TankModifier tank = path.getTankModifier();
       Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".pf1.csv"),
           tank.getSourceTrajectory());
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
-          tank.getLeftTrajectory());
       Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.pf1.csv"),
+          tank.getLeftTrajectory());
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
           tank.getRightTrajectory());
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
