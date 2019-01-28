@@ -337,9 +337,11 @@ public class MainController {
       TankModifier tank = path.getTankModifier();
       Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".pf1.csv"),
           tank.getSourceTrajectory());
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
-          tank.getLeftTrajectory());
+      // Note: the left and the right are swapped. This is due to our orientation of the
+      // coordinate system. This is a hack to fix path output for the 2019 season.
       Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.pf1.csv"),
+          tank.getLeftTrajectory());
+      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
           tank.getRightTrajectory());
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
