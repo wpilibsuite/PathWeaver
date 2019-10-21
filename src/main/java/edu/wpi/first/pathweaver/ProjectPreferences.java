@@ -35,7 +35,8 @@ public class ProjectPreferences {
     } catch (JsonParseException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Preferences import error");
-      alert.setContentText("Preferences have been reset. You may reimport your projects with the 'Import Project' button");
+      alert.setContentText(
+              "Preferences have been reset. You may reimport your projects with the 'Import Project' button");
       setDefaults();
     } catch (FileNotFoundException e) {
       setDefaults();
