@@ -2,6 +2,8 @@ package edu.wpi.first.pathweaver;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import javafx.scene.control.Alert;
 
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
@@ -30,6 +32,11 @@ public class ProjectPreferences {
       BufferedReader reader = new BufferedReader(new FileReader(directory + FILENAME));
       Gson gson = new Gson();
       values = gson.fromJson(reader, Values.class);
+    } catch (JsonParseException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Preferences import error");
+      alert.setContentText("Preferences have been reset. You may reimport your projects with the 'Import Project' button");
+      setDefaults();
     } catch (FileNotFoundException e) {
       setDefaults();
     }
