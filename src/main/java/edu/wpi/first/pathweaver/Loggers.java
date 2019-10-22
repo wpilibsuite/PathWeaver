@@ -18,7 +18,6 @@ import java.util.logging.StreamHandler;
  * Helper class for setting up the application loggers.
  */
 @SuppressWarnings("PMD.ClassNamingConventions")
-
 final class Loggers {
 
   private Loggers() {
@@ -39,8 +38,7 @@ final class Loggers {
     }
 
     String directory = System.getProperty("user.home") + "/PathWeaver/logs";
-    ;
-    File folder = new File(directory);
+      File folder = new File(directory);
     if (!folder.exists()) {
       folder.mkdir();
     }
@@ -53,7 +51,7 @@ final class Loggers {
     // We need to stream to System.out instead of System.err
     final StreamHandler sh = new StreamHandler(System.out, new SimpleFormatter()) {
       @Override
-      public synchronized void publish(final LogRecord record) { // NOPMD this is the same signature as the superclass
+      public synchronized void publish(final LogRecord record) {
         super.publish(record);
         // For some reason this doesn't happen automatically.
         // This will ensure we get all of the logs printed to the console immediately instead of at shutdown

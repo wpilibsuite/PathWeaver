@@ -1,5 +1,7 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.path.Path;
+import edu.wpi.first.pathweaver.path.wpilib.WpilibPath;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
@@ -42,8 +44,8 @@ public final class PathIOUtil {
       for (Waypoint wp : path.getWaypoints()) {
         double xPos = wp.getX();
         double yPos = wp.getY();
-        double tangentX = wp.getTangent().getX();
-        double tangentY = wp.getTangent().getY();
+        double tangentX = wp.getTangentX();
+        double tangentY = wp.getTangentY();
         String name = wp.getName();
         csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent(), name);
       }
@@ -89,7 +91,7 @@ public final class PathIOUtil {
         }
         waypoints.add(point);
       }
-      return new Path(waypoints, fileName);
+      return new WpilibPath(waypoints, fileName);
     } catch (IOException except) {
       LOGGER.log(Level.WARNING, "Could not read Path file", except);
       return null;

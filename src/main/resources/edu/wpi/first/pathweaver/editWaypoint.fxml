@@ -9,33 +9,32 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="properties" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.EditWaypointController">
+<GridPane fx:id="properties" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.1"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.EditWaypointController">
     <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="12.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
     </rowConstraints>
-    <children>
-        <Label text="X" />
-        <Label text="Y" GridPane.rowIndex="1" />
-        <Label text="Tangent X" GridPane.columnIndex="2" />
-        <Label text="Tangent Y" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Label text="Locked Tangent" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label text="Name" GridPane.rowIndex="2" />
-        <TextField GridPane.columnIndex="1" fx:id="xPosition" />
-        <TextField fx:id="yPosition" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <TextField fx:id="tangentX" GridPane.columnIndex="3" />
-        <TextField fx:id="tangentY" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-        <TextField fx:id="pointName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <CheckBox fx:id="lockedTangent" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-    </children>
     <BorderPane.margin>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </BorderPane.margin>
+    <Label text="X"/>
+    <Label text="Y" GridPane.rowIndex="1"/>
+    <Label text="Tangent X" GridPane.columnIndex="2"/>
+    <Label text="Tangent Y" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <Label text="Locked Tangent" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <Label text="Name" GridPane.rowIndex="2"/>
+    <TextField GridPane.columnIndex="1" fx:id="xPosition"/>
+    <TextField fx:id="yPosition" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="tangentX" GridPane.columnIndex="3"/>
+    <TextField fx:id="tangentY" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+    <TextField fx:id="pointName" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <CheckBox fx:id="lockedTangent" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 </GridPane>

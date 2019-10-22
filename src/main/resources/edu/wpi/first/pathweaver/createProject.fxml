@@ -47,9 +47,9 @@
             <Label fx:id="accelerationLabel" text="Max Acceleration" GridPane.rowIndex="6" />
             <Label fx:id="jerkLabel" text="Max Jerk" GridPane.rowIndex="7" />
             <Label fx:id="wheelBaseLabel" text="Wheel Base" GridPane.rowIndex="8" />
-            <TextField fx:id="directory" editable="false" GridPane.columnIndex="1" />
+            <TextField fx:id="directory" GridPane.columnIndex="1" />
             <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse" GridPane.columnIndex="2" />
-            <TextField fx:id="outputDirectory" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="outputDirectory" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Button fx:id="browseOutput" mnemonicParsing="false" onAction="#browseOutput" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <ChoiceBox fx:id="game" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ChoiceBox fx:id="length" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />

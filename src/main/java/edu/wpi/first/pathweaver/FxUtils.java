@@ -22,7 +22,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public final class FxUtils { // NOPMD util class name
+public final class FxUtils {
   private static final List<PseudoClass> SUBCHILD_SELECTORS; // NOPMD
 
   static {

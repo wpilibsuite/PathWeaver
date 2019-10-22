@@ -12,13 +12,12 @@ import java.util.Set;
 import javafx.scene.image.Image;
 
 public final class Game {
+  private static final Set<Game> GAMES = new LinkedHashSet<>();
+  public static final Game DEEP_SPACE_2019 = loadGameFromResource("2019-deepspace.json");
+  public static final Game POWER_UP_2018 = loadGameFromResource("2018-powerup.json");
 
   private final String name;
   private final Field field;
-
-  private static final Set<Game> games = new LinkedHashSet<>(); // NOPMD constant name
-  public static final Game DEEP_SPACE_2019 = loadGameFromResource("2019-deepspace.json");
-  public static final Game POWER_UP_2018 = loadGameFromResource("2018-powerup.json");
 
   private Game(String name, Field field) {
     this.name = name;
@@ -36,11 +35,11 @@ public final class Game {
    * @throws DuplicateGameException if a game has already been created with the given name
    */
   public static Game create(String name, Field field) throws DuplicateGameException {
-    if (games.stream().map(Game::getName).anyMatch(name::equals)) {
+    if (GAMES.stream().map(Game::getName).anyMatch(name::equals)) {
       throw new DuplicateGameException("A game already exists with the name \"" + name + "\"");
     }
     Game game = new Game(name, field);
-    games.add(game);
+    GAMES.add(game);
     return game;
   }
 
@@ -60,7 +59,7 @@ public final class Game {
    * @return the name with the given name
    */
   public static Game fromPrettyName(String name) {
-    return games.stream()
+    return GAMES.stream()
         .filter(game -> game.getName().equals(name))
         .findFirst()
         .orElse(null);
@@ -84,7 +83,7 @@ public final class Game {
   }
 
   public static Set<Game> getGames() {
-    return games;
+    return GAMES;
   }
 
   private static Game loadGameFromResource(String gameJsonPath) {
