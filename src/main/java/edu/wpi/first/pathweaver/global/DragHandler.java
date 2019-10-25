@@ -54,7 +54,6 @@ public class DragHandler {
     event.consume();
   }
 
-
   private void setupDrag() {
     drawPane.setOnDragDone(event -> finishDrag());
     drawPane.setOnDragOver(this::handleDrag);
@@ -67,8 +66,8 @@ public class DragHandler {
     if (controller.checkBounds(event.getX(), event.getY())) {
       point.setX(event.getX());
       point.setY(event.getY());
-      path.update();
       path.recalculateTangents(point);
+      path.update();
     }
     CurrentSelections.getCurPath().selectWaypoint(point);
   }

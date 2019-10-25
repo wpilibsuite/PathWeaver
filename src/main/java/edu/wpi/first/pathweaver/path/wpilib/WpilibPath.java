@@ -5,6 +5,7 @@ import edu.wpi.first.pathweaver.FxUtils;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.global.CurrentSelections;
 import edu.wpi.first.pathweaver.path.Path;
+import edu.wpi.first.pathweaver.path.PathUtil;
 import edu.wpi.first.pathweaver.spline.wpilib.WpilibSpline;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Point2D;
@@ -93,11 +94,16 @@ public class WpilibPath extends Path {
 
     @Override
     protected void updateTheta(Waypoint wp) {
-        super.updateTheta(wp);
+        int curWpIndex = getWaypoints().indexOf(wp);
+        if(curWpIndex - 1 < 0 || curWpIndex + 1 >= waypoints.size() || wp.isLockTangent()) {
+            return;
+        }
 
-        double newMag = Math.pow(Math.pow(wp.getTangentX(), 2) + Math.pow(wp.getTangentY(), 2), 0.25);
-        double angle = Math.atan2(wp.getTangentY(), wp.getTangentX());
-        wp.setTangent(new Point2D(newMag * Math.cos(angle), newMag * Math.sin(angle)));
+        Waypoint previous = getWaypoints().get(curWpIndex - 1);
+        Waypoint next = getWaypoints().get(curWpIndex + 1);
+
+        Point2D wpTangent = PathUtil.rawThetaOptimization(previous.getCoords(), wp.getCoords(), next.getCoords());
+        wp.setTangent(wpTangent);
     }
 
     private void setupWaypoint(Waypoint waypoint) {

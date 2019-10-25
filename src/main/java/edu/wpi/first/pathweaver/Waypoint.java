@@ -39,8 +39,7 @@ public class Waypoint {
    */
   public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle) {
     lockTangent.set(fixedAngle);
-    setX(position.getX());
-    setY(position.getY());
+    setCoords(position);
 
     icon = new Polygon(
             0.0, SIZE / 3,
@@ -56,7 +55,6 @@ public class Waypoint {
     tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangentX() + getX(), tangentX, x));
     tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangentY() + getY(), tangentY, y));
   }
-
 
   public void enableSubchildSelector(int i) {
     FxUtils.enableSubchildSelector(this.icon, i);
@@ -108,17 +106,17 @@ public class Waypoint {
     return new Point2D(tangentX.get(), tangentY.get());
   }
 
+  public void setTangent(Point2D tangent) {
+    this.tangentX.set(tangent.getX());
+    this.tangentY.set(tangent.getY());
+  }
+
   public double getTangentX() {
     return tangentX.get();
   }
 
   public double getTangentY() {
     return tangentY.get();
-  }
-
-  public void setTangent(Point2D tangent) {
-    this.tangentX.set(tangent.getX());
-    this.tangentY.set(tangent.getY());
   }
 
   public void setTangentX(double tangentX) {
@@ -159,6 +157,11 @@ public class Waypoint {
 
   public Point2D getCoords() {
     return new Point2D(getX(), getY());
+  }
+
+  public void setCoords(Point2D coords) {
+    setX(coords.getY());
+    setY(coords.getY());
   }
 
   public String getName() {

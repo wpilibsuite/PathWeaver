@@ -17,28 +17,21 @@ import java.util.stream.Collectors;
 
 public final class ExtensionManager {
   private static final Logger LOGGER = Logger.getLogger(ExtensionManager.class.getName());
+  private static final ExtensionManager INSTANCE = new ExtensionManager();
 
   private final String directory = System.getProperty("user.home") + "/PathWeaver/Games";
   private final ExtensionLoader loader = new ExtensionLoader();
-
   private final List<Game> games = new ArrayList<>();
 
-  private static final ExtensionManager instance = new ExtensionManager(); // NOPMD constant name
-
-  public ExtensionManager() {
+  private ExtensionManager() {
     new File(directory).mkdirs();
   }
 
   public static ExtensionManager getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
-  /**
-   * Gets a list of the games in the ~/PathWeaver/Games directory.
-   *
-   * @throws IOException if the games directory could not be read
-   */
-  public List<Game> findGames() throws IOException {
+  private List<Game> findGames() throws IOException {
     List<Game> games = new ArrayList<>();
 
     Files.list(Paths.get(directory))
@@ -106,5 +99,4 @@ public final class ExtensionManager {
     }
     return games;
   }
-
 }

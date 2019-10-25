@@ -63,6 +63,7 @@ import javafx.scene.image.Image;
  * </table>
  */
 public final class ExtensionLoader {
+  private static final Logger LOGGER = Logger.getLogger(ExtensionLoader.class.getName());
 
   public static final String GAME_NAME_KEY = "game";
   public static final String FIELD_IMAGE_KEY = "field-image";
@@ -71,8 +72,6 @@ public final class ExtensionLoader {
   public static final String BOTTOM_RIGHT_KEY = "bottom-right";
   public static final String FIELD_SIZE_KEY = "field-size";
   public static final String FIELD_UNITS_KEY = "field-unit";
-
-  private static final Logger log = Logger.getLogger(ExtensionLoader.class.getName());
 
   /**
    * Loads a game + field image extension from a JSON file.
@@ -167,7 +166,7 @@ public final class ExtensionLoader {
       try {
         deleteDir(dir);
       } catch (IOException e) {
-        log.log(Level.WARNING, "Could not delete temp directory " + dir, e);
+        LOGGER.log(Level.WARNING, "Could not delete temp directory " + dir, e);
       }
     }
   }
@@ -211,7 +210,6 @@ public final class ExtensionLoader {
   }
 
   private static final class ExtensionJsonDeserializer implements JsonDeserializer<Game> {
-
     private final Function<String, Image> imageProvider;
 
     private ExtensionJsonDeserializer(Function<String, Image> imageProvider) {

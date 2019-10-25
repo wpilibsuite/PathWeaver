@@ -109,20 +109,20 @@ public class WpilibSpline extends AbstractSpline {
             var p0 = waypoints[i];
             var p1 = waypoints[i + 1];
 
-            double p0Angle = Math.atan2(p0.getTangentY(), p0.getTangentX());
-            double p0Magnitude = Math.pow(p0.getTangentX(), 2) + Math.pow(p0.getTangentY(), 0);
-
-            double p1Angle = Math.atan2(p1.getTangentY(), p1.getTangentX());
-            double p1Magnitude = Math.pow(p1.getTangentX(), 2) + Math.pow(p1.getTangentY(), 0);
+//            double p0Angle = Math.atan2(p0.getTangentY(), p0.getTangentX());
+//            double p0Magnitude = Math.pow(p0.getTangentX(), 2) + Math.pow(p0.getTangentY(), 0);
+//
+//            double p1Angle = Math.atan2(p1.getTangentY(), p1.getTangentX());
+//            double p1Magnitude = Math.pow(p1.getTangentX(), 2) + Math.pow(p1.getTangentY(), 0);
 
             double[] xInitialVector =
-                    {p0.getX(), p0Magnitude * Math.cos(p0Angle), 0.0};
+                    {p0.getX(), p0.getTangentX(), 0.0};
             double[] xFinalVector =
-                    {p1.getX(), p1Magnitude * Math.cos(p1Angle), 0.0};
+                    {p1.getX(), p1.getTangentX(), 0.0};
             double[] yInitialVector =
-                    {p0.getY(), p0Magnitude * Math.sin(p0Angle), 0.0};
+                    {p0.getY(), p0.getTangentY(), 0.0};
             double[] yFinalVector =
-                    {p1.getY(), p1Magnitude * Math.sin(p1Angle), 0.0};
+                    {p1.getY(), p1.getTangentY(), 0.0};
 
             splines[i] = new QuinticHermiteSpline(xInitialVector, xFinalVector,
                     yInitialVector, yFinalVector);
