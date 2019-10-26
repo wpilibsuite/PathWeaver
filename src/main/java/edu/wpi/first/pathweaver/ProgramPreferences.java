@@ -2,19 +2,15 @@ package edu.wpi.first.pathweaver;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.stage.Stage;
 
 public class ProgramPreferences {
   private static ProgramPreferences instance;
@@ -34,7 +30,14 @@ public class ProgramPreferences {
       Gson gson = new GsonBuilder().serializeNulls().create();
       values = gson.fromJson(prefs, Values.class);
     } catch (FileNotFoundException e) {
-      values = new Values();
+      updatePrefs();
+    } catch (JsonParseException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Preferences import error");
+      alert.setContentText(
+              "Preferences have been reset due to file corruption. You may reimport your projects with the 'Import Project' button");
+      ((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+      alert.show();
       updatePrefs();
     }
   }
@@ -51,6 +54,7 @@ public class ProgramPreferences {
   }
 
   private void updatePrefs() {
+    values = new Values();
     try {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
       FileWriter writer = new FileWriter(directory + FILENAME);
