@@ -2,7 +2,28 @@ package edu.wpi.first.pathweaver.path;
 
 import javafx.geometry.Point2D;
 
-public class PathUtil {
+/**
+ * This is an utility class for Path functionality that can be backend-agnostic and may
+ * be usable by multiple backends.
+ *
+ * @see Path
+ */
+public final class PathUtil {
+    private PathUtil() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
+
+    /**
+     * Calculates the optimal tangent lines for quintic hermite splines given the coordinates
+     * of a waypoint and those right before and after it. This algorithm is based on the
+     * <a href="https://arxiv.org/pdf/1010.4615.pdf">following paper</a>.
+     *
+     * @param p1 the Point2d representing the coordinates of the waypoint before this one
+     * @param p2 the Point2d representing the coordinates of this waypoint
+     * @param p3 the Point2d representing the coordinates of the waypoint after this one
+     * @return the a Point2d representing the lengths of the tangent line of this waypoint
+     */
+    @SuppressWarnings("PMD.NcssCount")
     public static Point2D rawThetaOptimization(Point2D p1, Point2D p2, Point2D p3) {
         Point2D p1Scaled = new Point2D(0, 0);
         Point2D p2Scaled = p2.subtract(p1).multiply(1 / p3.distance(p1));

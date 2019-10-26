@@ -14,7 +14,6 @@ import javax.measure.quantity.Time;
 
 public final class PathUnits extends AbstractSystemOfUnits {
   private static final String SYSTEM_NAME = "PathWeaver Units";
-
   private static final PathUnits INSTANCE = new PathUnits();
 
   public static final Unit<Length> METER = addUnit(USCustomary.METER, "Meter", "m");
@@ -44,7 +43,7 @@ public final class PathUnits extends AbstractSystemOfUnits {
     return INSTANCE;
   }
 
-  public static <U extends Unit<?>> U addUnit(U unit, String name, String label) {
+  private static <U extends Unit<?>> U addUnit(U unit, String name, String label) {
     return addUnit(unit, name, label, true);
   }
 
@@ -64,7 +63,7 @@ public final class PathUnits extends AbstractSystemOfUnits {
    * Gets the unit of length with the given name, case-insensitive.
    *
    * @param unit the name of the unit of length to get
-   *
+   * @return the unit represented by the string
    * @throws IllegalArgumentException if no such unit exists
    */
   public Unit<Length> length(String unit) { // NOPMD it's a giant switch statement
@@ -110,21 +109,21 @@ public final class PathUnits extends AbstractSystemOfUnits {
     }
   }
 
-  /**
+  /*
    * Generates a velocity string for {unit} per second such as m/s, ft/s, etc.
    */
   public static String velocity(Unit<Length> unit) {
     return SimpleUnitFormat.getInstance().format(unit) + "/s";
   }
 
-  /**
+  /*
    * Generates an acceleration string for {unit} per second per second such as m/s², ft/s², etc.
    */
   public static String acceleration(Unit<Length> unit) {
     return SimpleUnitFormat.getInstance().format(unit) + "/s²";
   }
 
-  /**
+  /*
    * Generates a jerk string for {unit} per second per second per second such as m/s³, ft/s³, etc.
    */
   public static String jerk(Unit<Length> unit) {

@@ -42,6 +42,8 @@ public final class FxUtils {
    *
    * @param text         the text of the menu item
    * @param eventHandler the handler to call when the menu item is acted upon
+   *
+   * @return the created menu item
    */
   public static MenuItem menuItem(String text, EventHandler<ActionEvent> eventHandler) {
     MenuItem menuItem = new MenuItem(text);

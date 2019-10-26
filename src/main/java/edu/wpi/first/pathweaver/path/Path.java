@@ -20,6 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ *
+ * Note: This abstract class places drag and drop constraints on implementors.
+ * Implementors of this class should see {@link edu.wpi.first.pathweaver.path.wpilib.WpilibPath} for
+ * an example of setting up drag and drop for the path and waypoints.
+ * <p>
+ * Drag and drop is fundamental to Pathweaver, and implmentors of this interface
+ * must abide by the following policies. Between {@link Spline} and {@link Path}, the
+ * following variables must get set in {@link CurrentSelections}:
+ *
+ * <ul>
+ * <li>{@link CurrentSelections#curPathProperty()}: To be set whenever a Path is clicked or dragged,
+ * see {@link edu.wpi.first.pathweaver.path.wpilib.WpilibPath} for an example.
+ * <li>{@link CurrentSelections#curWaypointProperty()}: To be set whenever a Waypoint is clicked or dragged.
+ * <li>{@link CurrentSelections#curSegmentStartProperty()} and {@link CurrentSelections#curSegmentEndProperty()}: To be set
+ * whenever a SplineSegment (or functional equivalent) is clicked on or dragged.
+ * </ul>
+ *
+ * @see CurrentSelections
+ * @see Spline
+ */
 @SuppressWarnings("PMD.TooManyMethods")
 public abstract class Path {
     protected static final PseudoClass SELECTED_CLASS = PseudoClass.getPseudoClass("selected");
@@ -35,7 +56,12 @@ public abstract class Path {
     protected final String pathName;
     protected int subchildIdx = 0;
 
-    public Path(SplineFactory splineFactory, String pathName) {
+    /**
+     * Creates a Path from a {@link SplineFactory} and the name of the path.
+     * @param splineFactory the SplineFactory
+     * @param pathName the name of the path
+     */
+    protected Path(SplineFactory splineFactory, String pathName) {
         this.spline = splineFactory.makeSpline(waypoints, this);
         this.pathName = Objects.requireNonNull(pathName);
     }
@@ -44,6 +70,13 @@ public abstract class Path {
         return waypoints;
     }
 
+    /**
+     * Duplicates the current path, returning a new Path with no shared state.
+     * Implementors are highly encouraged to return Self with this method in order
+     * to maintain desired behavior across refreshes.
+     * @param pathName the new name of the path
+     * @return a duplicate of this path with a new name
+     */
     public abstract Path duplicate(String pathName);
 
     /**
@@ -105,7 +138,7 @@ public abstract class Path {
                 Waypoint toAdd = new Waypoint(coordinates, new Point2D(0, 0), false);
                 waypoints.add(i, toAdd);
 
-                updateTheta(toAdd);
+                updateTangent(toAdd);
                 return toAdd;
             }
         }
@@ -113,28 +146,34 @@ public abstract class Path {
                 "Endpoints provided not are invalid segment");
     }
 
+    /**
+     * Recalculate the tangents for the waypoint provided, as well as those before and after it.
+     * This implementation skips over non-existent waypoints, calling the {@link #updateTangent(Waypoint)} on the others.
+     * @param wp the waypoint to recalculate tangents for
+     */
     public void recalculateTangents(Waypoint wp) {
         int curWpIndex = getWaypoints().indexOf(wp);
 
         if (curWpIndex - 1 > 0) {
             Waypoint previous = getWaypoints().get(curWpIndex - 1);
-            updateTheta(previous);
+            updateTangent(previous);
         }
 
-        updateTheta(wp);
+        updateTangent(wp);
 
         if (curWpIndex + 1 < waypoints.size()) {
             Waypoint next = getWaypoints().get(curWpIndex + 1);
-            updateTheta(next);
+            updateTangent(next);
         }
     }
 
     /**
-     * Forces recomputation of optimal theta value.
+     * Forces recomputation of optimal tangent line (representing heading). Implementors are
+     * free to make this function a no-op.
      *
-     * @param wp Waypoint to update theta for.
+     * @param wp the waypoint to update the tangent line for.
      */
-    protected abstract void updateTheta(Waypoint wp);
+    protected abstract void updateTangent(Waypoint wp);
 
     public void enableSubchildSelector(int i) {
         this.subchildIdx = i;
@@ -144,6 +183,11 @@ public abstract class Path {
         spline.enableSubchildSelector(subchildIdx);
     }
 
+    /**
+     * This function toggles the selection status of a waypoint. This implementation calls {@link #deselectWaypoint(Waypoint)}
+     * if the waypoint is currently selected and {@link #selectWaypoint(Waypoint)} otherwise.
+     * @param waypoint the waypoint to toggle
+     */
     public void toggleWaypoint(Waypoint waypoint) {
         if (CurrentSelections.getCurWaypoint() == waypoint) {
             deselectWaypoint(waypoint);
@@ -152,6 +196,11 @@ public abstract class Path {
         }
     }
 
+    /**
+     * Selects the given waypoint by calling the appropriate methods in {@link CurrentSelections}, making care to update the waypoint,
+     * as well as the current path.
+     * @param waypoint the waypoint to select
+     */
     public void selectWaypoint(Waypoint waypoint) {
         Waypoint curWaypoint = CurrentSelections.getCurWaypoint();
         if (curWaypoint != null) {
@@ -164,6 +213,11 @@ public abstract class Path {
         CurrentSelections.setCurPath(this);
     }
 
+    /**
+     * Selects the given waypoint by calling the appropriate methods in {@link CurrentSelections}, making care to update the waypoint.
+     * This implementation does not currently null out {@link CurrentSelections#curPathProperty()} due to a NPE.
+     * @param waypoint the waypoint to deselect
+     */
     public void deselectWaypoint(Waypoint waypoint) {
         Waypoint curWaypoint = CurrentSelections.getCurWaypoint();
         if (CurrentSelections.getCurWaypoint() == waypoint) {
@@ -173,10 +227,14 @@ public abstract class Path {
         }
     }
 
+    /**
+     * Removes a Waypoint from this path. This implementation will not remove the last 2 points.
+     * @param waypoint the waypoint to remove
+     * @return whether the remove succeeded or not
+     */
     public boolean removeWaypoint(Waypoint waypoint) {
         if (waypoints.size() > 2) {
-            waypoints.remove(waypoint);
-            return true;
+            return waypoints.remove(waypoint);
         }
         return false;
     }

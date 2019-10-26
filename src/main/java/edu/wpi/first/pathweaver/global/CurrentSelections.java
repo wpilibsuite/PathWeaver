@@ -4,6 +4,11 @@ import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.path.Path;
 import javafx.beans.property.SimpleObjectProperty;
 
+/**
+ * The class holding the global state for the currently selected objects.
+ * Those who would like to remove this should refrain from doing so, as the
+ * necessary plumbing is verbose and unwieldy.
+ */
 @SuppressWarnings("PMD.ClassNamingConventions")
 public final class CurrentSelections {
     private static SimpleObjectProperty<Waypoint> curSplineStart = new SimpleObjectProperty<>();
@@ -12,14 +17,14 @@ public final class CurrentSelections {
     private static SimpleObjectProperty<Path> curPath = new SimpleObjectProperty<>();
 
     private CurrentSelections() {
-        throw new UnsupportedOperationException("This is a utility class");
+        throw new UnsupportedOperationException("This class holds global state!");
     }
 
     public static Waypoint getCurSplineStart() {
         return curSplineStart.get();
     }
 
-    public static SimpleObjectProperty<Waypoint> curSplineStartProperty() {
+    public static SimpleObjectProperty<Waypoint> curSegmentStartProperty() {
         return curSplineStart;
     }
 
@@ -31,7 +36,7 @@ public final class CurrentSelections {
         return curSplineEnd.get();
     }
 
-    public static SimpleObjectProperty<Waypoint> curSplineEndProperty() {
+    public static SimpleObjectProperty<Waypoint> curSegmentEndProperty() {
         return curSplineEnd;
     }
 

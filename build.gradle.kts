@@ -186,10 +186,6 @@ tasks.withType<Test>().configureEach {
     }
 }
 
-tasks.withType<Javadoc>().configureEach {
-    isFailOnError = false
-}
-
 val nativeShadowTasks = NativePlatforms.values().map { platform ->
     tasks.create<ShadowJar>("shadowJar-${platform.platformName}") {
         classifier = platform.platformName

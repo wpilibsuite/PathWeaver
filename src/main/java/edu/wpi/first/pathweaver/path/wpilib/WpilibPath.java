@@ -92,8 +92,12 @@ public class WpilibPath extends Path {
         });
     }
 
+    /**
+     * This implementation calls {@link PathUtil#rawThetaOptimization(Point2D, Point2D, Point2D)} to update the tangent line.
+     * @param wp the waypoint to update the tangent line for.
+     */
     @Override
-    protected void updateTheta(Waypoint wp) {
+    protected void updateTangent(Waypoint wp) {
         int curWpIndex = getWaypoints().indexOf(wp);
         if(curWpIndex - 1 < 0 || curWpIndex + 1 >= waypoints.size() || wp.isLockTangent()) {
             return;
@@ -170,8 +174,8 @@ public class WpilibPath extends Path {
     /**
      * Duplicates a path.
      *
-     * @param newName Filename of new path.
-     * @return The new path.
+     * @param newName filename of the new path.
+     * @return the new path.
      */
     @Override
     public Path duplicate(String newName) {

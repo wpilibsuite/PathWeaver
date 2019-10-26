@@ -51,7 +51,9 @@ import javafx.scene.image.Image;
  * boundary of the playable area in the field image. Non-rectangular playing areas are not supported.
  * <br>The field size is the width and length of the playable area of the field in the provided units.
  * <br>The field units are not case-sensitive and can be one of:
+ *
  * <table>
+ * <caption>PathWeaver accepted units</caption>
  * <tr><th>Unit</th><th>Accepted Values</th></tr>
  * <tr><td>Meter</td><td>"meter", "meters", "m"</td></tr>
  * <tr><td>Centimeter</td><td>"centimeter", "centimeters", "cm"</td></tr>
@@ -77,7 +79,7 @@ public final class ExtensionLoader {
    * Loads a game + field image extension from a JSON file.
    *
    * @param jsonFile the JSON extension file.
-   *
+   * @return tne game represented by the JSON
    * @throws IOException if the file could not be read
    */
   public Game loadFromJsonFile(Path jsonFile) throws IOException, DuplicateGameException {

@@ -11,6 +11,10 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 
+/**
+ * This class handles the drag and drop functionality for PathWeaver. Implementors should be sure that
+ * the appropriate property in {@link CurrentSelections} is set correctly for this functionality to work properly.
+ */
 public class DragHandler {
   private final FieldDisplayController controller;
   private final Pane drawPane;

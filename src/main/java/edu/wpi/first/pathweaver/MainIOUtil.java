@@ -38,14 +38,14 @@ public final class MainIOUtil {
    * Checks if a file exists with filename if so appends incremental value.
    *
    * @param directory The directory the file will be saved to
-   * @param filename  The preferred filename
+   * @param pathName The preferred filename
    * @param extension The file extension
    *
-   * @return
+   * @return the next valid filename for the path name
    */
-  public static String getValidFileName(String directory, String filename, String extension) {
+  public static String getValidFileName(String directory, String pathName, String extension) {
     // remove the _number following the file name
-    String nameNoVersion = filename.replaceFirst("_[0-9]+", "");
+    String nameNoVersion = pathName.replaceFirst("_[0-9]+", "");
     File file = new File(directory, nameNoVersion + extension);
     for (int num = 0; file.exists(); num++) {
       file = new File(directory, nameNoVersion + "_" + num + extension);

@@ -37,7 +37,8 @@ public class PathCell extends TextFieldTreeCell<String> {
   /**
    * Creates PathCell, a TreeCell object that can be dragged and used as a drag target.
    *
-   * @param validDropTarget If this item should allow drag over and drag drop.
+   * @param validDropTarget if this item should allow drag over and drag drop.
+   * @param validation a bifunction that checks if renaming the cell is valid
    */
   public PathCell(boolean validDropTarget, BiFunction<String, String, Boolean> validation) {
     super();

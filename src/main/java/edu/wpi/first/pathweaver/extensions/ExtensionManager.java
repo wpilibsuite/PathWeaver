@@ -81,6 +81,8 @@ public final class ExtensionManager {
 
   /**
    * Gets the list of discovered games. The list will be empty until {@link #refresh()} is called.
+   *
+   * @return the list of discovered games
    */
   public List<Game> getGames() {
     return games;
@@ -88,6 +90,8 @@ public final class ExtensionManager {
 
   /**
    * Refreshes the list of discovered games.
+   *
+   * @return the list of discovered games
    */
   public List<Game> refresh() {
     try {

@@ -179,7 +179,8 @@ public class ProjectPreferences {
      * @param maxAcceleration The maximum acceleration to use
      * @param maxJerk         The maximum jerk (acceleration per second) to use
      * @param wheelBase       The width between the individual sides of the drivebase
-     * @param gameName            The year/FRC game
+     * @param gameName        The year/FRC game
+     * @param outputDir       The directory for the output files
      */
     public Values(String lengthUnit, double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
                   double wheelBase, String gameName, String outputDir) {
