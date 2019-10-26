@@ -73,27 +73,24 @@ stages:
           testResultsFiles: '**/TEST-*.xml'
           tasks: 'check'
 
-#  - job: Mac
-#    pool:
-#      vmImage: 'macOS-10.14'
-#    steps:
-#      - script: |
-#          mkdir build
-#          export JAVA_HOME=`/usr/libexec/java_home -v 11`
-#        displayName: 'Setup JDK'
-#      - script: |
-#          rm /Users/vsts/.gradle/init.d/log-gradle-version-plugin.gradle
-#        displayName: 'Delete Version init script'
-#      - task: Gradle@2
-#        inputs:
-#          workingDirectory: ''
-#          gradleWrapperFile: 'gradlew'
-#          gradleOptions: '-Xmx3072m'
-#          jdkVersionOption: '1.11'
-#          publishJUnitResults: false
-#          testResultsFiles: '**/TEST-*.xml'
-#          tasks: 'check'
-#          options: '-PbuildServer'
+  - job: Mac
+    pool:
+      vmImage: 'macOS-10.14'
+    steps:
+      - script: |
+          mkdir build
+          export JAVA_HOME=`/usr/libexec/java_home -v 11`
+        displayName: 'Setup JDK'
+      - task: Gradle@2
+        inputs:
+          workingDirectory: ''
+          gradleWrapperFile: 'gradlew'
+          gradleOptions: '-Xmx3072m'
+          jdkVersionOption: '1.11'
+          publishJUnitResults: false
+          testResultsFiles: '**/TEST-*.xml'
+          tasks: 'check'
+          options: '-PbuildServer'
 
 - stage: Publish
   jobs:
