@@ -3,6 +3,8 @@ package edu.wpi.first.pathweaver;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import edu.wpi.first.pathweaver.path.Path;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 

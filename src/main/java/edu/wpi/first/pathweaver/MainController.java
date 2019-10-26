@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.modifiers.TankModifier;
+import edu.wpi.first.pathweaver.global.CurrentSelections;
+import edu.wpi.first.pathweaver.path.Path;
+import edu.wpi.first.pathweaver.path.wpilib.WpilibPath;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -35,7 +36,7 @@ public class MainController {
   @FXML private TreeView<String> paths;
   @FXML private Pane pathDisplay;
   // Variable is auto generated as Pane name + Controller
-  @FXML private PathDisplayController pathDisplayController; //NOPMD
+  @FXML private FieldDisplayController fieldDisplayController; //NOPMD
 
   @FXML private GridPane editWaypoint;
   // Variable is auto generated as Pane name + Controller
@@ -58,13 +59,10 @@ public class MainController {
     setupDrag();
 
     setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
-
     setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
-
-    pathDisplayController.setPathDirectory(pathDirectory);
 
     setupClickablePaths();
     setupClickableAutons();
@@ -74,11 +72,11 @@ public class MainController {
     paths.setEditable(true);
     setupEditable();
 
-    duplicate.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
-    flipHorizontal.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
-    flipVertical.disableProperty().bind(pathDisplayController.currentPathProperty().isNull());
+    duplicate.disableProperty().bind(CurrentSelections.curPathProperty().isNull());
+    flipHorizontal.disableProperty().bind(CurrentSelections.curPathProperty().isNull());
+    flipVertical.disableProperty().bind(CurrentSelections.curPathProperty().isNull());
 
-    editWaypointController.bindToWaypoint(pathDisplayController.selectedWaypointProperty(), pathDisplayController);
+    editWaypointController.bindToWaypoint(CurrentSelections.curWaypointProperty(), fieldDisplayController);
   }
 
   private void setupTreeView(TreeView<String> treeView, TreeItem<String> treeRoot, MenuItem newItem) {
@@ -114,8 +112,8 @@ public class MainController {
 
       saveAllAutons();
       loadAllAutons();
-      pathDisplayController.removeAllPath();
-      pathDisplayController.addPath(pathDirectory, event.getTreeItem());
+      fieldDisplayController.removeAllPath();
+      fieldDisplayController.addPath(pathDirectory, event.getTreeItem());
     });
   }
 
@@ -166,8 +164,8 @@ public class MainController {
         removePath(selected);
       }
     } else if (pathRoot == root && FxUtils.promptDelete(selected.getValue())) {
-      pathDisplayController.removeAllPath();
-      SaveManager.getInstance().removeChange(pathDisplayController.currentPathProperty().get());
+      fieldDisplayController.removeAllPath();
+      SaveManager.getInstance().removeChange(CurrentSelections.curPathProperty().get());
       MainIOUtil.deleteItem(pathDirectory, selected);
       for (TreeItem<String> path : getAllInstances(selected)) {
         removePath(path);
@@ -227,8 +225,8 @@ public class MainController {
             }
             selected = newValue;
             if (newValue != pathRoot && newValue != null) {
-              pathDisplayController.removeAllPath();
-              pathDisplayController.addPath(pathDirectory, newValue);
+              fieldDisplayController.removeAllPath();
+              fieldDisplayController.addPath(pathDirectory, newValue);
             }
           }
         };
@@ -251,14 +249,14 @@ public class MainController {
           return;
         }
         selected = newValue;
-        pathDisplayController.removeAllPath();
+        fieldDisplayController.removeAllPath();
         if (newValue != autonRoot) {
           if (newValue.getParent() == autonRoot) { //is an auton with children
             for (TreeItem<String> it : selected.getChildren()) {
-              pathDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
+              fieldDisplayController.addPath(pathDirectory, it).enableSubchildSelector(FxUtils.getItemIndex(it));
             }
           } else { //has no children so try to display path
-            Path path = pathDisplayController.addPath(pathDirectory, newValue);
+            Path path = fieldDisplayController.addPath(pathDirectory, newValue);
             if (FxUtils.isSubChild(autons, newValue)) {
               path.enableSubchildSelector(FxUtils.getItemIndex(newValue));
             }
@@ -279,7 +277,6 @@ public class MainController {
 
 
   private void setupDrag() {
-
     paths.setCellFactory(param -> new PathCell(false, this::validPathName));
     autons.setCellFactory(param -> new PathCell(true, this::validAutonName));
 
@@ -292,17 +289,17 @@ public class MainController {
 
   @FXML
   private void flipHorizontal() {
-    pathDisplayController.flip(true);
+    fieldDisplayController.flip(true);
   }
 
   @FXML
   private void flipVertical() {
-    pathDisplayController.flip(false);
+    fieldDisplayController.flip(false);
   }
 
   @FXML
   private void duplicate() {
-    Path newPath = pathDisplayController.duplicate(pathDirectory);
+    Path newPath = fieldDisplayController.duplicate(pathDirectory);
     TreeItem<String> stringTreeItem = MainIOUtil.addChild(pathRoot, newPath.getPathName());
     SaveManager.getInstance().saveChange(newPath);
     paths.getSelectionModel().select(stringTreeItem);
@@ -312,7 +309,7 @@ public class MainController {
   private void createPath() {
     String name = MainIOUtil.getValidFileName(pathDirectory, "Unnamed", ".path");
     MainIOUtil.addChild(pathRoot, name);
-    Path newPath = new Path(name);
+    Path newPath = new WpilibPath(name);
     // The default path defaults to FEET
     newPath.convertUnit(PathUnits.FOOT, ProjectPreferences.getInstance().getValues().getLengthUnit());
     SaveManager.getInstance().saveChange(newPath);
@@ -326,6 +323,7 @@ public class MainController {
   }
 
   @FXML
+  @SuppressWarnings("PMD.NcssCount")
   private void buildPaths() {
     if (!SaveManager.getInstance().promptSaveAll()) {
       return;
@@ -334,15 +332,14 @@ public class MainController {
     output.mkdirs();
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
       Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
-      TankModifier tank = path.getTankModifier();
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".pf1.csv"),
-          tank.getSourceTrajectory());
-      // Note: the left and the right are swapped. This is due to our orientation of the
-      // coordinate system. This is a hack to fix path output for the 2019 season.
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".right.pf1.csv"),
-          tank.getLeftTrajectory());
-      Pathfinder.writeToCSV(new File(output, path.getPathNameNoExtension() + ".left.pf1.csv"),
-          tank.getRightTrajectory());
+
+      File f = new File(output, path.getPathNameNoExtension() + ".wpilib.csv");
+
+      if(!path.getSpline().writeToFile(f.toPath())) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Path export failure!");
+        alert.setContentText("Could not export to: " + f.getAbsolutePath());
+      }
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Paths exported!");

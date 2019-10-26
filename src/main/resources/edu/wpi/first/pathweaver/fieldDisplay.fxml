@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<Pane fx:id="topPane" onKeyPressed="#keyPressed" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.wpi.first.pathweaver.FieldDisplayController">
+    <Group fx:id="group">
+        <ImageView fx:id="backgroundImage" preserveRatio="true"/>
+        <Pane fx:id="drawPane">
+            <Group fx:id="pathGroup"/>
+        </Pane>
+    </Group>
+</Pane>

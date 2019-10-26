@@ -2,6 +2,9 @@ package edu.wpi.first.pathweaver;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
@@ -15,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProjectPreferences {
-
   private static final String FILENAME = "/pathweaver.json";
 
   private static ProjectPreferences instance;
@@ -30,6 +32,15 @@ public class ProjectPreferences {
       BufferedReader reader = new BufferedReader(new FileReader(directory + FILENAME));
       Gson gson = new Gson();
       values = gson.fromJson(reader, Values.class);
+    } catch (JsonParseException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Preferences import error");
+      alert.setContentText(
+              "Preferences have been reset due to file corruption. You may have to reconfigure your project.");
+      ((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+
+      alert.show();
+      setDefaults();
     } catch (FileNotFoundException e) {
       setDefaults();
     }
@@ -172,7 +183,8 @@ public class ProjectPreferences {
      * @param maxAcceleration The maximum acceleration to use
      * @param maxJerk         The maximum jerk (acceleration per second) to use
      * @param wheelBase       The width between the individual sides of the drivebase
-     * @param gameName            The year/FRC game
+     * @param gameName        The year/FRC game
+     * @param outputDir       The directory for the output files
      */
     public Values(String lengthUnit, double timeStep, double maxVelocity, double maxAcceleration, double maxJerk,
                   double wheelBase, String gameName, String outputDir) {

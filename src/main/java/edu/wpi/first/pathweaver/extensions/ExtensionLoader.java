@@ -51,7 +51,9 @@ import javafx.scene.image.Image;
  * boundary of the playable area in the field image. Non-rectangular playing areas are not supported.
  * <br>The field size is the width and length of the playable area of the field in the provided units.
  * <br>The field units are not case-sensitive and can be one of:
+ *
  * <table>
+ * <caption>PathWeaver accepted units</caption>
  * <tr><th>Unit</th><th>Accepted Values</th></tr>
  * <tr><td>Meter</td><td>"meter", "meters", "m"</td></tr>
  * <tr><td>Centimeter</td><td>"centimeter", "centimeters", "cm"</td></tr>
@@ -63,6 +65,7 @@ import javafx.scene.image.Image;
  * </table>
  */
 public final class ExtensionLoader {
+  private static final Logger LOGGER = Logger.getLogger(ExtensionLoader.class.getName());
 
   public static final String GAME_NAME_KEY = "game";
   public static final String FIELD_IMAGE_KEY = "field-image";
@@ -72,13 +75,11 @@ public final class ExtensionLoader {
   public static final String FIELD_SIZE_KEY = "field-size";
   public static final String FIELD_UNITS_KEY = "field-unit";
 
-  private static final Logger log = Logger.getLogger(ExtensionLoader.class.getName());
-
   /**
    * Loads a game + field image extension from a JSON file.
    *
    * @param jsonFile the JSON extension file.
-   *
+   * @return tne game represented by the JSON
    * @throws IOException if the file could not be read
    */
   public Game loadFromJsonFile(Path jsonFile) throws IOException, DuplicateGameException {
@@ -167,7 +168,7 @@ public final class ExtensionLoader {
       try {
         deleteDir(dir);
       } catch (IOException e) {
-        log.log(Level.WARNING, "Could not delete temp directory " + dir, e);
+        LOGGER.log(Level.WARNING, "Could not delete temp directory " + dir, e);
       }
     }
   }
@@ -211,7 +212,6 @@ public final class ExtensionLoader {
   }
 
   private static final class ExtensionJsonDeserializer implements JsonDeserializer<Game> {
-
     private final Function<String, Image> imageProvider;
 
     private ExtensionJsonDeserializer(Function<String, Image> imageProvider) {

@@ -1,5 +1,8 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.pathweaver.path.Path;
+import edu.wpi.first.pathweaver.path.wpilib.WpilibPath;
+import javafx.geometry.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.TemporaryFolder;
@@ -25,7 +28,7 @@ public class SaveManagerTest {
 
   @Test
   public void saveAndLoadDefaultPath() {
-    Path path = new Path("default");
+    Path path = new WpilibPath("default");
     SaveManager.getInstance().saveChange(path);
     Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
     assertEquals(path, loadPath, "Path loaded from disk doesn't match original");
@@ -33,8 +36,8 @@ public class SaveManagerTest {
 
   @Test
   public void saveAndLoadWithAddedWaypoint() {
-    Path path = new Path("default");
-    path.addNewWaypoint(path.getStart().getSpline());
+    Path path = new WpilibPath("default");
+    path.addWaypoint(new Point2D(5.0, 5.0), path.getStart(), path.getEnd());
     SaveManager.getInstance().saveChange(path);
     Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
     assertEquals(path, loadPath, "Path loaded from disk with an added waypoint doesn't match original");
@@ -63,9 +66,9 @@ public class SaveManagerTest {
   }
 
   private List<Path> getThreeDefaultPaths() {
-    Path pathOne = new Path("one");
-    Path pathTwo = new Path("two");
-    Path pathThree = new Path("three");
+    Path pathOne = new WpilibPath("one");
+    Path pathTwo = new WpilibPath("two");
+    Path pathThree = new WpilibPath("three");
     return List.of(pathOne, pathTwo, pathThree);
   }
 }

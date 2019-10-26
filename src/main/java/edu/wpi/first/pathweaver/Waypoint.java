@@ -1,8 +1,5 @@
 package edu.wpi.first.pathweaver;
 
-import java.util.Map;
-
-import edu.wpi.first.pathweaver.spline.Spline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -11,8 +8,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import tec.units.ri.quantity.Quantities;
@@ -22,6 +17,9 @@ import javax.measure.quantity.Length;
 
 @SuppressWarnings("PMD.TooManyMethods")
 public class Waypoint {
+  private static final double SIZE = 30.0;
+  private static final double ICON_X_OFFSET = (SIZE * 3D / 5D) / 16.5;
+
   private final DoubleProperty x = new SimpleDoubleProperty();
   private final DoubleProperty y = new SimpleDoubleProperty();
   private final DoubleProperty tangentX = new SimpleDoubleProperty();
@@ -29,24 +27,8 @@ public class Waypoint {
   private final BooleanProperty lockTangent = new SimpleBooleanProperty();
   private final StringProperty name = new SimpleStringProperty("");
 
-  private Spline spline;
-
-  private Path path;
-  public static Waypoint currentWaypoint = null;
-
-
   private final Line tangentLine;
-  private Polygon icon;
-
-  private static final double SIZE = 30.0;
-
-  public Path getPath() {
-    return path;
-  }
-
-  public void setPath(Path path) {
-    this.path = path;
-  }
+  private final Polygon icon;
 
   /**
    * Creates Waypoint object containing javafx circle.
@@ -54,41 +36,25 @@ public class Waypoint {
    * @param position      x and y coordinates in user set units
    * @param tangentVector tangent vector in user set units
    * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
-   * @param myPath        the path this waypoint belongs to
    */
-  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, Path myPath) {
-    path = myPath;
+  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle) {
     lockTangent.set(fixedAngle);
-    setX(position.getX());
-    setY(position.getY());
-    icon = new Polygon();
+    setCoords(position);
+
+    icon = new Polygon(
+            0.0, SIZE / 3,
+            SIZE, 0.0,
+            0.0, -SIZE / 3);
     setupIcon();
-    x.addListener(listener -> update());
-    y.addListener(listener -> update());
 
     tangentLine = new Line();
     tangentLine.getStyleClass().add("tangent");
     tangentLine.startXProperty().bind(x);
     tangentLine.startYProperty().bind(y);
     setTangent(tangentVector);
-    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangent().getX() + getX(), tangentX, x));
-    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangent().getY() + getY(), tangentY, y));
-
-    this.spline = new NullSpline();
-
-    setupDnd();
+    tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangentX() + getX(), tangentX, x));
+    tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangentY() + getY(), tangentY, y));
   }
-
-  /**
-   * Creates waypoint before a path is created. Call setPath() once path is created.
-   * @param position      x and y coordinates in user set units
-   * @param tangentVector tangent vector in user set units
-   * @param fixedAngle    If the angle the of the waypoint should be fixed. Used for first and last waypoint
-   */
-  public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle) {
-    this(position, tangentVector, fixedAngle, null);
-  }
-
 
   public void enableSubchildSelector(int i) {
     FxUtils.enableSubchildSelector(this.icon, i);
@@ -96,12 +62,7 @@ public class Waypoint {
   }
 
   private void setupIcon() {
-    icon = new Polygon(
-            0.0, SIZE / 3,
-            SIZE, 0.0,
-            0.0, -SIZE / 3);
-    double xOffset = (SIZE * 3D / 5D) / 16.5;
-    icon.setLayoutX(-(icon.getLayoutBounds().getMaxX() + icon.getLayoutBounds().getMinX()) / 2 - xOffset);
+    icon.setLayoutX(-(icon.getLayoutBounds().getMaxX() + icon.getLayoutBounds().getMinX()) / 2 - ICON_X_OFFSET);
     icon.setLayoutY(-(icon.getLayoutBounds().getMaxY() + icon.getLayoutBounds().getMinY()) / 2);
 
     icon.translateXProperty().bind(x);
@@ -109,49 +70,9 @@ public class Waypoint {
     FxUtils.applySubchildClasses(this.icon);
     this.icon.rotateProperty().bind(
             Bindings.createObjectBinding(() ->
-                    getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangent().getY(), getTangent().getX())),
+                    getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(getTangentY(), getTangentX())),
                     tangentX, tangentY));
     icon.getStyleClass().add("waypoint");
-  }
-
-  private void setupDnd() {
-    icon.setOnDragDetected(event -> {
-      currentWaypoint = this;
-      icon.startDragAndDrop(TransferMode.MOVE)
-          .setContent(Map.of(DataFormats.WAYPOINT, "point"));
-    });
-    tangentLine.setOnDragDetected(event -> {
-      currentWaypoint = this;
-      tangentLine.startDragAndDrop(TransferMode.MOVE)
-          .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
-    });
-    tangentLine.setOnMouseClicked(this::resetOnDoubleClick);
-  }
-
-  /**
-   * Handles reseting point depending on the mouse event.
-   *
-   * @param event The mouse event that was triggered
-   */
-  public void resetOnDoubleClick(MouseEvent event) {
-    if (event.getClickCount() == 2 && lockTangent.get()) {
-      lockTangent.set(false);
-      update();
-    }
-  }
-
-  /**
-   * Updates the control points for the splines attached to this waypoint and to each of its neighbors.
-   */
-  public void update() {
-    if (this != path.getStart() && this != path.getEnd() && !isLockTangent()) {
-      path.updateTheta(this);
-    }
-    path.updateSplines();
-  }
-
-  public jaci.pathfinder.Waypoint getPathfinderWaypoint() {
-    return new jaci.pathfinder.Waypoint(getX(), getY(), Math.atan2(getTangent().getY(), getTangent().getX()));
   }
 
   /**
@@ -173,6 +94,10 @@ public class Waypoint {
     return lockTangent;
   }
 
+  public void setLockTangent(boolean lockTangent) {
+    this.lockTangent.set(lockTangent);
+  }
+
   public Line getTangentLine() {
     return tangentLine;
   }
@@ -184,6 +109,22 @@ public class Waypoint {
   public void setTangent(Point2D tangent) {
     this.tangentX.set(tangent.getX());
     this.tangentY.set(tangent.getY());
+  }
+
+  public double getTangentX() {
+    return tangentX.get();
+  }
+
+  public double getTangentY() {
+    return tangentY.get();
+  }
+
+  public void setTangentX(double tangentX) {
+    this.tangentX.set(tangentX);
+  }
+
+  public void setTangentY(double tangentY) {
+    this.tangentY.set(tangentY);
   }
 
   public Polygon getIcon() {
@@ -218,12 +159,9 @@ public class Waypoint {
     return new Point2D(getX(), getY());
   }
 
-  public void setSpline(Spline spline) {
-    this.spline = spline;
-  }
-
-  public Spline getSpline() {
-    return spline;
+  public void setCoords(Point2D coords) {
+    setX(coords.getY());
+    setY(coords.getY());
   }
 
   public String getName() {
@@ -234,10 +172,6 @@ public class Waypoint {
     return name;
   }
 
-  /**
-   * Updates the Waypoint name and configures the icon tooltip.
-   * @param name New name of Waypoint.
-   */
   public void setName(String name) {
     this.name.set(name);
   }

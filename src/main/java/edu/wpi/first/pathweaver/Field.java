@@ -74,10 +74,6 @@ public class Field {
     this(() -> image, unit, realWidth, realLength, xPixel, yPixel, pixelWidth, pixelLength);
   }
 
-
-  /**
-   * Gets the field image.
-   */
   public Image getImage() {
     if (image == null) {
       image = imageSupplier.get();

@@ -16,30 +16,22 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public final class ExtensionManager {
-
-  private static final Logger log = Logger.getLogger(ExtensionManager.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(ExtensionManager.class.getName());
+  private static final ExtensionManager INSTANCE = new ExtensionManager();
 
   private final String directory = System.getProperty("user.home") + "/PathWeaver/Games";
   private final ExtensionLoader loader = new ExtensionLoader();
-
   private final List<Game> games = new ArrayList<>();
 
-  private static final ExtensionManager instance = new ExtensionManager(); // NOPMD constant name
-
-  public ExtensionManager() {
+  private ExtensionManager() {
     new File(directory).mkdirs();
   }
 
   public static ExtensionManager getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
-  /**
-   * Gets a list of the games in the ~/PathWeaver/Games directory.
-   *
-   * @throws IOException if the games directory could not be read
-   */
-  public List<Game> findGames() throws IOException {
+  private List<Game> findGames() throws IOException {
     List<Game> games = new ArrayList<>();
 
     Files.list(Paths.get(directory))
@@ -59,11 +51,11 @@ public final class ExtensionManager {
     try {
       return Optional.of(loader.loadFromDir(dir));
     } catch (IOException e) {
-      log.log(Level.WARNING, "Could not load game from " + dir.toAbsolutePath(), e);
+      LOGGER.log(Level.WARNING, "Could not load game from " + dir.toAbsolutePath(), e);
     } catch (DuplicateGameException e) {
-      log.warning("Duplicate game name in " + dir.toAbsolutePath() + ": " + e.getMessage());
+      LOGGER.warning("Duplicate game name in " + dir.toAbsolutePath() + ": " + e.getMessage());
     } catch (RuntimeException e) { // NOPMD
-      log.log(Level.WARNING, "General exception when loading from " + dir.toAbsolutePath(), e);
+      LOGGER.log(Level.WARNING, "General exception when loading from " + dir.toAbsolutePath(), e);
     }
     return Optional.empty();
   }
@@ -72,11 +64,11 @@ public final class ExtensionManager {
     try {
       return Optional.ofNullable(loader.loadFromZip(zip));
     } catch (IOException e) {
-      log.log(Level.WARNING, "Could not load game from ZIP file " + zip.toAbsolutePath(), e);
+      LOGGER.log(Level.WARNING, "Could not load game from ZIP file " + zip.toAbsolutePath(), e);
     } catch (DuplicateGameException e) {
-      log.warning("Duplicate game name in ZIP file " + zip.toAbsolutePath() + ": " + e.getMessage());
+      LOGGER.warning("Duplicate game name in ZIP file " + zip.toAbsolutePath() + ": " + e.getMessage());
     } catch (RuntimeException e) { // NOPMD
-      log.log(Level.WARNING, "General exception when loading from ZIP file " + zip.toAbsolutePath(), e);
+      LOGGER.log(Level.WARNING, "General exception when loading from ZIP file " + zip.toAbsolutePath(), e);
     }
     return Optional.empty();
   }
@@ -89,6 +81,8 @@ public final class ExtensionManager {
 
   /**
    * Gets the list of discovered games. The list will be empty until {@link #refresh()} is called.
+   *
+   * @return the list of discovered games
    */
   public List<Game> getGames() {
     return games;
@@ -96,6 +90,8 @@ public final class ExtensionManager {
 
   /**
    * Refreshes the list of discovered games.
+   *
+   * @return the list of discovered games
    */
   public List<Game> refresh() {
     try {
@@ -103,9 +99,8 @@ public final class ExtensionManager {
       games.clear();
       games.addAll(foundGames);
     } catch (IOException e) {
-      log.log(Level.WARNING, "Could not refresh game extensions", e);
+      LOGGER.log(Level.WARNING, "Could not refresh game extensions", e);
     }
     return games;
   }
-
 }
