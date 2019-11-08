@@ -7,29 +7,29 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProgramPreferences {
-  private static ProgramPreferences instance;
-  private Values values;
+  private static final String FILE_NAME = "pathweaver.json";
+  private static final ProgramPreferences INSTANCE = new ProgramPreferences();
 
+  private Values values;
   private final String directory;
-  private static final String FILENAME = "pathweaver.json";
 
   private ProgramPreferences() {
     directory = System.getProperty("user.home") + "/PathWeaver/";
-    File folder = new File(directory);
-    if (!folder.exists()) {
-      folder.mkdir();
-    }
-    try {
-      BufferedReader prefs = new BufferedReader(new FileReader(directory + FILENAME));
+
+    try(BufferedReader prefs = Files.newBufferedReader(Paths.get(directory, FILE_NAME))) {
       Gson gson = new GsonBuilder().serializeNulls().create();
       values = gson.fromJson(prefs, Values.class);
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
+      values = new Values();
       updatePrefs();
     } catch (JsonParseException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -38,6 +38,8 @@ public class ProgramPreferences {
               "Preferences have been reset due to file corruption. You may reimport your projects with the 'Import Project' button");
       ((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
       alert.show();
+
+      values = new Values();
       updatePrefs();
     }
   }
@@ -47,19 +49,18 @@ public class ProgramPreferences {
    * @return Singleton instance of ProgramPreferences.
    */
   public static ProgramPreferences getInstance() {
-    if (instance == null) {
-      instance = new ProgramPreferences();
-    }
-    return instance;
+    return INSTANCE;
   }
 
   private void updatePrefs() {
-    values = new Values();
+    Path output = Paths.get(directory, FILE_NAME);
     try {
+      Files.createDirectories(output);
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      FileWriter writer = new FileWriter(directory + FILENAME);
-      gson.toJson(values, writer);
-      writer.close();
+
+      try(BufferedWriter writer = Files.newBufferedWriter(output)) {
+        gson.toJson(values, writer);
+      }
     } catch (IOException e) {
       Logger log = Logger.getLogger(getClass().getName());
       log.log(Level.WARNING, "couldn't update program preferences", e);

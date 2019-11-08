@@ -41,12 +41,12 @@ import java.util.Objects;
  * @see CurrentSelections
  * @see Spline
  */
-@SuppressWarnings("PMD.TooManyMethods")
+
 public abstract class Path {
     protected static final PseudoClass SELECTED_CLASS = PseudoClass.getPseudoClass("selected");
-    protected static final double DEFAULT_SPLINE_SCALE = 6; // NOPMD
-    protected static final double DEFAULT_CIRCLE_SCALE = .75; // NOPMD
-    protected static final double DEFAULT_LINE_SCALE = 4; // NOPMD
+    protected static final double DEFAULT_SPLINE_SCALE = 6;
+    protected static final double DEFAULT_CIRCLE_SCALE = .75;
+    protected static final double DEFAULT_LINE_SCALE = 4;
 
     protected final Field field = ProjectPreferences.getInstance().getField();
     protected final ObservableList<Waypoint> waypoints = new ObservableListWrapper<>(new ArrayList<>());

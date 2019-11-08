@@ -65,7 +65,6 @@ stages:
           jdkArchitectureOption: x86
       - task: Gradle@2
         inputs:
-          options: '-x pmdMain -x pmdTest -PbuildServer'
           workingDirectory: ''
           gradleWrapperFile: 'gradlew'
           gradleOptions: '-Xmx1024m'
@@ -81,6 +80,9 @@ stages:
           mkdir build
           export JAVA_HOME=`/usr/libexec/java_home -v 11`
         displayName: 'Setup JDK'
+      - script: |
+          rm /Users/vsts/.gradle/init.d/log-gradle-version-plugin.gradle
+        displayName: 'Delete Version init script'
       - task: Gradle@2
         inputs:
           workingDirectory: ''

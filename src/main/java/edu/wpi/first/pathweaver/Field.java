@@ -120,7 +120,7 @@ public class Field {
   }
 
   private void updateScale() {
-    this.scale = ((pixelWidth / realWidth()) + (pixelLength / realLength())) / 2; //NOPMD Useless parentheses
+    this.scale = ((pixelWidth / realWidth()) + (pixelLength / realLength())) / 2;
   }
 
   public Unit<Length> getUnit() {

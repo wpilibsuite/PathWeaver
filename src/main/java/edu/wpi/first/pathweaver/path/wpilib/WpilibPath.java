@@ -30,7 +30,7 @@ public class WpilibPath extends Path {
      * @param points        The list of waypoints to add
      * @param name          The name of the path
      */
-    @SuppressWarnings("PMD.NcssCount")
+
     public WpilibPath(List<Waypoint> points, String name) {
         super(WpilibSpline::new, name);
         this.waypoints.addListener((ListChangeListener<Waypoint>) c -> {

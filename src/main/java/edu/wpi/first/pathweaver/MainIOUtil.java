@@ -3,9 +3,9 @@ package edu.wpi.first.pathweaver;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -138,10 +138,8 @@ public final class MainIOUtil {
    * @param root     Auton treeItem to add new created items to.
    */
   public static void loadAuton(String location, String filename, TreeItem<String> root) {
-    BufferedReader reader;
     root.getChildren().clear();
-    try {
-      reader = new BufferedReader(new FileReader(location + filename));
+    try(BufferedReader reader = Files.newBufferedReader(Paths.get(location, filename))) {
       String line = reader.readLine();
       while (line != null) {
         addChild(root, line);
@@ -161,15 +159,11 @@ public final class MainIOUtil {
    * @param root     Auton treeItem to save
    */
   public static void saveAuton(String location, String filename, TreeItem<String> root) {
-    BufferedWriter writer;
-    try {
-      writer = new BufferedWriter(new FileWriter(location + filename));
+    try(BufferedWriter writer = Files.newBufferedWriter(Paths.get(location, filename))) {
       for (TreeItem<String> item : root.getChildren()) {
         writer.write(item.getValue());
         writer.newLine();
       }
-
-      writer.close();
     } catch (IOException e) {
       LOGGER.log(Level.WARNING, "Could not save auton file", e);
     }

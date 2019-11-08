@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
 
+@SuppressWarnings("PMD.UnusedPrivateMethod")
 public class EditWaypointController {
   @FXML
   private TextField xPosition;

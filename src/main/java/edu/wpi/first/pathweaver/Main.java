@@ -7,7 +7,8 @@ import javafx.application.Application;
  * reflectively access the JavaFX application launcher classes - this will fail because there is no module path;
  * everything is in the same, unnamed module.
  */
-@SuppressWarnings("PMD.UseUtilityClass") // Nope.
+ // Nope.
+@SuppressWarnings("PMD.UseUtilityClass")
 public final class Main {
   public static void main(String[] args) {
     // JavaFX 11+ uses GTK3 by default, and has problems on some display servers

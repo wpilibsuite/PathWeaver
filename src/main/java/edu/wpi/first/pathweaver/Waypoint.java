@@ -15,7 +15,7 @@ import tec.units.ri.quantity.Quantities;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
-@SuppressWarnings("PMD.TooManyMethods")
+
 public class Waypoint {
   private static final double SIZE = 30.0;
   private static final double ICON_X_OFFSET = (SIZE * 3D / 5D) / 16.5;
@@ -160,7 +160,7 @@ public class Waypoint {
   }
 
   public void setCoords(Point2D coords) {
-    setX(coords.getY());
+    setX(coords.getX());
     setY(coords.getY());
   }
 

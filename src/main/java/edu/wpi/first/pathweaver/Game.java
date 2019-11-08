@@ -31,10 +31,8 @@ public final class Game {
    * @param field the game field
    *
    * @return the created game
-   *
-   * @throws DuplicateGameException if a game has already been created with the given name
    */
-  public static Game create(String name, Field field) throws DuplicateGameException {
+  public static Game create(String name, Field field) {
     if (GAMES.stream().map(Game::getName).anyMatch(name::equals)) {
       throw new DuplicateGameException("A game already exists with the name \"" + name + "\"");
     }

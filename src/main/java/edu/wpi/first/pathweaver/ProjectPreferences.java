@@ -8,17 +8,15 @@ import javafx.stage.Stage;
 
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("PMD.SingleMethodSingleton")
 public class ProjectPreferences {
-  private static final String FILENAME = "/pathweaver.json";
+  private static final String FILE_NAME = "pathweaver.json";
 
   private static ProjectPreferences instance;
 
@@ -28,8 +26,7 @@ public class ProjectPreferences {
 
   private ProjectPreferences(String directory) {
     this.directory = directory;
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(directory + FILENAME));
+    try(BufferedReader reader = Files.newBufferedReader(Paths.get(directory, FILE_NAME))) {
       Gson gson = new Gson();
       values = gson.fromJson(reader, Values.class);
     } catch (JsonParseException e) {
@@ -41,7 +38,7 @@ public class ProjectPreferences {
 
       alert.show();
       setDefaults();
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       setDefaults();
     }
   }
@@ -52,12 +49,13 @@ public class ProjectPreferences {
   }
 
   private void updateValues() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     try {
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      new File(directory).mkdirs();
-      FileWriter writer = new FileWriter(directory + FILENAME);
-      gson.toJson(values, writer);
-      writer.close();
+      Files.createDirectories(Paths.get(directory));
+
+      try(BufferedWriter writer = Files.newBufferedWriter(Paths.get(directory, FILE_NAME))) {
+        gson.toJson(values, writer);
+      }
     } catch (IOException e) {
       Logger log = Logger.getLogger(getClass().getName());
       log.log(Level.WARNING, "Couldn't update Project Preferences", e);
@@ -83,6 +81,7 @@ public class ProjectPreferences {
    * @param folder Path to project folder.
    * @return Singleton instance of ProjectPreferences.
    */
+  @SuppressWarnings("PMD.NonThreadSafeSingleton")
   public static ProjectPreferences getInstance(String folder) {
     if (instance == null || !instance.directory.equals(folder)) {
       instance = new ProjectPreferences(folder);
@@ -100,7 +99,7 @@ public class ProjectPreferences {
   }
 
   public static boolean projectExists(String folder) {
-    return new File(folder + FILENAME).exists();
+    return Files.exists(Paths.get(folder, FILE_NAME));
   }
 
   /**

@@ -30,9 +30,8 @@ import tec.units.ri.format.SimpleUnitFormat;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
-@SuppressWarnings("PMD.TooManyFields")
+@SuppressWarnings("PMD")
 public class CreateProjectController {
-
   @FXML
   private Label title;
   @FXML
@@ -91,7 +90,7 @@ public class CreateProjectController {
   private boolean editing = false;
 
   @FXML
-  @SuppressWarnings("PMD.NcssCount")
+
   private void initialize() {
     ObservableList<TextField> numericFields = FXCollections.observableArrayList(timeStep, maxVelocity,
         maxAcceleration, maxJerk, wheelBase);
@@ -102,7 +101,7 @@ public class CreateProjectController {
     var outputControls = List.of(outputLabel, outputDirectory, browseOutput);
     var timeControls = List.of(timeLabel, timeStep, timeUnits);
     var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
-    var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits); // NOPMD
+    var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
     var jerkControls = List.of(jerkLabel, maxJerk, jerkUnits);
     var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
 
@@ -187,7 +186,7 @@ public class CreateProjectController {
   }
 
   @FXML
-  @SuppressWarnings("PMD.NcssCount")
+
   private void createProject() {
     String folderString = directory.getText().trim();
     // create a "PathWeaver" subdirectory if not editing an existing project
