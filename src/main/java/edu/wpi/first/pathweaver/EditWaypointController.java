@@ -15,141 +15,147 @@ import javafx.util.converter.NumberStringConverter;
 
 @SuppressWarnings("PMD.UnusedPrivateMethod")
 public class EditWaypointController {
-  @FXML
-  private TextField xPosition;
-  @FXML
-  private TextField yPosition;
-  @FXML
-  private TextField tangentX;
-  @FXML
-  private TextField tangentY;
-  @FXML
-  private CheckBox lockedTangent;
-  @FXML
-  private TextField pointName;
+	@FXML
+	private TextField xPosition;
+	@FXML
+	private TextField yPosition;
+	@FXML
+	private TextField tangentX;
+	@FXML
+	private TextField tangentY;
+	@FXML
+	private CheckBox lockedTangent;
+	@FXML
+	private TextField pointName;
 
-  private List<Control> controls;
-  private ChangeListener<String> nameListener;
+	private List<Control> controls;
+	private ChangeListener<String> nameListener;
 
-  @FXML
-  private void initialize() {
-    controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName);
-    controls.forEach(control -> control.setDisable(true));
-    List<TextField> textFields = List.of(xPosition, yPosition, tangentX, tangentY);
-    textFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
-  }
+	@FXML
+	private void initialize() {
+		controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName);
+		controls.forEach(control -> control.setDisable(true));
+		List<TextField> textFields = List.of(xPosition, yPosition, tangentX, tangentY);
+		textFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
+	}
 
-  /**
-   * Binds the edit fields to the given wp. Allows for the unbinding and rebinding of properties as wp changes.
-   * @param wp The ObservableValue for the selected waypoint.
-   * @param controller The PathDisplayController to check the bounds of new waypoint values.
-   */
-  public void bindToWaypoint(ObservableValue<Waypoint> wp, FieldDisplayController controller) {
-    // When changing X and Y values, verify points are within bounds
-    xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
-      boolean validText = !("").equals(newValue) && !("").equals(yPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(newValue), Double.parseDouble(yPosition.getText()))) {
-        xPosition.setText(oldValue);
-      }
-    });
-    yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
-      boolean validText = !("").equals(newValue) && !("").equals(xPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(xPosition.getText()), Double.parseDouble(newValue))) {
-        yPosition.setText(oldValue);
-      }
-    });
-    wp.addListener((observable, oldValue, newValue) -> {
-      if (oldValue != null) {
-        unbind(oldValue);
-      }
-      if (newValue != null) {
-        bind(newValue);
-      }
-    });
-    enableSaving(wp);
-    lockTangentOnEdit();
-  }
+	/**
+	 * Binds the edit fields to the given wp. Allows for the unbinding and rebinding
+	 * of properties as wp changes.
+	 *
+	 * @param wp
+	 *            The ObservableValue for the selected waypoint.
+	 * @param controller
+	 *            The PathDisplayController to check the bounds of new waypoint
+	 *            values.
+	 */
+	public void bindToWaypoint(ObservableValue<Waypoint> wp, FieldDisplayController controller) {
+		// When changing X and Y values, verify points are within bounds
+		xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
+			boolean validText = !("").equals(newValue) && !("").equals(yPosition.getText());
+			if (validText
+					&& !controller.checkBounds(Double.parseDouble(newValue), Double.parseDouble(yPosition.getText()))) {
+				xPosition.setText(oldValue);
+			}
+		});
+		yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
+			boolean validText = !("").equals(newValue) && !("").equals(xPosition.getText());
+			if (validText
+					&& !controller.checkBounds(Double.parseDouble(xPosition.getText()), Double.parseDouble(newValue))) {
+				yPosition.setText(oldValue);
+			}
+		});
+		wp.addListener((observable, oldValue, newValue) -> {
+			if (oldValue != null) {
+				unbind(oldValue);
+			}
+			if (newValue != null) {
+				bind(newValue);
+			}
+		});
+		enableSaving(wp);
+		lockTangentOnEdit();
+	}
 
-  private void enableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
-    NumberStringConverter converter = new NumberStringConverter() {
-      @Override
-      public Number fromString(String value) {
-        // Don't parse the beginning of a negative number
-        if ("-".equals(value)) {
-          return null;
-        } else {
-          return super.fromString(value);
-        }
-      }
-    };
-    field.textProperty().bindBidirectional(doubleProperty, converter);
-  }
+	private void enableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
+		NumberStringConverter converter = new NumberStringConverter() {
+			@Override
+			public Number fromString(String value) {
+				// Don't parse the beginning of a negative number
+				if ("-".equals(value)) {
+					return null;
+				} else {
+					return super.fromString(value);
+				}
+			}
+		};
+		field.textProperty().bindBidirectional(doubleProperty, converter);
+	}
 
-  private void disableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
-    field.textProperty().unbindBidirectional(doubleProperty);
-    field.setText("");
-  }
+	private void disableDoubleBinding(TextField field, DoubleProperty doubleProperty) {
+		field.textProperty().unbindBidirectional(doubleProperty);
+		field.setText("");
+	}
 
-  private void unbind(Waypoint oldValue) {
-    controls.forEach(control -> control.setDisable(true));
-    disableDoubleBinding(xPosition, oldValue.xProperty());
-    disableDoubleBinding(yPosition, oldValue.yProperty());
-    disableDoubleBinding(tangentX, oldValue.tangentXProperty());
-    disableDoubleBinding(tangentY, oldValue.tangentYProperty());
-    lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
-    lockedTangent.setSelected(false);
-    pointName.textProperty().removeListener(nameListener);
-    pointName.setText("");
-  }
+	private void unbind(Waypoint oldValue) {
+		controls.forEach(control -> control.setDisable(true));
+		disableDoubleBinding(xPosition, oldValue.xProperty());
+		disableDoubleBinding(yPosition, oldValue.yProperty());
+		disableDoubleBinding(tangentX, oldValue.tangentXProperty());
+		disableDoubleBinding(tangentY, oldValue.tangentYProperty());
+		lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
+		lockedTangent.setSelected(false);
+		pointName.textProperty().removeListener(nameListener);
+		pointName.setText("");
+	}
 
-  private void bind(Waypoint newValue) {
-    controls.forEach(control -> control.setDisable(false));
+	private void bind(Waypoint newValue) {
+		controls.forEach(control -> control.setDisable(false));
 
-    if (CurrentSelections.getCurPath().getStart() == newValue || CurrentSelections.getCurPath().getEnd() == newValue) {
-      lockedTangent.setDisable(true);
-      lockedTangent.setSelected(true);
-    } else {
-      lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
-    }
-    enableDoubleBinding(xPosition, newValue.xProperty());
-    enableDoubleBinding(yPosition, newValue.yProperty());
-    enableDoubleBinding(tangentX, newValue.tangentXProperty());
-    enableDoubleBinding(tangentY, newValue.tangentYProperty());
-    pointName.setText(newValue.getName());
-    nameListener = (observable, oldText, newText) -> newValue.setName(newText);
-    pointName.textProperty().addListener(nameListener);
-  }
+		if (CurrentSelections.getCurPath().getStart() == newValue
+				|| CurrentSelections.getCurPath().getEnd() == newValue) {
+			lockedTangent.setDisable(true);
+			lockedTangent.setSelected(true);
+		} else {
+			lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
+		}
+		enableDoubleBinding(xPosition, newValue.xProperty());
+		enableDoubleBinding(yPosition, newValue.yProperty());
+		enableDoubleBinding(tangentX, newValue.tangentXProperty());
+		enableDoubleBinding(tangentY, newValue.tangentYProperty());
+		pointName.setText(newValue.getName());
+		nameListener = (observable, oldText, newText) -> newValue.setName(newText);
+		pointName.textProperty().addListener(nameListener);
+	}
 
-  private void enableSaving(ObservableValue<Waypoint> wp) {
-    // Save values when out of focus
-    List.of(xPosition, yPosition, tangentX, tangentY, pointName)
-        .forEach(textField -> {
-          textField.setOnKeyReleased(event -> {
-            if (!textField.getText().equals("") && wp.getValue() != null) {
-              SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
-              CurrentSelections.getCurPath().update();
-            }
-            event.consume();
-          });
+	private void enableSaving(ObservableValue<Waypoint> wp) {
+		// Save values when out of focus
+		List.of(xPosition, yPosition, tangentX, tangentY, pointName).forEach(textField -> {
+			textField.setOnKeyReleased(event -> {
+				if (!textField.getText().equals("") && wp.getValue() != null) {
+					SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
+					CurrentSelections.getCurPath().update();
+				}
+				event.consume();
+			});
 
-          textField.setOnMouseClicked(event -> {
-            if (!textField.getText().equals("") && wp.getValue() != null) {
-              SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
-              CurrentSelections.getCurPath().update();
-            }
-          });
-        });
+			textField.setOnMouseClicked(event -> {
+				if (!textField.getText().equals("") && wp.getValue() != null) {
+					SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
+					CurrentSelections.getCurPath().update();
+				}
+			});
+		});
 
-    lockedTangent.selectedProperty()
-            .addListener(listener -> {
-              if (wp.getValue() != null) {
-                SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
-              }
-            });
-  }
+		lockedTangent.selectedProperty().addListener(listener -> {
+			if (wp.getValue() != null) {
+				SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
+			}
+		});
+	}
 
-  private void lockTangentOnEdit() {
-    tangentY.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
-    tangentX.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
-  }
+	private void lockTangentOnEdit() {
+		tangentY.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
+		tangentX.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
+	}
 }

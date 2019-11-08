@@ -99,6 +99,9 @@ application {
 spotless {
     java {
         removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        eclipse()
     }
     kotlinGradle {
         ktlint("0.33.0")
@@ -155,6 +158,7 @@ jacoco {
 
 extensions.getByType<PmdExtension>().apply {
     toolVersion = "6.19.0"
+//    isIncrementalAnalysis = true
     isConsoleOutput = true
     reportsDir = file("${project.buildDir}/reports/pmd")
     ruleSetFiles = files(file("$rootDir/pmd-ruleset.xml"))
@@ -211,5 +215,5 @@ publishing {
 }
 
 tasks.withType<Wrapper>().configureEach {
-    gradleVersion = "5.0"
+    gradleVersion = "5.6"
 }

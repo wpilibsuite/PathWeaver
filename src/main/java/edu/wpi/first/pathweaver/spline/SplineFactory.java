@@ -7,5 +7,5 @@ import java.util.List;
 
 //Simple functional interface to create a Spline
 public interface SplineFactory {
-    Spline makeSpline(List<Waypoint> waypoints, Path path);
+	Spline makeSpline(List<Waypoint> waypoints, Path path);
 }

@@ -20,52 +20,55 @@ import java.util.logging.StreamHandler;
 
 final class Loggers {
 
-  private Loggers() {
-    throw new UnsupportedOperationException("This is a utility class");
-  }
+	private Loggers() {
+		throw new UnsupportedOperationException("This is a utility class");
+	}
 
-  /**
-   * Sets up loggers to print to stdout (rather than stderr) and log to ~/PathWeaver/pathweaver.time.log
-   */
+	/**
+	 * Sets up loggers to print to stdout (rather than stderr) and log to
+	 * ~/PathWeaver/pathweaver.time.log
+	 */
 
-  public static void setupLoggers() throws IOException {
-    //Set up the global level logger. This handles IO for all loggers.
-    final Logger globalLogger = LogManager.getLogManager().getLogger("");
+	public static void setupLoggers() throws IOException {
+		// Set up the global level logger. This handles IO for all loggers.
+		final Logger globalLogger = LogManager.getLogManager().getLogger("");
 
-    // Remove the default handlers that stream to System.err
-    for (Handler handler : globalLogger.getHandlers()) {
-      globalLogger.removeHandler(handler);
-    }
+		// Remove the default handlers that stream to System.err
+		for (Handler handler : globalLogger.getHandlers()) {
+			globalLogger.removeHandler(handler);
+		}
 
-    String directory = System.getProperty("user.home") + "/PathWeaver/logs";
-      File folder = new File(directory);
-    if (!folder.exists()) {
-      folder.mkdir();
-    }
-    String time = DateTimeFormatter.ofPattern("YYYY-MM-dd-HH.mm.ss", Locale.getDefault()).format(LocalDateTime.now());
-    final Handler fileHandler = new FileHandler(directory + "/pathweaver." + time + ".log");
+		String directory = System.getProperty("user.home") + "/PathWeaver/logs";
+		File folder = new File(directory);
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+		String time = DateTimeFormatter.ofPattern("YYYY-MM-dd-HH.mm.ss", Locale.getDefault())
+				.format(LocalDateTime.now());
+		final Handler fileHandler = new FileHandler(directory + "/pathweaver." + time + ".log");
 
-    fileHandler.setLevel(Level.INFO);    // Only log INFO and above to disk
-    globalLogger.setLevel(Level.CONFIG); // Log CONFIG and higher
+		fileHandler.setLevel(Level.INFO); // Only log INFO and above to disk
+		globalLogger.setLevel(Level.CONFIG); // Log CONFIG and higher
 
-    // We need to stream to System.out instead of System.err
-    final StreamHandler sh = new StreamHandler(System.out, new SimpleFormatter()) {
-      @Override
-      public synchronized void publish(final LogRecord record) {
-        super.publish(record);
-        // For some reason this doesn't happen automatically.
-        // This will ensure we get all of the logs printed to the console immediately instead of at shutdown
-        flush();
-      }
-    };
-    sh.setLevel(Level.CONFIG); // Log CONFIG and higher to stdout
+		// We need to stream to System.out instead of System.err
+		final StreamHandler sh = new StreamHandler(System.out, new SimpleFormatter()) {
+			@Override
+			public synchronized void publish(final LogRecord record) {
+				super.publish(record);
+				// For some reason this doesn't happen automatically.
+				// This will ensure we get all of the logs printed to the console immediately
+				// instead of at shutdown
+				flush();
+			}
+		};
+		sh.setLevel(Level.CONFIG); // Log CONFIG and higher to stdout
 
-    globalLogger.addHandler(sh);
-    globalLogger.addHandler(fileHandler);
-    fileHandler.setFormatter(new SimpleFormatter()); //log in text, not xml
+		globalLogger.addHandler(sh);
+		globalLogger.addHandler(fileHandler);
+		fileHandler.setFormatter(new SimpleFormatter()); // log in text, not xml
 
-    globalLogger.config("Configuration done."); //Log that we are done setting up the logger
+		globalLogger.config("Configuration done."); // Log that we are done setting up the logger
 
-  }
+	}
 
 }
