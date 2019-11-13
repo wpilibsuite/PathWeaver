@@ -54,12 +54,12 @@ public class ProgramPreferences {
 	}
 
 	private void updatePrefs() {
-		Path output = Paths.get(directory, FILE_NAME);
+		Path dirPath = Paths.get(directory);
 		try {
-			Files.createDirectories(output);
+			Files.createDirectories(dirPath);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-			try (BufferedWriter writer = Files.newBufferedWriter(output)) {
+			try (BufferedWriter writer = Files.newBufferedWriter(dirPath.resolve(FILE_NAME))) {
 				gson.toJson(values, writer);
 			}
 		} catch (IOException e) {
