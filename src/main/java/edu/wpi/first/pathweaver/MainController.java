@@ -27,20 +27,22 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-@SuppressWarnings("PMD.TooManyMethods")
+
 //With the creation of a project many of these functions should be moved out of here
 //Anything to do with the directory should be part of a Project object
 
+@SuppressWarnings({"PMD.UnusedPrivateMethod","PMD.AvoidFieldNameMatchingMethodName"})
 public class MainController {
+  private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
+
   @FXML private TreeView<String> autons;
   @FXML private TreeView<String> paths;
-  @FXML private Pane pathDisplay;
-  // Variable is auto generated as Pane name + Controller
-  @FXML private FieldDisplayController fieldDisplayController; //NOPMD
+
+  @FXML private Pane fieldDisplay;
+  @FXML private FieldDisplayController fieldDisplayController;
 
   @FXML private GridPane editWaypoint;
-  // Variable is auto generated as Pane name + Controller
-  @FXML private EditWaypointController editWaypointController; //NOPMD
+  @FXML private EditWaypointController editWaypointController;
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
@@ -87,7 +89,7 @@ public class MainController {
     treeView.setShowRoot(false); // Don't show the roots "Paths" and "Autons" - cleaner appearance
   }
 
-  @SuppressWarnings("PMD.NcssCount")
+
   private void setupEditable() {
     autons.setOnEditStart(event -> {
       if (event.getTreeItem().getParent() != autonRoot) {
@@ -144,7 +146,7 @@ public class MainController {
   }
 
   @FXML
-  @SuppressWarnings("PMD.NcssCount")
+
   private void delete() {
     if (selected == null) {
       // have nothing selected
@@ -233,7 +235,7 @@ public class MainController {
     paths.getSelectionModel().selectedItemProperty().addListener(selectionListener);
   }
 
-  @SuppressWarnings("PMD.NcssCount")
+
   private void setupClickableAutons() {
     ChangeListener<TreeItem<String>> selectionListener = new ChangeListener<>() {
       @Override
@@ -323,7 +325,7 @@ public class MainController {
   }
 
   @FXML
-  @SuppressWarnings("PMD.NcssCount")
+
   private void buildPaths() {
     if (!SaveManager.getInstance().promptSaveAll()) {
       return;
@@ -346,8 +348,7 @@ public class MainController {
     try {
       alert.setContentText("Paths exported to: " + output.getCanonicalPath());
     } catch (IOException e) {
-      Logger log = Logger.getLogger(MainController.class.getName());
-      log.log(Level.WARNING, "Could not export to " + output.getPath(), e);
+      LOGGER.log(Level.WARNING, "Could not export to " + output.getPath(), e);
     }
     alert.show();
   }
@@ -356,14 +357,13 @@ public class MainController {
   private void editProject() {
     try {
       Pane root = FXMLLoader.load(getClass().getResource("createProject.fxml"));
-      Scene scene = pathDisplay.getScene();
+      Scene scene = fieldDisplay.getScene();
       Stage primaryStage = (Stage) scene.getWindow();
       primaryStage.setMaximized(false);
       primaryStage.setResizable(false);
       scene.setRoot(root);
     } catch (IOException e) {
-      Logger log = Logger.getLogger(getClass().getName());
-      log.log(Level.WARNING, "Couldn't load create project screen", e);
+      LOGGER.log(Level.WARNING, "Couldn't load create project screen", e);
     }
   }
 

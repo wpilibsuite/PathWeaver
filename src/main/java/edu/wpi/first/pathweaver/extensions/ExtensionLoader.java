@@ -82,7 +82,7 @@ public final class ExtensionLoader {
    * @return tne game represented by the JSON
    * @throws IOException if the file could not be read
    */
-  public Game loadFromJsonFile(Path jsonFile) throws IOException, DuplicateGameException {
+  public Game loadFromJsonFile(Path jsonFile) throws IOException {
     if (!jsonFile.getFileName().toString().endsWith(".json")) {
       throw new IllegalArgumentException("Not a JSON file: " + jsonFile);
     }
@@ -110,7 +110,7 @@ public final class ExtensionLoader {
    * @throws IllegalArgumentException if there are no JSON files in the directory
    * @throws IllegalArgumentException if there are multiple JSON files in the directory and none named "game.json"
    */
-  public Game loadFromDir(Path dir) throws IOException, DuplicateGameException {
+  public Game loadFromDir(Path dir) throws IOException {
     List<Path> possibleJsonFiles = Files.list(dir)
         .filter(path -> path.toString().endsWith(".json"))
         .collect(Collectors.toList());
@@ -145,7 +145,7 @@ public final class ExtensionLoader {
    * @throws IllegalArgumentException if there are multiple JSON files in the zip file and none named "game.json"
    * @see #loadFromDir(Path)
    */
-  public Game loadFromZip(Path zipFile) throws IOException, DuplicateGameException {
+  public Game loadFromZip(Path zipFile) throws IOException {
     Path dir = Files.createTempDirectory("pathweaver-extension-" + zipFile.getFileName());
 
     try (ZipFile zip = new ZipFile(zipFile.toFile())) {
@@ -191,10 +191,8 @@ public final class ExtensionLoader {
    * @param json          the JSON string to parse
    *
    * @return the game object defined by the JSON text
-   *
-   * @throws DuplicateGameException if a game already exists with the given name
    */
-  public Game loadFromJsonString(Function<String, Image> imageProvider, String json) throws DuplicateGameException {
+  public Game loadFromJsonString(Function<String, Image> imageProvider, String json) {
     return new GsonBuilder()
         .registerTypeAdapter(Game.class, new ExtensionJsonDeserializer(imageProvider))
         .create()
@@ -219,7 +217,7 @@ public final class ExtensionLoader {
     }
 
     @Override
-    public Game deserialize(JsonElement element, Type t, JsonDeserializationContext c) throws JsonParseException {
+    public Game deserialize(JsonElement element, Type t, JsonDeserializationContext c) {
       var jsonObject = element.getAsJsonObject();
 
       String imagePath = jsonObject

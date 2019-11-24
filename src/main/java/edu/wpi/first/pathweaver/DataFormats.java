@@ -5,7 +5,7 @@ import javafx.scene.input.DataFormat;
 /**
  * Custom data formats for PathWeaver.
  */
-public final class DataFormats { //NOPMD
+public final class DataFormats {
 
   public static final String APP_PREFIX = "pathweaver";
 

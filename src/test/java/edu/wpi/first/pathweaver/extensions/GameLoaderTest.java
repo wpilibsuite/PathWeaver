@@ -10,11 +10,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts") // PMD doesn't quite understand assertAll()
 public class GameLoaderTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitAssertionsShouldIncludeMessage") // False positive on the messages in the last 2 asserts
   public void testSimpleJson() {
     ExtensionLoader loader = new ExtensionLoader();
     String json = "{"

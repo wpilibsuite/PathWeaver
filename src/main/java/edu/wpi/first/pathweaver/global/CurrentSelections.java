@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
  * Those who would like to remove this should refrain from doing so, as the
  * necessary plumbing is verbose and unwieldy.
  */
-@SuppressWarnings("PMD.ClassNamingConventions")
+
 public final class CurrentSelections {
     private static SimpleObjectProperty<Waypoint> curSplineStart = new SimpleObjectProperty<>();
     private static SimpleObjectProperty<Waypoint> curSplineEnd = new SimpleObjectProperty<>();

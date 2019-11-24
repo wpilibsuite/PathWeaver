@@ -66,7 +66,7 @@ public final class PathUnits extends AbstractSystemOfUnits {
    * @return the unit represented by the string
    * @throws IllegalArgumentException if no such unit exists
    */
-  public Unit<Length> length(String unit) { // NOPMD it's a giant switch statement
+  public Unit<Length> length(String unit) {
     switch (unit.toLowerCase(Locale.US)) {
       // Metric
       case "meter":

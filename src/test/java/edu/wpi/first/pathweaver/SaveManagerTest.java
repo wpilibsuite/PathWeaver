@@ -5,9 +5,10 @@ import edu.wpi.first.pathweaver.path.wpilib.WpilibPath;
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,11 +19,10 @@ public class SaveManagerTest {
   private String pathDirectory;
 
   @BeforeEach
-  public void initialize() throws IOException {
-    TemporaryFolder folder = new TemporaryFolder();
-    folder.create();
-    String projectDirectory = folder.getRoot().getAbsolutePath();
-    pathDirectory = folder.newFolder("Paths").getAbsolutePath() + "/";
+  public void initialize(@TempDir java.nio.file.Path temp) throws IOException {
+    Files.createDirectories(temp.resolve("Paths/"));
+    String projectDirectory = temp.toAbsolutePath().toString();
+    pathDirectory = temp.resolve("Paths/").toAbsolutePath().toString();
     ProjectPreferences.getInstance(projectDirectory);
   }
 

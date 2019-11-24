@@ -34,7 +34,7 @@ import java.nio.file.Path;
  * @see edu.wpi.first.pathweaver.path.wpilib.WpilibPath
  * @see SplineSegment
  */
-@SuppressWarnings("PMD.NcssCount")
+
 public interface Spline {
   /**
    * Updates the current spline

@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 
+@SuppressWarnings("PMD.UnusedPrivateMethod")
 public class WelcomeController {
 
   @FXML
