@@ -124,8 +124,9 @@ dependencies {
     compile(group = "org.fxmisc.easybind", name = "easybind", version = "1.0.3")
 
     compile(group = "javax.measure", name = "unit-api", version = "1.0")
-    compile(group = "si.uom", name = "si-units", version = "0.9")
-    compile(group = "systems.uom", name = "systems-common", version = "0.8")
+    compile(group = "si.uom", name = "si-units", version = "2.0.1")
+    compile(group = "systems.uom", name = "systems-common", version = "2.0")
+    compile(group = "tech.units", name = "indriya", version = "2.0.1")
 
     compile(group = "com.google.code.gson", name = "gson", version = "2.8.5")
     compile(group = "org.apache.commons", name = "commons-csv", version = "1.5")

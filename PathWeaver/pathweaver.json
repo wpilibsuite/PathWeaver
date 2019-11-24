@@ -2,7 +2,6 @@
   "timeStep": 0.02,
   "maxVelocity": 10.0,
   "maxAcceleration": 60.0,
-  "maxJerk": 60.0,
   "wheelBase": 2.0,
   "gameName": "FIRST Power Up"
 }
