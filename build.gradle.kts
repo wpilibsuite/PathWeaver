@@ -134,20 +134,12 @@ dependencies {
     compile(group = "edu.wpi.first.wpiutil", name = "wpiutil-java", version = "2020.+")
     compile(group = "edu.wpi.first.wpilibj", name = "wpilibj-java", version = "2020.+")
 
-    fun junitJupiter(name: String, version: String = "5.2.0") =
+    fun junitJupiter(name: String, version: String = "5.5.0") =
         create(group = "org.junit.jupiter", name = name, version = version)
-    fun testFx(name: String, version: String = "4.0.13-alpha") =
-        create(group = "org.testfx", name = name, version = version)
 
     testCompile(junitJupiter(name = "junit-jupiter-api"))
-    testCompile(junitJupiter(name = "junit-jupiter-engine"))
     testCompile(junitJupiter(name = "junit-jupiter-params"))
-    testCompile(group = "com.google.guava", name = "guava-testlib", version = "23.0")
-    testCompile(testFx(name = "testfx-core"))
-    testCompile(testFx(name = "testfx-junit5"))
-
-    testRuntime(testFx(name = "openjfx-monocle", version = "jdk-9+181"))
-    testRuntime(group = "org.junit.platform", name = "junit-platform-launcher", version = "1.0.0")
+    testRuntime(junitJupiter(name = "junit-jupiter-engine"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -162,7 +154,7 @@ jacoco {
 }
 
 extensions.getByType<PmdExtension>().apply {
-    toolVersion = "6.8.0"
+    toolVersion = "6.19.0"
     isConsoleOutput = true
     reportsDir = file("${project.buildDir}/reports/pmd")
     ruleSetFiles = files(file("$rootDir/pmd-ruleset.xml"))
@@ -177,13 +169,7 @@ tasks.withType<JacocoReport>().configureEach {
 }
 
 tasks.withType<Test>().configureEach {
-    // TODO: re-enable when TestFX (or the underlying JavaFX problem) is fixed
-    println("UI tests will not be run due to TestFX being broken when headless on Java 10.")
-    println("See: https://github.com/javafxports/openjdk-jfx/issues/66")
-    // Link: https://github.com/javafxports/openjdk-jfx/issues/66
-    useJUnitPlatform {
-        excludeTags("UI")
-    }
+    useJUnitPlatform()
 }
 
 val nativeShadowTasks = NativePlatforms.values().map { platform ->
