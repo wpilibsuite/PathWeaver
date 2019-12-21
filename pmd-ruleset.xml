@@ -3,57 +3,102 @@
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
     <description>
         The PMD RuleSet for PathWeaver.
     </description>
+
     <rule ref="category/java/bestpractices.xml">
         <exclude name="AccessorClassGeneration"/>
         <exclude name="AccessorMethodGeneration"/>
+        <exclude name="AvoidPrintStackTrace"/>
+        <exclude name="AvoidReassigningParameters"/>
+        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
+        <exclude name="JUnitTestContainsTooManyAsserts"/>
+        <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
+        <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
+        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
+        <exclude name="SystemPrintln"/>
+        <exclude name="AvoidUsingHardCodedIP"/>
         <exclude name="UseVarargs"/>
         <exclude name="GuardLogStatement"/>
+        <exclude name="SwitchStmtsShouldHaveDefault"/>
     </rule>
-    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
-        <properties>
-            <property name="ignoredAnnotations" value="javafx.fxml.FXML"/>
-        </properties>
-    </rule>
-    <rule ref="category/java/codestyle.xml">
-        <exclude name="AtLeastOneConstructor"/>
-        <exclude name="LocalVariableCouldBeFinal"/>
-        <exclude name="MethodArgumentCouldBeFinal"/>
-        <exclude name="OnlyOneReturn"/>
-        <exclude name="ShortVariable"/>
-        <exclude name="TooManyStaticImports"/>
-    </rule>
+
     <rule ref="category/java/codestyle.xml/FieldNamingConventions">
         <properties>
-            <property name="constantPattern" value="log|logger|[A-Z][A-Z_0-9]*"/>
+            <property name="publicConstantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="constantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="enumConstantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="finalFieldPattern" value=".*"/>
+            <property name="staticFieldPattern" value=".*"/>
+            <property name="defaultFieldPattern" value=".*"/>
+            <property name="exclusions" value="serialVersionUID|serialPersistentFields"/>
         </properties>
     </rule>
+
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="AtLeastOneConstructor"/>
+        <exclude name="CallSuperInConstructor"/>
+        <exclude name="ClassNamingConventions"/>
+        <exclude name="FormalParameterNamingConventions"/>
+        <exclude name="GenericsNaming"/>
+        <exclude name="LocalVariableNamingConventions"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="LocalVariableCouldBeFinal"/>
+        <exclude name="OnlyOneReturn"/>
+        <exclude name="ShortClassName"/>
+        <exclude name="ShortMethodName"/>
+        <exclude name="ShortVariable"/>
+        <exclude name="LongVariable"/>
+        <exclude name="UselessParentheses"/>
+        <exclude name="UseUnderscoresInNumericLiterals"/>
+    </rule>
+
     <rule ref="category/java/design.xml/TooManyMethods">
         <properties>
-            <property name="maxmethods" value="11"></property>
+            <property name="maxmethods" value="20"/>
         </properties>
     </rule>
-    <rule ref="category/java/design.xml/TooManyFields">
-        <properties>
-            <property name="maxfields" value="16"></property>
-        </properties>
-    </rule>
-    <rule ref="category/java/codestyle.xml/ShortClassName">
-        <properties>
-            <property name="minimum" value="4"></property>
-        </properties>
-    </rule>
+
     <rule ref="category/java/design.xml">
+        <exclude name="AvoidDeeplyNestedIfStmts"/>
+        <exclude name="CouplingBetweenObjects"/>
+        <exclude name="CyclomaticComplexity"/>
         <exclude name="DataClass"/>
+        <exclude name="AvoidDeeplyNestedIfStmts"/>
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
+        <exclude name="NcssConstructorCount"/>
+        <exclude name="NcssCount"/>
+        <exclude name="NcssMethodCount"/>
+        <exclude name="NPathComplexity"/>
     </rule>
-    <rule ref="category/java/design.xml/NcssCount">
-        <properties>
-            <property name="methodReportLevel" value="20"/>
-            <property name="classReportLevel" value="250"/>
-        </properties>
+
+    <rule ref="category/java/performance.xml">
+        <exclude name="AvoidInstantiatingObjectsInLoops"/>
+        <exclude name="RedundantFieldInitializer"/>
+    </rule>
+
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="AvoidLiteralsInIfCondition"/>
+        <exclude name="BeanMembersShouldSerialize"/>
+        <exclude name="ConstructorCallsOverridableMethod"/>
+        <exclude name="DataflowAnomalyAnalysis"/>
+        <exclude name="DoNotCallSystemExit"/>
+        <exclude name="FinalizeDoesNotCallSuperFinalize"/>
+        <exclude name="JUnitSpelling"/>
+        <exclude name="MissingSerialVersionUID"/>
+        <exclude name="NullAssignment"/>
+        <exclude name="CompareObjectsWithEquals"/>
+        <exclude name="OverrideBothEqualsAndHashcode"/>
+        <exclude name="EmptyIfStmt"/>
+    </rule>
+
+    <rule ref="category/java/multithreading.xml">
+        <exclude name="AvoidSynchronizedAtMethodLevel"/>
+        <exclude name="AvoidUsingVolatile"/>
+        <exclude name="DoNotUseThreads"/>
     </rule>
 </ruleset>

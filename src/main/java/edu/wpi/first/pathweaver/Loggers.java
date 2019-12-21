@@ -17,7 +17,7 @@ import java.util.logging.StreamHandler;
 /**
  * Helper class for setting up the application loggers.
  */
-@SuppressWarnings("PMD.ClassNamingConventions")
+
 final class Loggers {
 
   private Loggers() {
@@ -27,7 +27,7 @@ final class Loggers {
   /**
    * Sets up loggers to print to stdout (rather than stderr) and log to ~/PathWeaver/pathweaver.time.log
    */
-  @SuppressWarnings("PMD.NcssCount")
+
   public static void setupLoggers() throws IOException {
     //Set up the global level logger. This handles IO for all loggers.
     final Logger globalLogger = LogManager.getLogManager().getLogger("");

@@ -21,9 +21,9 @@ public final class PathUtil {
      * @param p1 the Point2d representing the coordinates of the waypoint before this one
      * @param p2 the Point2d representing the coordinates of this waypoint
      * @param p3 the Point2d representing the coordinates of the waypoint after this one
-     * @return a Point2d representing the components of the tangent vector of this waypoint
+     * @return the a Point2d representing the lengths of the tangent line of this waypoint
      */
-    @SuppressWarnings("PMD.NcssCount")
+
     public static Point2D rawThetaOptimization(Point2D p1, Point2D p2, Point2D p3) {
         Point2D p1Scaled = new Point2D(0, 0);
         Point2D p2Scaled = p2.subtract(p1).multiply(1 / p3.distance(p1));

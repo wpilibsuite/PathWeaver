@@ -8,7 +8,6 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -66,13 +65,11 @@ public final class PathIOUtil {
    * @return Path object saved in Path file
    */
   public static Path importPath(String fileLocation, String fileName) {
-    File file = new File(fileLocation + fileName);
-    try {
-      Reader reader = Files.newBufferedReader(file.toPath());
-      CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
-              .withFirstRecordAsHeader()
-              .withIgnoreHeaderCase()
-              .withTrim());
+    try(Reader reader = Files.newBufferedReader(java.nio.file.Path.of(fileLocation, fileName));
+        CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withIgnoreHeaderCase()
+                .withTrim())) {
       ArrayList<Waypoint> waypoints = new ArrayList<>();
       for (CSVRecord csvRecord : csvParser) {
         Point2D position = new Point2D(

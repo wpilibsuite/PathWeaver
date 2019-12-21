@@ -23,7 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public final class FxUtils {
-  private static final List<PseudoClass> SUBCHILD_SELECTORS; // NOPMD
+  private static final List<PseudoClass> SUBCHILD_SELECTORS;
 
   static {
     PseudoClass[] selectors = new PseudoClass[8];

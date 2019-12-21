@@ -65,7 +65,6 @@ stages:
           jdkArchitectureOption: x86
       - task: Gradle@2
         inputs:
-          options: '-x pmdMain -x pmdTest -PbuildServer'
           workingDirectory: ''
           gradleWrapperFile: 'gradlew'
           gradleOptions: '-Xmx1024m'

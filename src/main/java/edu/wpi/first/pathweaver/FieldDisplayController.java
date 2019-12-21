@@ -21,7 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings("PMD.UnusedPrivateMethod")
 public class FieldDisplayController {
     private static final PseudoClass SELECTED_CLASS = PseudoClass.getPseudoClass("selected");
 

@@ -54,8 +54,6 @@ public final class ExtensionManager {
       LOGGER.log(Level.WARNING, "Could not load game from " + dir.toAbsolutePath(), e);
     } catch (DuplicateGameException e) {
       LOGGER.warning("Duplicate game name in " + dir.toAbsolutePath() + ": " + e.getMessage());
-    } catch (RuntimeException e) { // NOPMD
-      LOGGER.log(Level.WARNING, "General exception when loading from " + dir.toAbsolutePath(), e);
     }
     return Optional.empty();
   }
@@ -67,8 +65,6 @@ public final class ExtensionManager {
       LOGGER.log(Level.WARNING, "Could not load game from ZIP file " + zip.toAbsolutePath(), e);
     } catch (DuplicateGameException e) {
       LOGGER.warning("Duplicate game name in ZIP file " + zip.toAbsolutePath() + ": " + e.getMessage());
-    } catch (RuntimeException e) { // NOPMD
-      LOGGER.log(Level.WARNING, "General exception when loading from ZIP file " + zip.toAbsolutePath(), e);
     }
     return Optional.empty();
   }
