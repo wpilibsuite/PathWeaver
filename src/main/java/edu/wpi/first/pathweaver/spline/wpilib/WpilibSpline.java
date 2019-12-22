@@ -68,7 +68,8 @@ public class WpilibSpline extends AbstractSpline {
             for (int sample = 0; sample <= 40; sample++) {
                 PoseWithCurvature pose = quintic.getPoint(sample / 40.0);
                 seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getX());
-                seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getY());
+                //Convert from WPILib to JavaFX coords
+                seg.getLine().getPoints().add(-pose.poseMeters.getTranslation().getY());
             }
 
             seg.getLine().strokeWidthProperty().bind(strokeWidth);
@@ -97,7 +98,7 @@ public class WpilibSpline extends AbstractSpline {
                     .setKinematics(new DifferentialDriveKinematics(values.getWheelBase()));
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
-            TrajectoryUtil.toPathweaverJson(traj, path);
+            TrajectoryUtil.toPathweaverJson(traj, path.resolve(".wpilib.json"));
 
             return true;
         } catch (IOException except) {

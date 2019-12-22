@@ -14,6 +14,14 @@ import javafx.scene.shape.Polygon;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 
+/**
+ * The Waypoint class represents a point on the field. This class
+ * follows WPILib convention, with X being the long side of the field,
+ * and Y being the short side.
+ *
+ * Viewed from the screen, Y should increase as one moves up the screen, and X
+ * should increase as one moves left.
+ */
 public class Waypoint {
 	private static final double SIZE = 30.0;
 	private static final double ICON_X_OFFSET = (SIZE * 3D / 5D) / 16.5;
@@ -32,7 +40,7 @@ public class Waypoint {
 	 * Creates Waypoint object containing javafx circle.
 	 *
 	 * @param position
-	 *            x and y coordinates in user set units
+	 *            x and y coordinates in {@link Waypoint} convention
 	 * @param tangentVector
 	 *            tangent vector in user set units
 	 * @param fixedAngle
@@ -49,10 +57,13 @@ public class Waypoint {
 		tangentLine = new Line();
 		tangentLine.getStyleClass().add("tangent");
 		tangentLine.startXProperty().bind(x);
-		tangentLine.startYProperty().bind(y);
+		//Convert from WPILib to JavaFX coords
+		tangentLine.startYProperty().bind(y.negate());
 		setTangent(tangentVector);
 		tangentLine.endXProperty().bind(Bindings.createObjectBinding(() -> getTangentX() + getX(), tangentX, x));
-		tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> getTangentY() + getY(), tangentY, y));
+
+		//Convert from WPILib to JavaFX coords
+		tangentLine.endYProperty().bind(Bindings.createObjectBinding(() -> -getTangentY() + -getY(), tangentY, y));
 	}
 
 	public void enableSubchildSelector(int i) {
@@ -65,7 +76,8 @@ public class Waypoint {
 		icon.setLayoutY(-(icon.getLayoutBounds().getMaxY() + icon.getLayoutBounds().getMinY()) / 2);
 
 		icon.translateXProperty().bind(x);
-		icon.translateYProperty().bind(y);
+		//Convert from WPILib to JavaFX coords
+		icon.translateYProperty().bind(y.negate());
 		FxUtils.applySubchildClasses(this.icon);
 		this.icon.rotateProperty()
 				.bind(Bindings.createObjectBinding(

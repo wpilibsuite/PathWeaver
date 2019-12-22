@@ -140,8 +140,8 @@ public class WpilibPath extends Path {
      * @param name          The name of the path
      */
     public WpilibPath(String name) {
-        this(new Point2D(0, 0), new Point2D(10, 10), new Point2D(10, 0),
-                new Point2D(0, 10), name);
+        this(new Point2D(0, 0), new Point2D(10, -10), new Point2D(10, 0),
+                new Point2D(0, -10), name);
     }
 
     /**

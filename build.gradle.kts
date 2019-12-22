@@ -135,6 +135,10 @@ dependencies {
     compile(group = "edu.wpi.first.wpiutil", name = "wpiutil-java", version = "2020.+")
     compile(group = "edu.wpi.first.wpilibj", name = "wpilibj-java", version = "2020.+")
 
+    compile(group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.10.0")
+    compile(group = "com.fasterxml.jackson.core", name = "jackson-core", version = "2.10.0")
+    compile(group = "com.fasterxml.jackson.core", name = "jackson-databind", version = "2.10.0")
+
     fun junitJupiter(name: String, version: String = "5.5.0") =
         create(group = "org.junit.jupiter", name = name, version = version)
 

@@ -164,11 +164,12 @@ public class FieldDisplayController {
     /**
      * Checks if the given x, y coordinates are within the valid area of the drawpane.
      *
-     * @param x X coordinate
-     * @param y Y coordinate
+     * @param x X coordinate, following {@link Waypoint} convention
+     * @param y Y coordinate following {@link Waypoint} convention
      * @return True if X, Y is within the bounds of the drawpane.
      */
     public boolean checkBounds(double x, double y) {
-        return drawPane.getLayoutBounds().contains(x, y);
+        //Convert waypoint convention to JavaFX
+        return drawPane.getLayoutBounds().contains(x, -y);
     }
 }

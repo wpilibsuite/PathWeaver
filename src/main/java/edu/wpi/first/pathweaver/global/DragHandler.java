@@ -67,9 +67,10 @@ public class DragHandler {
   }
 
   private void handleWaypointDrag(DragEvent event, Path path, Waypoint point) {
-    if (controller.checkBounds(event.getX(), event.getY())) {
+    if (controller.checkBounds(event.getX(), -event.getY())) {
       point.setX(event.getX());
-      point.setY(event.getY());
+      //Y should increase as one drags the point up on the screen
+      point.setY(-event.getY());
       path.recalculateTangents(point);
       path.update();
     }
@@ -77,7 +78,8 @@ public class DragHandler {
   }
 
   private void handleVectorDrag(DragEvent event, Path path, Waypoint wp) {
-    Point2D pt = new Point2D(event.getX(), event.getY());
+    //Y should increase as one drags the vector up on the screen
+    Point2D pt = new Point2D(event.getX(), -event.getY());
     wp.setTangent(pt.subtract(wp.getX(), wp.getY()));
     wp.lockTangentProperty().set(true);
     path.update();
