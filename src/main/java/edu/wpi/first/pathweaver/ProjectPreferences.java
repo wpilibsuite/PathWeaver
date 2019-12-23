@@ -44,7 +44,7 @@ public class ProjectPreferences {
 	}
 
 	private void setDefaults() {
-		values = new Values("FOOT", 0.2, 10.0, 60.0, 2.0, Game.DEEP_SPACE_2019.getName(), null);
+		values = new Values("FOOT", 10.0, 60.0, 2.0, Game.DEEP_SPACE_2019.getName(), null);
 		updateValues();
 	}
 
@@ -177,7 +177,6 @@ public class ProjectPreferences {
 
 	public static class Values {
 		private String lengthUnit;
-		private final double timeStep;
 		private final double maxVelocity;
 		private final double maxAcceleration;
 		private final double wheelBase;
@@ -189,8 +188,6 @@ public class ProjectPreferences {
 		 *
 		 * @param lengthUnit
 		 *            The unit to use for distances
-		 * @param timeStep
-		 *            The time delta between points (in seconds)
 		 * @param maxVelocity
 		 *            The maximum velocity the body is capable of travelling at
 		 * @param maxAcceleration
@@ -202,10 +199,9 @@ public class ProjectPreferences {
 		 * @param outputDir
 		 *            The directory for the output files
 		 */
-		public Values(String lengthUnit, double timeStep, double maxVelocity, double maxAcceleration,
+		public Values(String lengthUnit, double maxVelocity, double maxAcceleration,
 				double wheelBase, String gameName, String outputDir) {
 			this.lengthUnit = lengthUnit;
-			this.timeStep = timeStep;
 			this.maxVelocity = maxVelocity;
 			this.maxAcceleration = maxAcceleration;
 			this.wheelBase = wheelBase;
@@ -214,13 +210,7 @@ public class ProjectPreferences {
 		}
 
 		public Unit<Length> getLengthUnit() {
-			return PathUnits.FOOT;
-			// return lengthUnit == null ? PathUnits.FOOT :
-			// PathUnits.getInstance().length(lengthUnit);
-		}
-
-		public double getTimeStep() {
-			return timeStep;
+			return PathUnits.getInstance().length(this.lengthUnit);
 		}
 
 		public double getMaxVelocity() {

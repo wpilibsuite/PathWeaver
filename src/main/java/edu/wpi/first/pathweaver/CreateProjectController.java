@@ -48,8 +48,6 @@ public class CreateProjectController {
 	@FXML
 	private TextField outputDirectory;
 	@FXML
-	private TextField timeStep;
-	@FXML
 	private TextField maxVelocity;
 	@FXML
 	private TextField maxAcceleration;
@@ -62,8 +60,6 @@ public class CreateProjectController {
 	@FXML
 	private Label browseLabel;
 	@FXML
-	private Label timeLabel;
-	@FXML
 	private Label outputLabel;
 	@FXML
 	private Label velocityLabel;
@@ -71,8 +67,6 @@ public class CreateProjectController {
 	private Label accelerationLabel;
 	@FXML
 	private Label wheelBaseLabel;
-	@FXML
-	private Label timeUnits;
 	@FXML
 	private Label velocityUnits;
 	@FXML
@@ -85,14 +79,13 @@ public class CreateProjectController {
 	@FXML
 
 	private void initialize() {
-		ObservableList<TextField> numericFields = FXCollections.observableArrayList(timeStep, maxVelocity,
+		ObservableList<TextField> numericFields = FXCollections.observableArrayList(maxVelocity,
 				maxAcceleration, wheelBase);
 		ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
 		allFields.add(directory);
 
 		var directoryControls = List.of(browseLabel, directory, browse);
 		var outputControls = List.of(outputLabel, outputDirectory, browseOutput);
-		var timeControls = List.of(timeLabel, timeStep, timeUnits);
 		var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
 		var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
 		var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
@@ -145,7 +138,6 @@ public class CreateProjectController {
 						+ "If it is the root folder of your FRC robot project,\nthe paths will automatically be copied to the "
 						+ "robot at deploy time.\nDefault: will search relative to your project directory,\n"
 						+ "attempting to find deploy folder.")));
-		timeControls.forEach(control -> control.setTooltip(new Tooltip("Time delta between points")));
 		velocityControls
 				.forEach(control -> control.setTooltip(new Tooltip("The maximum velocity your robot can travel.")));
 		velocityUnits.textProperty()
@@ -160,7 +152,7 @@ public class CreateProjectController {
 		// Show longer text for an extended period of time
 		Stream.of(directoryControls, outputControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDuration(Duration.seconds(10)));
-		Stream.of(directoryControls, outputControls, timeControls, velocityControls, accelerationControls,
+		Stream.of(directoryControls, outputControls, velocityControls, accelerationControls,
 				wheelBaseControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
@@ -188,11 +180,10 @@ public class CreateProjectController {
 		}
 		ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
 		String lengthUnit = length.getValue().getName();
-		double timeDelta = Double.parseDouble(timeStep.getText());
 		double velocityMax = Double.parseDouble(maxVelocity.getText());
 		double accelerationMax = Double.parseDouble(maxAcceleration.getText());
 		double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
-		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, timeDelta, velocityMax,
+		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, velocityMax,
 				accelerationMax, wheelBaseDistance, game.getValue().getName(), outputPath);
 		ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
 		prefs.setValues(values);
@@ -235,7 +226,6 @@ public class CreateProjectController {
 		cancel.setVisible(false);
 		game.setValue(Game.fromPrettyName(values.getGameName()));
 		length.setValue(values.getLengthUnit());
-		timeStep.setText(String.valueOf(values.getTimeStep()));
 		maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
 		maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
 		wheelBase.setText(String.valueOf(values.getWheelBase()));
