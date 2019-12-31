@@ -1,7 +1,7 @@
 package edu.wpi.first.pathweaver;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -330,26 +330,27 @@ public class MainController {
     if (!SaveManager.getInstance().promptSaveAll()) {
       return;
     }
-    File output = ProjectPreferences.getInstance().getOutputDir();
-    output.mkdirs();
+
+    java.nio.file.Path output = ProjectPreferences.getInstance().getOutputDir().toPath();
+    try {
+      Files.createDirectories(output);
+    } catch (IOException e) {
+      LOGGER.log(Level.WARNING, "Could not export to " + output, e);
+    }
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
       Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
 
-      File f = new File(output, path.getPathNameNoExtension() + ".wpilib.csv");
+      java.nio.file.Path pathNameFile = output.resolve(path.getPathNameNoExtension());
 
-      if(!path.getSpline().writeToFile(f.toPath())) {
+      if(!path.getSpline().writeToFile(pathNameFile)) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Path export failure!");
-        alert.setContentText("Could not export to: " + f.getAbsolutePath());
+        alert.setContentText("Could not export to: " + output.toAbsolutePath());
       }
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Paths exported!");
-    try {
-      alert.setContentText("Paths exported to: " + output.getCanonicalPath());
-    } catch (IOException e) {
-      LOGGER.log(Level.WARNING, "Could not export to " + output.getPath(), e);
-    }
+
     alert.show();
   }
 

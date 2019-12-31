@@ -1,21 +1,24 @@
 package edu.wpi.first.pathweaver.spline.wpilib;
 
 import edu.wpi.first.pathweaver.FxUtils;
+import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.path.Path;
 import edu.wpi.first.pathweaver.spline.AbstractSpline;
 import edu.wpi.first.pathweaver.spline.SplineSegment;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.spline.PoseWithCurvature;
 import edu.wpi.first.wpilibj.spline.QuinticHermiteSpline;
+import edu.wpi.first.wpilibj.spline.Spline;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +68,8 @@ public class WpilibSpline extends AbstractSpline {
             for (int sample = 0; sample <= 40; sample++) {
                 PoseWithCurvature pose = quintic.getPoint(sample / 40.0);
                 seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getX());
-                seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getY());
+                //Convert from WPILib to JavaFX coords
+                seg.getLine().getPoints().add(-pose.poseMeters.getTranslation().getY());
             }
 
             seg.getLine().strokeWidthProperty().bind(strokeWidth);
@@ -87,15 +91,15 @@ public class WpilibSpline extends AbstractSpline {
 
     @Override
     public boolean writeToFile(java.nio.file.Path path) {
-        //TODO: Json now
-        try (BufferedWriter writer = Files.newBufferedWriter(path);
-             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                     .withHeader("X", "Y", "Tangent X", "Tangent Y"))
-        ) {
-            for(Waypoint waypoint : waypoints) {
-                csvPrinter.printRecord(waypoint.getX(), waypoint.getY(), waypoint.getTangentX(), waypoint.getTangentY());
-            }
-            csvPrinter.flush();
+        try {
+            var values = ProjectPreferences.getInstance().getValues();
+
+            TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
+                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase()));
+            Trajectory traj = trajectoryFromWaypoints(waypoints, config);
+
+            TrajectoryUtil.toPathweaverJson(traj, path.resolve(".wpilib.json"));
+
             return true;
         } catch (IOException except) {
             LOGGER.log(Level.WARNING, "Could not write Spline to file", except);
@@ -105,16 +109,9 @@ public class WpilibSpline extends AbstractSpline {
 
     private static QuinticHermiteSpline[] getQuinticSplinesFromWaypoints(Waypoint[] waypoints) {
         QuinticHermiteSpline[] splines = new QuinticHermiteSpline[waypoints.length - 1];
-        for (int i = 0; i < waypoints.length - 1; i++) {
+        for (int i = 0; i < waypoints.length - 1; i++) {    
             var p0 = waypoints[i];
             var p1 = waypoints[i + 1];
-
-            //TODO: Something
-//            double p0Angle = Math.atan2(p0.getTangentY(), p0.getTangentX());
-//            double p0Magnitude = Math.pow(p0.getTangentX(), 2) + Math.pow(p0.getTangentY(), 0);
-//
-//            double p1Angle = Math.atan2(p1.getTangentY(), p1.getTangentX());
-//            double p1Magnitude = Math.pow(p1.getTangentX(), 2) + Math.pow(p1.getTangentY(), 0);
 
             double[] xInitialVector =
                     {p0.getX(), p0.getTangentX(), 0.0};
@@ -130,5 +127,17 @@ public class WpilibSpline extends AbstractSpline {
         }
 
         return splines;
+    }
+
+    private static Trajectory trajectoryFromWaypoints(Iterable<Waypoint> waypoints, TrajectoryConfig config) {
+        var list = new TrajectoryGenerator.ControlVectorList();
+
+        for(Waypoint wp: waypoints) {
+            list.add(new Spline.ControlVector(
+                    new double[] {wp.getX(), wp.getTangentX(), 0},
+                    new double[] {wp.getY(), wp.getTangentY(), 0}));
+        }
+
+        return TrajectoryGenerator.generateTrajectory(list, config);
     }
 }
