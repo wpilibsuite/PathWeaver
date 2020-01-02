@@ -5,6 +5,7 @@ import edu.wpi.first.pathweaver.extensions.ExtensionManager;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -17,7 +18,10 @@ public class PathWeaver extends Application {
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
     primaryStage.setTitle("PathWeaver - " + getVersion());
-    primaryStage.resizableProperty().setValue(false);
+    // Work around dialog bug
+    // See https://stackoverflow.com/questions/55190380/javafx-creates-alert-dialog-which-is-too-small
+    primaryStage.setResizable(true);
+    primaryStage.onShownProperty().addListener(e -> Platform.runLater(() -> primaryStage.setResizable(false)));
     primaryStage.setScene(scene);
     primaryStage.show();
     Loggers.setupLoggers();
