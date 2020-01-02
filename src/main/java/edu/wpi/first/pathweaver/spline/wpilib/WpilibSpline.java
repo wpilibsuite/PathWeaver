@@ -98,7 +98,7 @@ public class WpilibSpline extends AbstractSpline {
                     .setKinematics(new DifferentialDriveKinematics(values.getWheelBase()));
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
-            TrajectoryUtil.toPathweaverJson(traj, path.resolve(".wpilib.json"));
+            TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
 
             return true;
         } catch (IOException except) {
