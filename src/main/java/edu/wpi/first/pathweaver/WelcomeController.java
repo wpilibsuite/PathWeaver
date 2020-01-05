@@ -98,6 +98,6 @@ public class WelcomeController {
 
   @FXML
   private void help() throws URISyntaxException, IOException {
-    Desktop.getDesktop().browse(new URI("https://wpilib.screenstepslive.com/s/4485"));
+    Desktop.getDesktop().browse(new URI("https://docs.wpilib.org/en/latest/docs/software/wpilib-tools/path-planning/pathfinder/index.html"));
   }
 }
