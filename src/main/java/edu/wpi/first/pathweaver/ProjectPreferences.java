@@ -44,7 +44,7 @@ public class ProjectPreferences {
 	}
 
 	private void setDefaults() {
-		values = new Values("FOOT", 10.0, 60.0, 2.0, Game.DEEP_SPACE_2019.getName(), null);
+		values = new Values("FOOT", 10.0, 60.0, 2.0, Game.INFINTE_RECHARGE_2020.getName(), null);
 		updateValues();
 	}
 
