@@ -20,6 +20,7 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,6 +92,11 @@ public class WpilibSpline extends AbstractSpline {
 
     @Override
     public boolean writeToFile(java.nio.file.Path path) {
+        final AtomicBoolean okay = new AtomicBoolean(true);
+        TrajectoryGenerator.setErrorHandler((error, stacktrace) -> {
+            LOGGER.log(Level.WARNING, "Could not write Spline to file: " + error, stacktrace);
+            okay.set(false);
+        });
         try {
             var values = ProjectPreferences.getInstance().getValues();
 
@@ -100,7 +106,7 @@ public class WpilibSpline extends AbstractSpline {
 
             TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
 
-            return true;
+            return okay.get();
         } catch (IOException except) {
             LOGGER.log(Level.WARNING, "Could not write Spline to file", except);
             return false;
