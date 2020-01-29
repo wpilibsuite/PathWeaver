@@ -29,7 +29,7 @@ public class ProjectPreferences {
 			return name;
 		}
 
-		static ExportUnit fromString(String s) {
+		public static ExportUnit fromString(String s) {
 			switch (s) {
 				case "Always Meters": return METER;
 				case "Same as Project": return SAME;
@@ -256,7 +256,7 @@ public class ProjectPreferences {
 		}
 
 		public ExportUnit getExportUnit() {
-			return ExportUnit.fromString(this.exportUnit);
+			return ExportUnit.fromString(exportUnit);
 		}
 
 		public double getMaxVelocity() {
