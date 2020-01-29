@@ -58,6 +58,8 @@ public class CreateProjectController {
 	@FXML
 	private ChoiceBox<Unit<Length>> length;
 	@FXML
+	public ChoiceBox<ProjectPreferences.ExportUnit> export;
+	@FXML
 	private Label browseLabel;
 	@FXML
 	private Label outputLabel;
@@ -115,7 +117,7 @@ public class CreateProjectController {
 		});
 
 		length.getItems().addAll(PathUnits.LENGTHS);
-		length.getSelectionModel().selectFirst();
+		length.getSelectionModel().select(PathUnits.METER);
 		length.setConverter(new StringConverter<>() {
 			@Override
 			public String toString(Unit<Length> object) {
@@ -127,6 +129,22 @@ public class CreateProjectController {
 				throw new UnsupportedOperationException();
 			}
 		});
+
+		export.getItems().addAll(ProjectPreferences.ExportUnit.values());
+		export.getSelectionModel().selectFirst();
+		export.setConverter(new StringConverter<>() {
+			@Override
+			public String toString(ProjectPreferences.ExportUnit object) {
+				return object.getName();
+			}
+
+			@Override
+			public ProjectPreferences.ExportUnit fromString(String string) {
+				throw new UnsupportedOperationException();
+			}
+		});
+
+
 
 		var lengthUnit = EasyBind.monadic(length.getSelectionModel().selectedItemProperty());
 		directoryControls.forEach(control -> control.setTooltip(new Tooltip("The directory to store your project.\n"
@@ -180,10 +198,11 @@ public class CreateProjectController {
 		}
 		ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
 		String lengthUnit = length.getValue().getName();
+		String exportUnit = export.getValue().getName();
 		double velocityMax = Double.parseDouble(maxVelocity.getText());
 		double accelerationMax = Double.parseDouble(maxAcceleration.getText());
 		double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
-		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, velocityMax,
+		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, exportUnit, velocityMax,
 				accelerationMax, wheelBaseDistance, game.getValue().getName(), outputPath);
 		ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
 		prefs.setValues(values);
@@ -226,6 +245,7 @@ public class CreateProjectController {
 		cancel.setVisible(false);
 		game.setValue(Game.fromPrettyName(values.getGameName()));
 		length.setValue(values.getLengthUnit());
+		export.setValue(values.getExportUnit());
 		maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
 		maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
 		wheelBase.setText(String.valueOf(values.getWheelBase()));

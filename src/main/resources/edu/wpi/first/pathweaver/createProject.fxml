@@ -41,9 +41,9 @@
             <Insets bottom="20.0" left="40.0" right="40.0" top="10.0"/>
          </padding>
          <Label fx:id="browseLabel" text="Project Directory"/>
-         <Label fx:id="velocityLabel" text="Max Velocity" GridPane.rowIndex="4"/>
-         <Label fx:id="accelerationLabel" text="Max Acceleration" GridPane.rowIndex="5"/>
-         <Label fx:id="wheelBaseLabel" text="Wheel Base" GridPane.rowIndex="6"/>
+         <Label fx:id="velocityLabel" text="Max Velocity" GridPane.rowIndex="5"/>
+         <Label fx:id="accelerationLabel" text="Max Acceleration" GridPane.rowIndex="6"/>
+         <Label fx:id="wheelBaseLabel" text="Wheel Base" GridPane.rowIndex="7"/>
          <TextField fx:id="directory" GridPane.columnIndex="1"/>
          <Button fx:id="browse" mnemonicParsing="false" onAction="#browseDirectory" text="Browse"
                  GridPane.columnIndex="2"/>
@@ -52,12 +52,13 @@
                  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
          <ChoiceBox fx:id="game" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
          <ChoiceBox fx:id="length" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-         <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-         <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-         <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-         <Label fx:id="velocityUnits" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-         <Label fx:id="accelerationUnits" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-         <Label fx:id="wheelBaseUnits" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+         <ChoiceBox fx:id="export" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+         <TextField fx:id="maxVelocity" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+         <TextField fx:id="maxAcceleration" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+         <TextField fx:id="wheelBase" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+         <Label fx:id="velocityUnits" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+         <Label fx:id="accelerationUnits" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+         <Label fx:id="wheelBaseUnits" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
          <ButtonBar GridPane.columnIndex="2" GridPane.rowIndex="8">
             <buttons>
                <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel"/>
@@ -66,6 +67,7 @@
          </ButtonBar>
          <Label text="Game" GridPane.rowIndex="2"/>
          <Label text="Length Unit" GridPane.rowIndex="3"/>
+         <Label text="Export Unit" GridPane.rowIndex="4"/>
          <Label fx:id="outputLabel" text="Output Directory" GridPane.rowIndex="1"/>
       </GridPane>
    </children>

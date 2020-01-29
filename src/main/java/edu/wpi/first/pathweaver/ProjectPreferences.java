@@ -16,6 +16,28 @@ import java.util.logging.Logger;
 
 @SuppressWarnings("PMD.SingleMethodSingleton")
 public class ProjectPreferences {
+	public enum ExportUnit {
+		METER("Always Meters"), SAME("Same as Project");
+
+		private final String name;
+
+		ExportUnit(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		static ExportUnit fromString(String s) {
+			switch (s) {
+				case "Always Meters": return METER;
+				case "Same as Project": return SAME;
+				default: throw new IllegalArgumentException();
+			}
+		}
+	}
+
 	private static final String FILE_NAME = "pathweaver.json";
 
 	private static ProjectPreferences instance;
@@ -29,6 +51,27 @@ public class ProjectPreferences {
 		try (BufferedReader reader = Files.newBufferedReader(Paths.get(directory, FILE_NAME))) {
 			Gson gson = new Gson();
 			values = gson.fromJson(reader, Values.class);
+
+			if (values.gameName == null) {
+				values.gameName = Game.INFINTE_RECHARGE_2020.getName();
+			}
+			if (values.lengthUnit == null) {
+				values.lengthUnit = "METER";
+			}
+
+			if(values.exportUnit == null) {
+				values.exportUnit = "Same as Project";
+
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Export Units Warning");
+				alert.setContentText(
+						"Your project was imported from an older version of PathWeaver, where the exported units were always in the specified units. " +
+								"This causes issues with WPILib trajectory following. Please click on Edit Project and choose an appropriate `Export Unit` setting. " +
+								"It has been defaulted to `Same as Project` for backwards compatibility.");
+				((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+
+				alert.show();
+			}
 		} catch (JsonParseException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Preferences import error");
@@ -44,7 +87,7 @@ public class ProjectPreferences {
 	}
 
 	private void setDefaults() {
-		values = new Values("FOOT", 10.0, 60.0, 2.0, Game.INFINTE_RECHARGE_2020.getName(), null);
+		values = new Values("FOOT", "Always Meters", 10.0, 60.0, 2.0, Game.INFINTE_RECHARGE_2020.getName(), null);
 		updateValues();
 	}
 
@@ -116,15 +159,10 @@ public class ProjectPreferences {
 	public Field getField() {
 		if (values.getGameName() == null) {
 			values.gameName = Game.DEEP_SPACE_2019.getName();
-			updateValues();
 		}
 		Game game = Game.fromPrettyName(values.gameName);
 		if (game == null) {
 			throw new UnsupportedOperationException("The referenced game is unknown: \"" + values.gameName + "\"");
-		}
-		if (values.getLengthUnit() == null) {
-			values.lengthUnit = "FOOT";
-			updateValues();
 		}
 		Field field = game.getField();
 		field.convertUnit(values.getLengthUnit());
@@ -176,7 +214,10 @@ public class ProjectPreferences {
 	}
 
 	public static class Values {
+		@SuppressWarnings("PMD.ImmutableField")
 		private String lengthUnit;
+		@SuppressWarnings("PMD.ImmutableField")
+		private String exportUnit;
 		private final double maxVelocity;
 		private final double maxAcceleration;
 		private final double wheelBase;
@@ -199,9 +240,10 @@ public class ProjectPreferences {
 		 * @param outputDir
 		 *            The directory for the output files
 		 */
-		public Values(String lengthUnit, double maxVelocity, double maxAcceleration,
+		public Values(String lengthUnit, String exportUnit, double maxVelocity, double maxAcceleration,
 				double wheelBase, String gameName, String outputDir) {
 			this.lengthUnit = lengthUnit;
+			this.exportUnit = exportUnit;
 			this.maxVelocity = maxVelocity;
 			this.maxAcceleration = maxAcceleration;
 			this.wheelBase = wheelBase;
@@ -211,6 +253,10 @@ public class ProjectPreferences {
 
 		public Unit<Length> getLengthUnit() {
 			return PathUnits.getInstance().length(this.lengthUnit);
+		}
+
+		public ExportUnit getExportUnit() {
+			return ExportUnit.fromString(this.exportUnit);
 		}
 
 		public double getMaxVelocity() {
