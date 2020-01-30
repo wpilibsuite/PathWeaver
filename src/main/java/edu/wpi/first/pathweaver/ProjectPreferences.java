@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class ProjectPreferences {
 	public enum ExportUnit {
 		METER("Always Meters"), SAME("Same as Project");
+		private static final Map<String, ExportUnit> STRING_EXPORT_UNIT_MAP;
 
 		private final String name;
 
@@ -32,13 +33,12 @@ public class ProjectPreferences {
 			return name;
 		}
 
-		private static final Map<String, ExportUnit> stringToExportUnit;
 		static {
-			stringToExportUnit = Arrays.stream(values()).collect(Collectors.toMap(n -> n.name, n -> n));
+			STRING_EXPORT_UNIT_MAP = Arrays.stream(values()).collect(Collectors.toMap(n -> n.name, n -> n));
 		}
 
 		public static ExportUnit fromString(String s) {
-			ExportUnit result = stringToExportUnit.get(s);
+			ExportUnit result = STRING_EXPORT_UNIT_MAP.get(s);
 
 			if (result == null) {
 				throw new IllegalArgumentException();
