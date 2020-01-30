@@ -1,6 +1,7 @@
 package edu.wpi.first.pathweaver.spline.wpilib;
 
 import edu.wpi.first.pathweaver.FxUtils;
+import edu.wpi.first.pathweaver.PathUnits;
 import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.path.Path;
@@ -18,6 +19,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
+import javax.measure.UnitConverter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -136,12 +138,21 @@ public class WpilibSpline extends AbstractSpline {
     }
 
     private static Trajectory trajectoryFromWaypoints(Iterable<Waypoint> waypoints, TrajectoryConfig config) {
-        var list = new TrajectoryGenerator.ControlVectorList();
+        ProjectPreferences.Values prefs = ProjectPreferences.getInstance().getValues();
 
+        var list = new TrajectoryGenerator.ControlVectorList();
         for(Waypoint wp: waypoints) {
-            list.add(new Spline.ControlVector(
-                    new double[] {wp.getX(), wp.getTangentX(), 0},
-                    new double[] {wp.getY(), wp.getTangentY(), 0}));
+            if(prefs.getExportUnit() == ProjectPreferences.ExportUnit.METER) {
+                UnitConverter converter = prefs.getLengthUnit().getConverterTo(PathUnits.METER);
+                list.add(new Spline.ControlVector(
+                        new double[] {converter.convert(wp.getX()), converter.convert(wp.getTangentX()), 0},
+                        new double[] {converter.convert(wp.getY()), converter.convert(wp.getTangentY()), 0}));
+            } else {
+                list.add(new Spline.ControlVector(
+                        new double[] {wp.getX(), wp.getTangentX(), 0},
+                        new double[] {wp.getY(), wp.getTangentY(), 0}));
+            }
+
         }
 
         return TrajectoryGenerator.generateTrajectory(list, config);
