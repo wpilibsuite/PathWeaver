@@ -11,8 +11,11 @@ import javax.measure.quantity.Length;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("PMD.SingleMethodSingleton")
 public class ProjectPreferences {
@@ -29,12 +32,19 @@ public class ProjectPreferences {
 			return name;
 		}
 
+		private static final Map<String, ExportUnit> stringToExportUnit;
+		static {
+			stringToExportUnit = Arrays.stream(values()).collect(Collectors.toMap(n -> n.name, n -> n));
+		}
+
 		public static ExportUnit fromString(String s) {
-			switch (s) {
-				case "Always Meters": return METER;
-				case "Same as Project": return SAME;
-				default: throw new IllegalArgumentException();
+			ExportUnit result = stringToExportUnit.get(s);
+
+			if (result == null) {
+				throw new IllegalArgumentException();
 			}
+
+			return result;
 		}
 	}
 

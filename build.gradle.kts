@@ -132,8 +132,8 @@ dependencies {
     compile(group = "org.apache.commons", name = "commons-csv", version = "1.5")
 
     compile(group = "org.ejml", name = "ejml-simple", version = "0.38")
-    compile(group = "edu.wpi.first.wpiutil", name = "wpiutil-java", version = "2020.2.2")
-    compile(group = "edu.wpi.first.wpilibj", name = "wpilibj-java", version = "2020.2.2")
+    compile(group = "edu.wpi.first.wpiutil", name = "wpiutil-java", version = "2020.+")
+    compile(group = "edu.wpi.first.wpilibj", name = "wpilibj-java", version = "2020.+")
 
     compile(group = "com.fasterxml.jackson.core", name = "jackson-annotations", version = "2.10.0")
     compile(group = "com.fasterxml.jackson.core", name = "jackson-core", version = "2.10.0")
