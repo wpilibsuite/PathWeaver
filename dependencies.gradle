@@ -1,3 +1,5 @@
+wpilibTools.createNativeConfigurations()
+
 wpilibTools.deps.wpilibVersion = "2020.+"
 
 wpilibTools.deps.javafx(dependencies, "base")
@@ -32,7 +34,6 @@ dependencies {
     testImplementation(junitJupiter("junit-jupiter-api"))
     testImplementation(junitJupiter("junit-jupiter-engine"))
     testImplementation(junitJupiter("junit-jupiter-params"))
-
 }
 
 ext.projectMainClass = "edu.wpi.first.pathweaver.Main"

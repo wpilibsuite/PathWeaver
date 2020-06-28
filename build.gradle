@@ -77,11 +77,7 @@ if (System.getenv()['RUN_AZURE_ARTIFACTORY_RELEASE'] != null) {
     publish.dependsOn artifactoryPublish
 }
 
-wpilibTools.createNativeConfigurations()
-
 apply from: 'dependencies.gradle'
-
-wpilibTools.addNativeResourcesToSourceSet(sourceSets.main)
 
 shadowJar {
     archiveClassifier.set(wpilibTools.platformMapper.currentPlatform.platformName)
