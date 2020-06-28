@@ -105,7 +105,7 @@ publishing {
         } else {
             artifact(shadowJar)
         }
-        groupId 'edu.wpi.first.wpilib'
+        groupId 'edu.wpi.first.tools'
         artifactId project.name
         version project.version
         }
