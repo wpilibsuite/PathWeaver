@@ -1,15 +1,13 @@
-wpilibTools.createNativeConfigurations()
-
 wpilibTools.deps.wpilibVersion = "2020.+"
-
-wpilibTools.deps.javafx(dependencies, "base")
-wpilibTools.deps.javafx(dependencies, "controls")
-wpilibTools.deps.javafx(dependencies, "fxml")
-wpilibTools.deps.javafx(dependencies, "graphics")
 
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
     implementation wpilibTools.deps.wpilibJava("wpilibj")
+
+    implementation wpilibTools.deps.javafx("base")
+    implementation wpilibTools.deps.javafx("controls")
+    implementation wpilibTools.deps.javafx("fxml")
+    implementation wpilibTools.deps.javafx("graphics")
 
     implementation "com.fasterxml.jackson.core:jackson-annotations:2.10.0"
     implementation "com.fasterxml.jackson.core:jackson-core:2.10.0"
