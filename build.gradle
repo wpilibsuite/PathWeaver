@@ -20,7 +20,7 @@ plugins {
     id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '4.0.1'
     id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
     id 'checkstyle'
-    id 'edu.wpi.first.WpilibTools' version '0.6.0'
+    id 'edu.wpi.first.WpilibTools' version '0.6.1'
 }
 
 if (project.hasProperty('buildServer')) {
