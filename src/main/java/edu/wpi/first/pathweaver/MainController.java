@@ -31,7 +31,8 @@ import javafx.stage.Stage;
 //With the creation of a project many of these functions should be moved out of here
 //Anything to do with the directory should be part of a Project object
 
-@SuppressWarnings({"PMD.UnusedPrivateMethod","PMD.AvoidFieldNameMatchingMethodName"})
+@SuppressWarnings({"PMD.UnusedPrivateMethod","PMD.AvoidFieldNameMatchingMethodName",
+  "PMD.GodClass"})
 public class MainController {
   private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
