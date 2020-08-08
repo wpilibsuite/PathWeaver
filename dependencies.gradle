@@ -2,7 +2,7 @@ wpilibTools.deps.wpilibVersion = "2020.+"
 
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
-    implementation wpilibTools.deps.wpilibJava("wpilibj")
+    implementation wpilibTools.deps.wpilibJava("wpimath")
 
     implementation wpilibTools.deps.javafx("base")
     implementation wpilibTools.deps.javafx("controls")
