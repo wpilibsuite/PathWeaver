@@ -63,7 +63,7 @@ public class WpilibPath extends Path {
             waypoint.getIcon().startDragAndDrop(TransferMode.MOVE)
                     .setContent(Map.of(DataFormats.WAYPOINT, "point"));
         });
-
+        
         waypoint.getTangentLine().setOnDragDetected(event -> {
             CurrentSelections.setCurWaypoint(waypoint);
             CurrentSelections.setCurPath(this);
@@ -126,6 +126,12 @@ public class WpilibPath extends Path {
                 menu.getItems().add(FxUtils.menuItem("Show control vector",
                         event -> waypoint.getTangentLine().setVisible(true)));
             }
+            menu.getItems().add(FxUtils.menuItem("Reverse Vector", event -> {
+                waypoints.forEach(wp -> {
+                    wp.setReversed(!wp.isReversed());
+                    spline.update();
+                });
+            }));
             menu.show(mainGroup.getScene().getWindow(), e.getScreenX(), e.getScreenY());
         });
 
@@ -154,7 +160,7 @@ public class WpilibPath extends Path {
      * @param name          The string name to assign path, also used for naming exported files
      */
     private WpilibPath(Point2D startPos, Point2D endPos, Point2D startTangent, Point2D endTangent, String name) {
-        this(List.of(new Waypoint(startPos, startTangent, true), new Waypoint(endPos, endTangent, true)), name);
+        this(List.of(new Waypoint(startPos, startTangent, true, false), new Waypoint(endPos, endTangent, true, false)), name);
     }
 
     @Override

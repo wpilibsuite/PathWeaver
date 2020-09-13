@@ -31,6 +31,7 @@ public class Waypoint {
 	private final DoubleProperty tangentX = new SimpleDoubleProperty();
 	private final DoubleProperty tangentY = new SimpleDoubleProperty();
 	private final BooleanProperty lockTangent = new SimpleBooleanProperty();
+	private final BooleanProperty reversed = new SimpleBooleanProperty();
 	private final StringProperty name = new SimpleStringProperty("");
 
 	private final Line tangentLine;
@@ -47,8 +48,9 @@ public class Waypoint {
 	 *            If the angle the of the waypoint should be fixed. Used for first
 	 *            and last waypoint
 	 */
-	public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle) {
+	public Waypoint(Point2D position, Point2D tangentVector, boolean fixedAngle, boolean reverse) {
 		lockTangent.set(fixedAngle);
+		reversed.set(reverse);
 		setCoords(position);
 
 		icon = new Polygon(0.0, SIZE / 3, SIZE, 0.0, 0.0, -SIZE / 3);
@@ -109,6 +111,18 @@ public class Waypoint {
 
 	public void setLockTangent(boolean lockTangent) {
 		this.lockTangent.set(lockTangent);
+	}
+
+	public boolean isReversed() {
+		return reversed.get();
+	}
+
+	public BooleanProperty reversedProperty() {
+		return reversed;
+	}
+
+	public void setReversed(boolean reversed) {
+		this.reversed.set(reversed);
 	}
 
 	public Line getTangentLine() {
@@ -214,7 +228,11 @@ public class Waypoint {
 	}
 
 	public Waypoint copy() {
-		return new Waypoint(getCoords(), getTangent(), isLockTangent());
+		return new Waypoint(getCoords(), getTangent(), isLockTangent(), isReversed());
+	}
+
+	public String toString() {
+		return String.format("%s (%f,%f), (%f,%f), %b %b", getName(), getX(), getY(), getTangentX(), getTangentY(), isLockTangent(), isReversed());
 	}
 
 	@Override
@@ -232,6 +250,6 @@ public class Waypoint {
 
 		return x.get() == point.x.get() && y.get() == point.y.get() && tangentX.get() == point.tangentX.get()
 				&& tangentY.get() == point.tangentY.get() && name.get().equals(point.name.get())
-				&& isLockTangent() == point.isLockTangent();
+				&& isLockTangent() == point.isLockTangent() && isReversed() == point.isReversed();
 	}
 }

@@ -38,7 +38,7 @@ public final class PathIOUtil {
         BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileLocation + path.getPathName()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta", "Name"))
+            .withHeader("X", "Y", "Tangent X", "Tangent Y", "Fixed Theta", "Reversed", "Name"))
     ) {
       for (Waypoint wp : path.getWaypoints()) {
         double xPos = wp.getX();
@@ -46,7 +46,7 @@ public final class PathIOUtil {
         double tangentX = wp.getTangentX();
         double tangentY = wp.getTangentY();
         String name = wp.getName();
-        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent(), name);
+        csvPrinter.printRecord(xPos, yPos, tangentX, tangentY, wp.isLockTangent(), wp.isReversed(), name);
       }
       csvPrinter.flush();
     } catch (IOException except) {
@@ -81,7 +81,8 @@ public final class PathIOUtil {
                 Double.parseDouble(csvRecord.get("Tangent Y"))
         );
         boolean locked = Boolean.parseBoolean(csvRecord.get("Fixed Theta"));
-        Waypoint point = new Waypoint(position, tangent, locked);
+        boolean reversed = Boolean.parseBoolean(csvRecord.get("Reversed"));
+        Waypoint point = new Waypoint(position, tangent, locked, reversed);
         if (csvRecord.isMapped("Name")) {
           String name = csvRecord.get("Name");
           point.setName(name);
