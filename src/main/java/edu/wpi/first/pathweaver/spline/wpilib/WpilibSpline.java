@@ -68,7 +68,7 @@ public class WpilibSpline extends AbstractSpline {
                 segStart.setTangentX(segStart.getTangentX()*-1);
                 segStart.setTangentY(segStart.getTangentY()*-1);
                 segEnd.setTangentX(segEnd.getTangentX()*-1);
-                segEnd.setTangentY(segEnd.getTangentY()*-1);                
+                segEnd.setTangentY(segEnd.getTangentY()*-1);
             }
 
             QuinticHermiteSpline quintic = getQuinticSplinesFromWaypoints(new Waypoint[]{segStart, segEnd})[0];
@@ -111,9 +111,9 @@ public class WpilibSpline extends AbstractSpline {
         });
         try {
             var values = ProjectPreferences.getInstance().getValues();
-
+            
             TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
-                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase()));
+                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
             TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
