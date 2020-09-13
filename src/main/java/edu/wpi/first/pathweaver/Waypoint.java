@@ -231,6 +231,7 @@ public class Waypoint {
 		return new Waypoint(getCoords(), getTangent(), isLockTangent(), isReversed());
 	}
 
+	@Override
 	public String toString() {
 		return String.format("%s (%f,%f), (%f,%f), %b %b", getName(), getX(), getY(), getTangentX(), getTangentY(), isLockTangent(), isReversed());
 	}
