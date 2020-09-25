@@ -211,6 +211,11 @@ public class Waypoint {
 		return tangentY;
 	}
 
+	public void reverseTangent() {
+		tangentX.set(tangentX.get()*-1);
+		tangentY.set(tangentY.get()*-1);
+	}
+
 	/**
 	 * Converts the unit system of a this Waypoint.
 	 *
