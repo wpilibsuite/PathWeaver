@@ -26,6 +26,8 @@ public class EditWaypointController {
   @FXML
   private CheckBox lockedTangent;
   @FXML
+  private CheckBox reverseSpline;
+  @FXML
   private TextField pointName;
 
   private List<Control> controls;
@@ -97,7 +99,9 @@ public class EditWaypointController {
     disableDoubleBinding(tangentX, oldValue.tangentXProperty());
     disableDoubleBinding(tangentY, oldValue.tangentYProperty());
     lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
+    reverseSpline.selectedProperty().unbindBidirectional(oldValue.reversedProperty());
     lockedTangent.setSelected(false);
+    reverseSpline.setSelected(false);
     pointName.textProperty().removeListener(nameListener);
     pointName.setText("");
   }
@@ -111,6 +115,7 @@ public class EditWaypointController {
     } else {
       lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
     }
+    reverseSpline.selectedProperty().bindBidirectional(newValue.reversedProperty());
     enableDoubleBinding(xPosition, newValue.xProperty());
     enableDoubleBinding(yPosition, newValue.yProperty());
     enableDoubleBinding(tangentX, newValue.tangentXProperty());
@@ -141,6 +146,12 @@ public class EditWaypointController {
         });
 
     lockedTangent.selectedProperty()
+            .addListener(listener -> {
+              if (wp.getValue() != null) {
+                SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
+              }
+            });
+    reverseSpline.selectedProperty()
             .addListener(listener -> {
               if (wp.getValue() != null) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());

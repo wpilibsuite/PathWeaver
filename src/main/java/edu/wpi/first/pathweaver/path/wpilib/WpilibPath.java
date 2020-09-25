@@ -34,11 +34,19 @@ public class WpilibPath extends Path {
     public WpilibPath(List<Waypoint> points, String name) {
         super(WpilibSpline::new, name);
         this.waypoints.addListener((ListChangeListener<Waypoint>) c -> {
+            Waypoint first = this.waypoints.get(0);
             while (c.next()) {
                 for (Waypoint wp : c.getAddedSubList()) {
                     setupWaypoint(wp);
                     iconGroup.getChildren().add(wp.getIcon());
                     tangentGroup.getChildren().add(wp.getTangentLine());
+                    if (wp != first) {
+                        wp.reversedProperty().bindBidirectional(first.reversedProperty());
+                    }
+                    wp.reversedProperty().addListener(l -> {
+                        this.waypoints.forEach(w -> updateTangent(w));
+                        update();
+                    });
                 }
 
                 for (Waypoint wp : c.getRemoved()) {
@@ -63,7 +71,7 @@ public class WpilibPath extends Path {
             waypoint.getIcon().startDragAndDrop(TransferMode.MOVE)
                     .setContent(Map.of(DataFormats.WAYPOINT, "point"));
         });
-        
+
         waypoint.getTangentLine().setOnDragDetected(event -> {
             CurrentSelections.setCurWaypoint(waypoint);
             CurrentSelections.setCurPath(this);
@@ -74,18 +82,17 @@ public class WpilibPath extends Path {
 
     private void setupClick(Waypoint waypoint) {
         waypoint.getIcon().setOnMouseClicked(e -> {
-                    if (e.getClickCount() == 1) {
-                        toggleWaypoint(waypoint);
-                    } else if (e.getClickCount() == 2) {
-                        waypoint.setLockTangent(false);
-                    }
-                    e.consume();
-                }
-        );
+            if (e.getClickCount() == 1) {
+                toggleWaypoint(waypoint);
+            } else if (e.getClickCount() == 2) {
+                waypoint.setLockTangent(false);
+            }
+            e.consume();
+        });
 
-        waypoint.getTangentLine().setOnMouseClicked(e ->  {
+        waypoint.getTangentLine().setOnMouseClicked(e -> {
             toggleWaypoint(waypoint);
-            if(e.getClickCount() == 2) {
+            if (e.getClickCount() == 2) {
                 waypoint.setLockTangent(false);
                 e.consume();
             }
@@ -94,12 +101,13 @@ public class WpilibPath extends Path {
 
     /**
      * This implementation calls {@link PathUtil#rawThetaOptimization(Point2D, Point2D, Point2D)} to update the tangent line.
+     * 
      * @param wp the waypoint to update the tangent line for.
      */
     @Override
     protected void updateTangent(Waypoint wp) {
         int curWpIndex = getWaypoints().indexOf(wp);
-        if(curWpIndex - 1 < 0 || curWpIndex + 1 >= waypoints.size() || wp.isLockTangent()) {
+        if (curWpIndex - 1 < 0 || curWpIndex + 1 >= waypoints.size() || wp.isLockTangent()) {
             return;
         }
 
@@ -107,7 +115,7 @@ public class WpilibPath extends Path {
         Waypoint next = getWaypoints().get(curWpIndex + 1);
 
         Point2D wpTangent = PathUtil.rawThetaOptimization(previous.getCoords(), wp.getCoords(), next.getCoords());
-        if (wp.isReversed()) 
+        if (wp.isReversed())
             wpTangent = wpTangent.multiply(-1);
         wp.setTangent(wpTangent);
     }
@@ -128,12 +136,8 @@ public class WpilibPath extends Path {
                 menu.getItems().add(FxUtils.menuItem("Show control vector",
                         event -> waypoint.getTangentLine().setVisible(true)));
             }
-            menu.getItems().add(FxUtils.menuItem("Reverse Vector", event -> {
-                waypoints.forEach(wp -> {
-                    wp.setReversed(!wp.isReversed());
-                    spline.update();
-                });
-            }));
+            menu.getItems().add(FxUtils.menuItem("Reverse Vector",
+                    event -> waypoint.setReversed(!waypoint.isReversed())));
             menu.show(mainGroup.getScene().getWindow(), e.getScreenX(), e.getScreenY());
         });
 
