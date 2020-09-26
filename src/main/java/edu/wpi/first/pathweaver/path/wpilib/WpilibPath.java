@@ -115,8 +115,9 @@ public class WpilibPath extends Path {
         Waypoint next = getWaypoints().get(curWpIndex + 1);
 
         Point2D wpTangent = PathUtil.rawThetaOptimization(previous.getCoords(), wp.getCoords(), next.getCoords());
-        if (wp.isReversed())
+        if (wp.isReversed()) {
             wpTangent = wpTangent.multiply(-1);
+        }
         wp.setTangent(wpTangent);
     }
 
