@@ -1,5 +1,5 @@
 [![Build Status](https://dev.azure.com/wpilib/DesktopTools/_apis/build/status/wpilibsuite.PathWeaver)](https://dev.azure.com/wpilib/DesktopTools/_build/latest?definitionId=10)
-# PathWeaver
+# PathWeaver - an amazing project
 
 PathWeaver is a front end motion planning program. It is primarily designed for FRC teams using WPILib's trajectories and splines. For more instructions on using PathWeaver, refer to the [WPILib instructions](https://docs.wpilib.org/en/latest/docs/software/wpilib-tools/pathweaver/index.html).
 
