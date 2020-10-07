@@ -12,4 +12,4 @@ To run PathWeaver use the command `./gradlew run`
 
 
 ### Requirements
-- [JDK 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- [JDK 11](https://adoptopenjdk.net/)
