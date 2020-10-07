@@ -60,19 +60,27 @@ public class WpilibSpline extends AbstractSpline {
     @Override
     public void update() {
         group.getChildren().clear();
-
         for (int i = 1; i < waypoints.size(); i++) {
-            Waypoint segStart = waypoints.get(i - 1);
-            Waypoint segEnd = waypoints.get(i);
+            Waypoint segStart = waypoints.get(i - 1).copy();
+            Waypoint segEnd = waypoints.get(i).copy();
+
+            if (segStart.isReversed()) {
+                segStart.reverseTangent();
+                segEnd.reverseTangent();
+            }
 
             QuinticHermiteSpline quintic = getQuinticSplinesFromWaypoints(new Waypoint[]{segStart, segEnd})[0];
-            SplineSegment seg = new SplineSegment(segStart, segEnd, path);
+            SplineSegment seg = new SplineSegment(waypoints.get(i-1), waypoints.get(i), path);
 
             for (int sample = 0; sample <= 40; sample++) {
                 PoseWithCurvature pose = quintic.getPoint(sample / 40.0);
                 seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getX());
                 //Convert from WPILib to JavaFX coords
                 seg.getLine().getPoints().add(-pose.poseMeters.getTranslation().getY());
+            }
+
+            if (segStart.isReversed()) {
+                seg.getLine().getStrokeDashArray().addAll(0.1, 0.2);
             }
 
             seg.getLine().strokeWidthProperty().bind(strokeWidth);
@@ -101,9 +109,9 @@ public class WpilibSpline extends AbstractSpline {
         });
         try {
             var values = ProjectPreferences.getInstance().getValues();
-
+            
             TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
-                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase()));
+                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
             TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
