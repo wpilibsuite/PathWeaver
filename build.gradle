@@ -60,16 +60,16 @@ if (System.getenv()['RUN_AZURE_ARTIFACTORY_RELEASE'] != null) {
         publish {
             repository {
                 if (project.hasProperty('releaseMode')) {
-                repoKey = 'release'
+                    repoKey = 'release'
                 } else {
-                repoKey = 'development'
+                    repoKey = 'development'
                 }
                 username = System.getenv()['ARTIFACTORY_PUBLISH_USERNAME']
                 password = System.getenv()['ARTIFACTORY_PUBLISH_PASSWORD']
                 maven = true
             }
             defaults {
-                publications ('maven')
+                publications('maven')
             }
         }
         clientConfig.info.setBuildName(project.name)
@@ -83,25 +83,37 @@ shadowJar {
     archiveVersion = ""
     exclude("module-info.class")
     archiveClassifier.set(wpilibTools.currentPlatform.platformName)
+
+    if (project.hasProperty("developerID")
+            && wpilibTools.currentPlatform.platformName.startsWith("mac")) {
+        doLast {
+            exec {
+                workingDir rootDir
+                def args = ["sh", "codesign.sh", project.findProperty("developerID"),
+                            archiveFile.get().getAsFile().getAbsolutePath()]
+                commandLine args
+            }
+        }
+    }
 }
 
 publishing {
     publications {
         maven(MavenPublication) {
-        if (publishingFromAllOutputs) {
-            outputsFolder.eachFile {
-                def dashSplit = it.name.split('-')
-                def clfr = dashSplit[dashSplit.length - 1].split('\\.')[0]
-                artifact(it) {
-                classifier = clfr
+            if (publishingFromAllOutputs) {
+                outputsFolder.eachFile {
+                    def dashSplit = it.name.split('-')
+                    def clfr = dashSplit[dashSplit.length - 1].split('\\.')[0]
+                    artifact(it) {
+                        classifier = clfr
+                    }
                 }
+            } else {
+                artifact(shadowJar)
             }
-        } else {
-            artifact(shadowJar)
-        }
-        groupId 'edu.wpi.first.tools'
-        artifactId project.name
-        version project.version
+            groupId 'edu.wpi.first.tools'
+            artifactId project.name
+            version project.version
         }
     }
 }
