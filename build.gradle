@@ -17,7 +17,7 @@ plugins {
     id 'idea'
     id 'jacoco'
     id 'pmd'
-    id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '4.0.1'
+    id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '4.0.2'
     id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
     id 'checkstyle'
     id 'edu.wpi.first.WpilibTools' version '0.6.1'
@@ -25,10 +25,12 @@ plugins {
 
 if (project.hasProperty('buildServer')) {
     wpilibVersioning.buildServerMode = true
+    wpilibVersioning.useAllTags = true
 }
 
 if (project.hasProperty('releaseMode')) {
     wpilibVersioning.releaseMode = true
+    wpilibVersioning.useAllTags = true
 }
 
 allprojects {
