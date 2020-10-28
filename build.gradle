@@ -20,7 +20,7 @@ plugins {
     id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '4.0.2'
     id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
     id 'checkstyle'
-    id 'edu.wpi.first.WpilibTools' version '0.6.1'
+    id 'edu.wpi.first.WpilibTools' version '0.7.1'
 }
 
 if (project.hasProperty('buildServer')) {
@@ -86,8 +86,8 @@ shadowJar {
     exclude("module-info.class")
     archiveClassifier.set(wpilibTools.currentPlatform.platformName)
 
-    if (project.hasProperty("developerID")
-            && wpilibTools.currentPlatform.platformName.startsWith("mac")) {
+    if (wpilibTools.platformMapper.currentPlatform.platformName.startsWith("mac") &&
+        project.hasProperty("developerID") && project.findProperty("developerID") != "") {
         doLast {
             exec {
                 workingDir rootDir
