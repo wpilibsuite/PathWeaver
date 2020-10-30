@@ -1,4 +1,4 @@
-wpilibTools.deps.wpilibVersion = "2020.+"
+wpilibTools.deps.wpilibVersion = "2021.+"
 
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
