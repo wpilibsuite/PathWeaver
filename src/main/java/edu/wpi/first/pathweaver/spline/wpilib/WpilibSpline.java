@@ -7,6 +7,7 @@ import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.path.Path;
 import edu.wpi.first.pathweaver.spline.AbstractSpline;
 import edu.wpi.first.pathweaver.spline.SplineSegment;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.spline.PoseWithCurvature;
 import edu.wpi.first.wpilibj.spline.QuinticHermiteSpline;
@@ -20,6 +21,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 
 import javax.measure.UnitConverter;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -109,10 +111,23 @@ public class WpilibSpline extends AbstractSpline {
         });
         try {
             var values = ProjectPreferences.getInstance().getValues();
-            
+
             TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
-                    .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
+                .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
+
+            double height = ProjectPreferences.getInstance().getField().getRealLength()
+                .getValue().doubleValue();
+
+            for (int i = 0; i < traj.getStates().size(); ++i) {
+                var st = traj.getStates().get(i);
+                traj.getStates().set(i, new Trajectory.State(
+                    st.timeSeconds, st.velocityMetersPerSecond, st.accelerationMetersPerSecondSq,
+                    new Pose2d(st.poseMeters.getX(), st.poseMeters.getY() + height,
+                        st.poseMeters.getRotation()),
+                    st.curvatureRadPerMeter
+                ));
+            }
 
             TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
 
@@ -125,7 +140,7 @@ public class WpilibSpline extends AbstractSpline {
 
     private static QuinticHermiteSpline[] getQuinticSplinesFromWaypoints(Waypoint[] waypoints) {
         QuinticHermiteSpline[] splines = new QuinticHermiteSpline[waypoints.length - 1];
-        for (int i = 0; i < waypoints.length - 1; i++) {    
+        for (int i = 0; i < waypoints.length - 1; i++) {
             var p0 = waypoints[i];
             var p1 = waypoints[i + 1];
 
