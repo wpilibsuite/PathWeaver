@@ -1,0 +1,10 @@
+{
+    "game": "Bounce Path",
+    "field-image": "bounce.png",
+    "field-corners": {
+      "top-left": [107, 16],
+      "bottom-right": [862, 392]
+    },
+    "field-size": [30, 15],
+    "field-unit": "feet"
+  }

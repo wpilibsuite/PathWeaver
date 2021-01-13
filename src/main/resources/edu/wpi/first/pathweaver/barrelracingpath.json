@@ -1,0 +1,10 @@
+{
+    "game": "Barrel Racing Path",
+    "field-image": "barrel.png",
+    "field-corners": {
+      "top-left": [105, 16],
+      "bottom-right": [860, 392]
+    },
+    "field-size": [30, 15],
+    "field-unit": "feet"
+  }

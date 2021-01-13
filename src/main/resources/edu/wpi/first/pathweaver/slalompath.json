@@ -1,0 +1,10 @@
+{
+    "game": "Slalom Path",
+    "field-image": "slalom.png",
+    "field-corners": {
+      "top-left": [106, 16],
+      "bottom-right": [861, 392]
+    },
+    "field-size": [30, 15],
+    "field-unit": "feet"
+  }
