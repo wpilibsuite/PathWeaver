@@ -1,6 +1,6 @@
 {
-    "game": "Galactic Search B",
-    "field-image": "galacticsearchb.png",
+    "game": "Barrel Racing Path",
+    "field-image": "2021-barrel.png",
     "field-corners": {
       "top-left": [105, 16],
       "bottom-right": [860, 392]

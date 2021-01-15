@@ -1,6 +1,6 @@
 {
     "game": "Slalom Path",
-    "field-image": "slalom.png",
+    "field-image": "2021-slalom.png",
     "field-corners": {
       "top-left": [106, 16],
       "bottom-right": [861, 392]

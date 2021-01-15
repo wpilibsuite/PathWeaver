@@ -1,6 +1,6 @@
 {
     "game": "Bounce Path",
-    "field-image": "bounce.png",
+    "field-image": "2021-bounce.png",
     "field-corners": {
       "top-left": [107, 16],
       "bottom-right": [862, 392]
