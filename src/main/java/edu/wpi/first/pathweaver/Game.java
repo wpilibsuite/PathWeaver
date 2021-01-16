@@ -16,11 +16,11 @@ public final class Game {
   public static final Game INFINTE_RECHARGE_2020 = loadGameFromResource("2020-infiniterecharge.json");
   public static final Game DEEP_SPACE_2019 = loadGameFromResource("2019-deepspace.json");
   public static final Game POWER_UP_2018 = loadGameFromResource("2018-powerup.json");
-  public static final Game BARREL_RACING_PATH = loadGameFromResource("barrelracingpath.json");
-  public static final Game BOUNCE_PATH = loadGameFromResource("bouncepath.json");
-  public static final Game GALACTIC_SEARCH_A = loadGameFromResource("galacticsearcha.json");
-  public static final Game GALACTIC_SEARCH_B = loadGameFromResource("galacticsearchb.json");
-  public static final Game SLALOM_PATH = loadGameFromResource("slalompath.json");
+  public static final Game BARREL_RACING_PATH = loadGameFromResource("2021-barrelracingpath.json");
+  public static final Game BOUNCE_PATH = loadGameFromResource("2021-bouncepath.json");
+  public static final Game GALACTIC_SEARCH_A = loadGameFromResource("2021-galacticsearcha.json");
+  public static final Game GALACTIC_SEARCH_B = loadGameFromResource("2021-galacticsearchb.json");
+  public static final Game SLALOM_PATH = loadGameFromResource("2021-slalompath.json");
 
   private final String name;
   private final Field field;
