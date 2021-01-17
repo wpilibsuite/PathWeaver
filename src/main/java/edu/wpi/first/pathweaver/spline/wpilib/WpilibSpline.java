@@ -116,8 +116,17 @@ public class WpilibSpline extends AbstractSpline {
                 .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
-            double height = ProjectPreferences.getInstance().getField().getRealLength()
-                .getValue().doubleValue();
+            var prefs = ProjectPreferences.getInstance();
+            var lengthUnit = prefs.getField().getUnit();
+
+            // This value has units of the length type.
+            double height = prefs.getField().getRealLength().getValue().doubleValue();
+
+            // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.
+            if (prefs.getValues().getExportUnit() == ProjectPreferences.ExportUnit.METER) {
+                UnitConverter converter = lengthUnit.getConverterTo(PathUnits.METER);
+                height = converter.convert(height);
+            }
 
             for (int i = 0; i < traj.getStates().size(); ++i) {
                 var st = traj.getStates().get(i);
