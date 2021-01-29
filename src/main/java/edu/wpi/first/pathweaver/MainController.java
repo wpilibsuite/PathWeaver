@@ -351,6 +351,7 @@ public class MainController {
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Paths exported!");
+    alert.setContentText("Paths exported to: " + output.toAbsolutePath());
 
     alert.show();
   }
