@@ -86,7 +86,7 @@ public final class SaveManager {
    */
   private void saveChange(Path path, boolean remove) {
     String pathDirectory = ProjectPreferences.getInstance().getDirectory() + "/Paths/";
-    PathIOUtil.export(pathDirectory, path);
+    WaypointUtil.exportWaypoints(pathDirectory, path, 0d);
     if (remove) {
       paths.remove(path);
     }

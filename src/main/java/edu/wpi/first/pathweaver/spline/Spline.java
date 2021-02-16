@@ -63,4 +63,11 @@ public interface Spline {
    * @return whether the write succeeded
    */
   boolean writeToFile(Path path);
+
+  /**
+   * Export this path to a file for use in the robot.
+   * @param path the path of the file to write to
+   * @return whether the write succeeded
+   */
+  boolean writePathToFile(Path path);
 }

@@ -339,16 +339,23 @@ public class MainController {
       LOGGER.log(Level.WARNING, "Could not export to " + output, e);
     }
     for (TreeItem<String> pathName : pathRoot.getChildren()) {
-      Path path = PathIOUtil.importPath(pathDirectory, pathName.getValue());
+      Path path = WaypointUtil.importWaypoints(pathDirectory, pathName.getValue());
 
       java.nio.file.Path pathNameFile = output.resolve(path.getPathNameNoExtension());
 
-      if(!path.getSpline().writeToFile(pathNameFile)) {
+      if(!path.getSpline().writePathToFile(pathNameFile)) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Path export failure!");
         alert.setContentText("Could not export to: " + output.toAbsolutePath());
       }
+
+      if(!path.getSpline().writeToFile(pathNameFile)) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Trajectory export failure!");
+        alert.setContentText("Could not export to: " + output.toAbsolutePath());
+      }
     }
+
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Paths exported!");
     alert.setContentText("Paths exported to: " + output.toAbsolutePath());

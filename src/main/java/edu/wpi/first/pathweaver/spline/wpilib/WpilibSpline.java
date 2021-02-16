@@ -1,6 +1,7 @@
 package edu.wpi.first.pathweaver.spline.wpilib;
 
 import edu.wpi.first.pathweaver.FxUtils;
+import edu.wpi.first.pathweaver.PathIOUtil;
 import edu.wpi.first.pathweaver.PathUnits;
 import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
@@ -139,6 +140,35 @@ public class WpilibSpline extends AbstractSpline {
             }
 
             TrajectoryUtil.toPathweaverJson(traj, path.resolveSibling(path.getFileName() + ".wpilib.json"));
+
+            return okay.get();
+        } catch (IOException except) {
+            LOGGER.log(Level.WARNING, "Could not write Spline to file", except);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean writePathToFile(java.nio.file.Path path) {
+        final AtomicBoolean okay = new AtomicBoolean(true);
+        TrajectoryGenerator.setErrorHandler((error, stacktrace) -> {
+            LOGGER.log(Level.WARNING, "Could not write Spline to file: " + error, stacktrace);
+            okay.set(false);
+        });
+        try {
+            var prefs = ProjectPreferences.getInstance();
+            var lengthUnit = prefs.getField().getUnit();
+
+            // This value has units of the length type.
+            double height = prefs.getField().getRealLength().getValue().doubleValue();
+
+            // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.
+            if (prefs.getValues().getExportUnit() == ProjectPreferences.ExportUnit.METER) {
+                UnitConverter converter = lengthUnit.getConverterTo(PathUnits.METER);
+                height = converter.convert(height);
+            }
+
+            WaypointUtil.exportWaypoints(path.getParent().toString(), path, height);
 
             return okay.get();
         } catch (IOException except) {
