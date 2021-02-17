@@ -30,7 +30,7 @@ public class SaveManagerTest {
   public void saveAndLoadDefaultPath() {
     Path path = new WpilibPath("default");
     SaveManager.getInstance().saveChange(path);
-    Path loadPath = WaypointUtil.importWaypoints(pathDirectory, path.getPathName());
+    Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
     assertEquals(path, loadPath, "Path loaded from disk doesn't match original");
   }
 
@@ -39,7 +39,7 @@ public class SaveManagerTest {
     Path path = new WpilibPath("default");
     path.addWaypoint(new Point2D(5.0, 5.0), path.getStart(), path.getEnd());
     SaveManager.getInstance().saveChange(path);
-    Path loadPath = WaypointUtil.importWaypoints(pathDirectory, path.getPathName());
+    Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
     assertEquals(path, loadPath, "Path loaded from disk with an added waypoint doesn't match original");
   }
 
@@ -49,7 +49,7 @@ public class SaveManagerTest {
     paths.forEach(path -> SaveManager.getInstance().addChange(path));
     SaveManager.getInstance().saveAll();
     for (Path path : paths) {
-      Path loadPath = WaypointUtil.importWaypoints(pathDirectory, path.getPathName());
+      Path loadPath = PathIOUtil.importPath(pathDirectory, path.getPathName());
       assertEquals(path, loadPath, "Path loaded from disk doesn't match original");
     }
   }

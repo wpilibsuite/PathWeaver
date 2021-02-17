@@ -149,32 +149,28 @@ public class WpilibSpline extends AbstractSpline {
     }
 
     @Override
-    public boolean writePathToFile(java.nio.file.Path path) {
+    public boolean writePathToFile(Path path) {
         final AtomicBoolean okay = new AtomicBoolean(true);
         TrajectoryGenerator.setErrorHandler((error, stacktrace) -> {
             LOGGER.log(Level.WARNING, "Could not write Spline to file: " + error, stacktrace);
             okay.set(false);
         });
-        try {
-            var prefs = ProjectPreferences.getInstance();
-            var lengthUnit = prefs.getField().getUnit();
 
-            // This value has units of the length type.
-            double height = prefs.getField().getRealLength().getValue().doubleValue();
+        var prefs = ProjectPreferences.getInstance();
+        var lengthUnit = prefs.getField().getUnit();
 
-            // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.
-            if (prefs.getValues().getExportUnit() == ProjectPreferences.ExportUnit.METER) {
-                UnitConverter converter = lengthUnit.getConverterTo(PathUnits.METER);
-                height = converter.convert(height);
-            }
+        // This value has units of the length type.
+        double height = prefs.getField().getRealLength().getValue().doubleValue();
 
-            WaypointUtil.exportWaypoints(path.getParent().toString(), path, height);
-
-            return okay.get();
-        } catch (IOException except) {
-            LOGGER.log(Level.WARNING, "Could not write Spline to file", except);
-            return false;
+        // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.
+        if (prefs.getValues().getExportUnit() == ProjectPreferences.ExportUnit.METER) {
+            UnitConverter converter = lengthUnit.getConverterTo(PathUnits.METER);
+            height = converter.convert(height);
         }
+
+        PathIOUtil.export(ProjectPreferences.getInstance().getValues().getOutputDir() + "/Waypoints/", path, height);
+
+        return okay.get();
     }
 
     private static QuinticHermiteSpline[] getQuinticSplinesFromWaypoints(Waypoint[] waypoints) {

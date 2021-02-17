@@ -111,7 +111,7 @@ public class FieldDisplayController {
                 return path;
             }
         }
-        Path newPath = WaypointUtil.importWaypoints(fileLocations, fileName);
+        Path newPath = PathIOUtil.importPath(fileLocations, fileName);
         if (newPath == null) {
             newPath = new WpilibPath(fileName);
             SaveManager.getInstance().saveChange(newPath);
