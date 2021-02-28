@@ -1,6 +1,6 @@
 {
     "game" : "Infinite Recharge",
-    "field-image" : "2020-Field.png",
+    "field-image" : "2020-field.png",
     "field-corners": {
         "top-left" : [96, 25],
         "bottom-right" : [1040, 514]
