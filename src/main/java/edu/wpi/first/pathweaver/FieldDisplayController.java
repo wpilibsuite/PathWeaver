@@ -12,6 +12,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -45,7 +46,8 @@ public class FieldDisplayController {
         field = ProjectPreferences.getInstance().getField();
         Image image = field.getImage();
         backgroundImage.setImage(image);
-        topPane.getStyleClass().add("pane");
+        drawPane.setOnMouseMoved(e -> Tooltip.install(topPane, new Tooltip(
+                "X: " + roundToString(e.getX()) + " / Y: " + roundToString(e.getY()))));
         Scale scale = new Scale();
         scale.xProperty().bind(Bindings.createDoubleBinding(() ->
                         Math.min(topPane.getWidth() / image.getWidth(), topPane.getHeight() / image.getHeight()),
@@ -171,5 +173,10 @@ public class FieldDisplayController {
     public boolean checkBounds(double x, double y) {
         //Convert waypoint convention to JavaFX
         return drawPane.getLayoutBounds().contains(x, -y);
+    }
+
+    private String roundToString(Double number) {
+        number = Math.round(number * 100.0) / 100.0;
+        return String.valueOf(number);
     }
 }
