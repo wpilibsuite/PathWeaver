@@ -5,9 +5,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javafx.scene.control.TreeItem;
 
@@ -169,5 +172,25 @@ public final class MainIOUtil {
     }
   }
 
+  public static void copyGroupFiles(String autonDirectory, String groupDirectory) throws IOException {
+    File folder = new File(groupDirectory + "/");
+    File autonfolder = new File(autonDirectory);
+    if (folder.exists()) {
+      if (!autonfolder.exists()) {
+        autonfolder.mkdir();
+      }
+      try (Stream<Path> stream = Files.walk(folder.toPath(), 1)) {
+        stream.filter(Files::isRegularFile).forEach(
+                source -> copy(source, Paths.get(autonDirectory + source.getFileName())));
+      } 
+    }
+  }
 
+  private static void copy(Path source, Path dest) {
+    try {
+        Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+    } catch (Exception e) {
+        throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 }

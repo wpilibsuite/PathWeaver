@@ -22,7 +22,7 @@
    </center>
    <right>
       <VBox BorderPane.alignment="CENTER">
-         <TitledPane animated="false" collapsible="false" text="Path Groups">
+         <TitledPane animated="false" collapsible="false" text="Autonomous Routines">
             <TreeView fx:id="autons"/>
          </TitledPane>
          <ToolBar prefHeight="40.0">

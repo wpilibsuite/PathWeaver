@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,7 +48,8 @@ public class MainController {
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
-  private final String autonDirectory = directory + "/Groups/";
+  private final String autonDirectory = directory + "/Autos/";
+  private final String groupDirectory = directory + "/Groups/"; // Legacy dir for backwards compatability
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -63,6 +65,12 @@ public class MainController {
 
     setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
     setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
+
+    try {
+      MainIOUtil.copyGroupFiles(autonDirectory, groupDirectory);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
