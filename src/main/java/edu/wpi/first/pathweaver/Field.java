@@ -8,6 +8,7 @@ import tech.units.indriya.quantity.Quantities;
 
 import javax.measure.Quantity;
 import javax.measure.Unit;
+import javax.measure.UnitConverter;
 import javax.measure.quantity.Length;
 
 public class Field {
@@ -93,12 +94,22 @@ public class Field {
 		return rWidth;
 	}
 
+	public double getDefaultWidth() {
+		UnitConverter toFeet = getUnit().getConverterTo(PathUnits.FOOT);
+		return toFeet.convert(realWidth() * 0.25);
+	}
+
 	private void setRealWidth(Quantity<Length> width) {
 		this.rWidth = width;
 	}
 
 	public Quantity<Length> getRealLength() {
 		return rLength;
+	}
+
+	public double getDefaultLength() {
+		UnitConverter toFeet = getUnit().getConverterTo(PathUnits.FOOT);
+		return toFeet.convert(realLength() * 0.25);
 	}
 
 	private void setRealLength(Quantity<Length> length) {

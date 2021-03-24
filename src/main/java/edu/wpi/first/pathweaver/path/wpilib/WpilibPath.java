@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver.path.wpilib;
 
 import edu.wpi.first.pathweaver.DataFormats;
 import edu.wpi.first.pathweaver.FxUtils;
+import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.global.CurrentSelections;
 import edu.wpi.first.pathweaver.path.Path;
@@ -153,8 +154,11 @@ public class WpilibPath extends Path {
      * @param name          The name of the path
      */
     public WpilibPath(String name) {
-        this(new Point2D(0, 0), new Point2D(10, -10), new Point2D(10, 0),
-                new Point2D(0, -10), name);
+        this(new Point2D(0, 0),
+                new Point2D(ProjectPreferences.getInstance().getField().getDefaultLength(),
+                        -ProjectPreferences.getInstance().getField().getDefaultWidth()),
+                new Point2D(ProjectPreferences.getInstance().getField().getDefaultLength(), 0),
+                new Point2D(0, -ProjectPreferences.getInstance().getField().getDefaultWidth()), name);
     }
 
     /**
