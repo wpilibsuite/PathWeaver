@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javax.measure.Unit;
 import javax.measure.quantity.Length;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -287,5 +288,9 @@ public abstract class Path {
             }
             return coords.subtract(minus);
         }
+    }
+
+    public void reversePath() {
+        Collections.reverse(waypoints);
     }
 }

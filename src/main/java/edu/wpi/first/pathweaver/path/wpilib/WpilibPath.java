@@ -44,7 +44,7 @@ public class WpilibPath extends Path {
                         wp.reversedProperty().bindBidirectional(first.reversedProperty());
                     }
                     wp.reversedProperty().addListener(l -> {
-                        wp.reverseTangent();
+                        CurrentSelections.getCurPath().reversePath();
                         update();
                     });
                 }
