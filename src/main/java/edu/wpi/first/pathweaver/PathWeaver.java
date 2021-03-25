@@ -1,7 +1,10 @@
 package edu.wpi.first.pathweaver;
 
+import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.pathweaver.extensions.ExtensionManager;
 
+import edu.wpi.first.wpiutil.CombinedRuntimeLoader;
+import edu.wpi.first.wpiutil.WPIUtilJNI;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -14,6 +17,10 @@ import javafx.stage.Stage;
 public class PathWeaver extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
+    WPIUtilJNI.Helper.setExtractOnStaticLoad(false);
+    WPIMathJNI.Helper.setExtractOnStaticLoad(false);
+    CombinedRuntimeLoader.loadLibraries(PathWeaver.class,  "wpiutiljni", "wpimathjni");
+
     ExtensionManager.getInstance().refresh();
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
     Scene scene = new Scene(root);
