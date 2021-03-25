@@ -178,6 +178,25 @@ public class CreateProjectController {
 		if (ProjectPreferences.getInstance() != null) {
 			setupEditProject();
 		}
+		else {
+			setupCreateProject();
+		}
+	}
+
+	private void setupCreateProject() {
+		directory.setText("");
+		outputDirectory.setText("");
+		create.setText("Create Project");
+		title.setText("Create Project...");
+		cancel.setText("Cancel");
+		browse.setVisible(true);
+		game.getSelectionModel().selectFirst();
+		length.getSelectionModel().select(3); // Default is Meter
+		export.getSelectionModel().selectFirst();
+		maxVelocity.setText("");
+		maxAcceleration.setText("");
+		wheelBase.setText("");
+		editing = false;
 	}
 
 	@FXML
@@ -231,6 +250,7 @@ public class CreateProjectController {
 
 	@FXML
 	private void cancel() throws IOException {
+		ProjectPreferences.resetInstance();
 		Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
 		vBox.getScene().setRoot(root);
 	}
@@ -239,10 +259,10 @@ public class CreateProjectController {
 		ProjectPreferences.Values values = ProjectPreferences.getInstance().getValues();
 		directory.setText(ProjectPreferences.getInstance().getDirectory());
 		outputDirectory.setText(ProjectPreferences.getInstance().getValues().getOutputDir());
-		create.setText("Edit Project");
+		create.setText("Save Project");
 		title.setText("Edit Project");
+		cancel.setText("Select Project");
 		browse.setVisible(false);
-		cancel.setVisible(false);
 		game.setValue(Game.fromPrettyName(values.getGameName()));
 		length.setValue(values.getLengthUnit());
 		export.setValue(values.getExportUnit());
