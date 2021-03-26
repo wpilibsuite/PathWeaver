@@ -47,16 +47,19 @@ public class EditWaypointController {
    * @param controller The PathDisplayController to check the bounds of new waypoint values.
    */
   public void bindToWaypoint(ObservableValue<Waypoint> wp, FieldDisplayController controller) {
+    double height = ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue();
     // When changing X and Y values, verify points are within bounds
     xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(yPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(newValue), Double.parseDouble(yPosition.getText()))) {
+      if (validText && !controller.checkBounds(Double.parseDouble(newValue),
+              Double.parseDouble(yPosition.getText()) - height)) {
         xPosition.setText(oldValue);
       }
     });
     yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(xPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(xPosition.getText()), Double.parseDouble(newValue))) {
+      if (validText && !controller.checkBounds(Double.parseDouble(xPosition.getText()),
+              Double.parseDouble(newValue) - height)) {
         yPosition.setText(oldValue);
       }
     });
@@ -82,6 +85,23 @@ public class EditWaypointController {
         } else {
           return super.fromString(value);
         }
+      }
+    };
+    field.textProperty().bindBidirectional(doubleProperty, converter);
+  }
+
+  private void yDoubleBinding(TextField field, DoubleProperty doubleProperty) {
+    NumberStringConverter converter = new NumberStringConverter() {
+      @Override
+      public Double fromString(String value) {
+        double height = ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue();
+        return Double.parseDouble(value) - height;
+      }
+
+      @Override
+      public String toString(Number object){
+        double height = ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue();
+        return String.format("%.3f", height + object.doubleValue());
       }
     };
     field.textProperty().bindBidirectional(doubleProperty, converter);
@@ -117,7 +137,7 @@ public class EditWaypointController {
     }
     reverseSpline.selectedProperty().bindBidirectional(newValue.reversedProperty());
     enableDoubleBinding(xPosition, newValue.xProperty());
-    enableDoubleBinding(yPosition, newValue.yProperty());
+    yDoubleBinding(yPosition, newValue.yProperty());
     enableDoubleBinding(tangentX, newValue.tangentXProperty());
     enableDoubleBinding(tangentY, newValue.tangentYProperty());
     pointName.setText(newValue.getName());
