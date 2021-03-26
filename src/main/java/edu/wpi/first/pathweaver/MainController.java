@@ -66,6 +66,7 @@ public class MainController {
     setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
     setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
 
+    // Copying files from the old directory name to the new one to maintain backwards compatibility
     try {
       MainIOUtil.copyGroupFiles(autonDirectory, groupDirectory);
     } catch (IOException e) {
