@@ -182,15 +182,15 @@ public final class MainIOUtil {
       try (Stream<Path> stream = Files.walk(folder.toPath(), 1)) {
         stream.filter(Files::isRegularFile).forEach(
                 source -> copy(source, Paths.get(autonDirectory + source.getFileName())));
-      } 
+      }
     }
   }
 
   private static void copy(Path source, Path dest) {
     try {
         Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
-    } catch (Exception e) {
-        throw new RuntimeException(e.getMessage(), e);
+    } catch (IOException e) {
+        LOGGER.log(Level.WARNING, "Could not copy file", e);
     }
   }
 }
