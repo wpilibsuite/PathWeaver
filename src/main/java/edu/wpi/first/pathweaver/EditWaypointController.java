@@ -146,14 +146,14 @@ public class EditWaypointController {
         });
 
     lockedTangent.selectedProperty()
-            .addListener(listener -> {
-              if (wp.getValue() != null) {
+            .addListener((listener, oldValue, newValue) -> {
+              if (wp.getValue().isLockTangent() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
     reverseSpline.selectedProperty()
-            .addListener(listener -> {
-              if (wp.getValue() != null) {
+            .addListener((listener, oldValue, newValue) -> {
+              if (wp.getValue().isReversed() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
