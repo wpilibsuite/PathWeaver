@@ -3,7 +3,6 @@ package edu.wpi.first.pathweaver;
 import java.util.List;
 
 import edu.wpi.first.pathweaver.global.CurrentSelections;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
