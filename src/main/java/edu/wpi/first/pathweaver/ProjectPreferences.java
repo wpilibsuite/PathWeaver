@@ -156,6 +156,10 @@ public class ProjectPreferences {
 		return instance;
 	}
 
+	public static void resetInstance() {
+			instance = null;
+		}
+
 	public static boolean projectExists(String folder) {
 		return Files.exists(Paths.get(folder, FILE_NAME));
 	}

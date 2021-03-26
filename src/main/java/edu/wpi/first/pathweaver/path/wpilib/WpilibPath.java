@@ -1,8 +1,6 @@
 package edu.wpi.first.pathweaver.path.wpilib;
 
-import edu.wpi.first.pathweaver.DataFormats;
-import edu.wpi.first.pathweaver.FxUtils;
-import edu.wpi.first.pathweaver.Waypoint;
+import edu.wpi.first.pathweaver.*;
 import edu.wpi.first.pathweaver.global.CurrentSelections;
 import edu.wpi.first.pathweaver.path.Path;
 import edu.wpi.first.pathweaver.path.PathUtil;
@@ -14,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.TransferMode;
 
+import javax.measure.UnitConverter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -153,8 +152,10 @@ public class WpilibPath extends Path {
      * @param name          The name of the path
      */
     public WpilibPath(String name) {
-        this(new Point2D(0, 0), new Point2D(10, -10), new Point2D(10, 0),
-                new Point2D(0, -10), name);
+        this(new Point2D(0, 0),
+                new Point2D(getDefaultLength(), getDefaultWidth()),
+                new Point2D(getDefaultLength(), 0),
+                new Point2D(0, getDefaultWidth()), name);
     }
 
     /**
@@ -216,5 +217,15 @@ public class WpilibPath extends Path {
         }
 
         return getWaypoints().equals(path.getWaypoints());
+    }
+
+    public static double getDefaultWidth() {
+        UnitConverter toFeet = ProjectPreferences.getInstance().getField().getUnit().getConverterTo(PathUnits.FOOT);
+        return -toFeet.convert(ProjectPreferences.getInstance().getField().getRealWidth().getValue().doubleValue() * 0.25);
+    }
+
+    public static double getDefaultLength() {
+        UnitConverter toFeet = ProjectPreferences.getInstance().getField().getUnit().getConverterTo(PathUnits.FOOT);
+        return toFeet.convert(ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue() * 0.25);
     }
 }
