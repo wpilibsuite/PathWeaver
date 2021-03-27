@@ -22,6 +22,7 @@ import javafx.stage.DirectoryChooser;
 
 @SuppressWarnings("PMD.UnusedPrivateMethod")
 public class WelcomeController {
+  public static boolean dark;
 
   @FXML
   private BorderPane borderPane;
@@ -69,6 +70,7 @@ public class WelcomeController {
 
   private void invalidProject(String folder) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    FxUtils.applyDarkMode(alert);
     alert.setTitle("Project Does Not Exist!");
     alert.setHeaderText("The project does not exist.");
     alert.setContentText("What do you want to do?");
@@ -99,5 +101,16 @@ public class WelcomeController {
   @FXML
   private void help() throws URISyntaxException, IOException {
     Desktop.getDesktop().browse(new URI("https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/pathweaver/index.html"));
+  }
+
+  @FXML
+  private void darkToggle() {
+    final String darkModeFile = "dark.css";
+    final boolean darkIsOn = PathWeaver.mainScene.getStylesheets().contains(getClass().getResource(darkModeFile).toExternalForm());
+    if (darkIsOn)
+      PathWeaver.mainScene.getStylesheets().removeAll(getClass().getResource(darkModeFile).toExternalForm());
+    else
+      PathWeaver.mainScene.getStylesheets().add(getClass().getResource(darkModeFile).toExternalForm());
+    dark = !darkIsOn;
   }
 }

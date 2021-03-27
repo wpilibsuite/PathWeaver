@@ -2,6 +2,7 @@ package edu.wpi.first.pathweaver.path;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 import edu.wpi.first.pathweaver.Field;
+import edu.wpi.first.pathweaver.FxUtils;
 import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.global.CurrentSelections;
@@ -250,6 +251,7 @@ public abstract class Path {
         for (Waypoint wp : waypoints) {
             if (!drawPane.contains(reflectPoint(getStart(), wp, horizontal, false))) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
+                FxUtils.applyDarkMode(a);
                 a.setTitle("");
                 a.setHeaderText("The path could not be flipped.");
                 a.setContentText("Flipping this path would cause it to go out of bounds");
