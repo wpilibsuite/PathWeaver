@@ -67,13 +67,14 @@ public class DragHandler {
   }
 
   private void handleWaypointDrag(DragEvent event, Path path, Waypoint point) {
-    if (controller.checkBounds(event.getX(), -event.getY())) {
+    if (controller.checkBounds(event.getX(), 0)) {
       point.setX(event.getX());
-      //Y should increase as one drags the point up on the screen
-      point.setY(-event.getY());
-      path.recalculateTangents(point);
-      path.update();
     }
+    if (controller.checkBounds(0, -event.getY())) {
+      point.setY(-event.getY());
+    }
+    path.recalculateTangents(point);
+    path.update();
     CurrentSelections.getCurPath().selectWaypoint(point);
   }
 
