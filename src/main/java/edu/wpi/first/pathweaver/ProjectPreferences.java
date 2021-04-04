@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import javax.measure.Unit;
@@ -79,6 +80,7 @@ public class ProjectPreferences {
 								"This causes issues with WPILib trajectory following. Please click on Edit Project and choose an appropriate `Export Unit` setting. " +
 								"It has been defaulted to `Same as Project` for backwards compatibility.");
 				((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+				alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 
 				alert.show();
 			}
@@ -88,6 +90,7 @@ public class ProjectPreferences {
 			alert.setContentText(
 					"Preferences have been reset due to file corruption. You may have to reconfigure your project.");
 			((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+			alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 
 			alert.show();
 			setDefaults();

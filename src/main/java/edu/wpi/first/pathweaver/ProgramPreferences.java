@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -37,6 +38,8 @@ public class ProgramPreferences {
 			alert.setContentText(
 					"Preferences have been reset due to file corruption. You may reimport your projects with the 'Import Project' button");
 			((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
+			alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+			
 			alert.show();
 
 			values = new Values();
