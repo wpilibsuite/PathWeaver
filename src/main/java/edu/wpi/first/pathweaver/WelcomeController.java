@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,19 +21,18 @@ import javafx.stage.DirectoryChooser;
 
 @SuppressWarnings("PMD.UnusedPrivateMethod")
 public class WelcomeController {
+  public static boolean dark;
 
-  @FXML
-  private BorderPane borderPane;
-  @FXML
-  private ListView<String> projects;
-  @FXML
-  private Label version;
+  @FXML private BorderPane borderPane;
+  @FXML private ListView<String> projects;
+  @FXML private Label version;
 
   @FXML
   private void initialize() {
     version.setText(PathWeaver.getVersion());
 
-    projects.getItems().setAll(ProgramPreferences.getInstance().getRecentProjects());
+    projects.getItems().setAll(
+        ProgramPreferences.getInstance().getRecentProjects());
 
     projects.setOnMouseClicked(event -> {
       String folder = projects.getSelectionModel().getSelectedItem();
@@ -54,7 +52,6 @@ public class WelcomeController {
       Logger log = Logger.getLogger(getClass().getName());
       log.log(Level.WARNING, "Couldn't load create project screen", e);
     }
-
   }
 
   private void loadProject(String folder) {
@@ -69,6 +66,7 @@ public class WelcomeController {
 
   private void invalidProject(String folder) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    FxUtils.applyDarkMode(alert);
     alert.setTitle("Project Does Not Exist!");
     alert.setHeaderText("The project does not exist.");
     alert.setContentText("What do you want to do?");
@@ -89,7 +87,8 @@ public class WelcomeController {
   @FXML
   private void importProject() {
     DirectoryChooser chooser = new DirectoryChooser();
-    File selectedDirectory = chooser.showDialog(borderPane.getScene().getWindow());
+    File selectedDirectory =
+        chooser.showDialog(borderPane.getScene().getWindow());
     if (selectedDirectory != null) {
       ProgramPreferences.getInstance().addProject(selectedDirectory.getPath());
       loadProject(selectedDirectory.getPath());
@@ -98,6 +97,22 @@ public class WelcomeController {
 
   @FXML
   private void help() throws URISyntaxException, IOException {
-    Desktop.getDesktop().browse(new URI("https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/pathweaver/index.html"));
+    Desktop.getDesktop().browse(new URI(
+        "https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/pathweaver/index.html"));
+  }
+
+  @FXML
+  private void darkToggle() {
+    final String darkModeFile = "dark.css";
+    final boolean darkIsOn = PathWeaver.mainScene.getStylesheets().contains(
+        getClass().getResource(darkModeFile).toExternalForm());
+    if (darkIsOn) {
+      PathWeaver.mainScene.getStylesheets().removeAll(
+          getClass().getResource(darkModeFile).toExternalForm());
+    } else {
+      PathWeaver.mainScene.getStylesheets().add(
+          getClass().getResource(darkModeFile).toExternalForm());
+    }
+    dark = !darkIsOn;
   }
 }

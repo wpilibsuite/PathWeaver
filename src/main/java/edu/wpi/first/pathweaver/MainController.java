@@ -346,11 +346,13 @@ public class MainController {
 
       if(!path.getSpline().writeToFile(pathNameFile)) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        FxUtils.applyDarkMode(alert);
         alert.setTitle("Path export failure!");
         alert.setContentText("Could not export to: " + output.toAbsolutePath());
       }
     }
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    FxUtils.applyDarkMode(alert);
     alert.setTitle("Paths exported!");
     alert.setContentText("Paths exported to: " + output.toAbsolutePath());
 
