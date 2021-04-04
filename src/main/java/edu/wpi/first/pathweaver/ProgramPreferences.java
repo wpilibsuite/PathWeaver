@@ -35,7 +35,7 @@ public class ProgramPreferences {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Preferences import error");
 			alert.setContentText(
-					"Preferences have been reset due to file corruption. You may reimport your projects with the 'Import Project' button");
+					"Preferences have been reset due to file corruption.\n You may reimport your projects with the 'Import Project' button");
 			((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
 			alert.show();
 

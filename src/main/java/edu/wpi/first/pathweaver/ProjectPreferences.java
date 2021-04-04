@@ -75,8 +75,8 @@ public class ProjectPreferences {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Export Units Warning");
 				alert.setContentText(
-						"Your project was imported from an older version of PathWeaver, where the exported units were always in the specified units. " +
-								"This causes issues with WPILib trajectory following. Please click on Edit Project and choose an appropriate `Export Unit` setting. " +
+						"Your project was imported from an older version of PathWeaver, where the exported units were always in the specified units.\n" +
+								"This causes issues with WPILib trajectory following.\n Please click on Edit Project and choose an appropriate `Export Unit` setting.\n" +
 								"It has been defaulted to `Same as Project` for backwards compatibility.");
 				((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
 
@@ -86,7 +86,7 @@ public class ProjectPreferences {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Preferences import error");
 			alert.setContentText(
-					"Preferences have been reset due to file corruption. You may have to reconfigure your project.");
+					"Preferences have been reset due to file corruption.\n You may have to reconfigure your project.");
 			((Stage) alert.getDialogPane().getScene().getWindow()).setAlwaysOnTop(true);
 
 			alert.show();
