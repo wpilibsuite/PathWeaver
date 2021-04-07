@@ -113,7 +113,7 @@ public class WpilibSpline extends AbstractSpline {
             var values = ProjectPreferences.getInstance().getValues();
 
             TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
-                .setKinematics(new DifferentialDriveKinematics(values.getWheelBase())).setReversed(waypoints.get(0).isReversed());
+                .setKinematics(new DifferentialDriveKinematics(values.getTrackWidth())).setReversed(waypoints.get(0).isReversed());
             Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
             var prefs = ProjectPreferences.getInstance();
