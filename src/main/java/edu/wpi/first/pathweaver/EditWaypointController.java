@@ -1,6 +1,10 @@
 package edu.wpi.first.pathweaver;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 import edu.wpi.first.pathweaver.global.CurrentSelections;
 import javafx.beans.property.DoubleProperty;
@@ -32,6 +36,8 @@ public class EditWaypointController {
 
   private List<Control> controls;
   private ChangeListener<String> nameListener;
+  private NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
+  private DecimalFormat df = (DecimalFormat)nf;
 
   @FXML
   private void initialize() {
@@ -39,6 +45,7 @@ public class EditWaypointController {
     controls.forEach(control -> control.setDisable(true));
     List<TextField> textFields = List.of(xPosition, yPosition, tangentX, tangentY);
     textFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
+    df.applyPattern("###,###.000");
   }
 
   /**
@@ -51,15 +58,15 @@ public class EditWaypointController {
     // When changing X and Y values, verify points are within bounds
     xPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(yPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(newValue),
-              Double.parseDouble(yPosition.getText()) - height)) {
+      if (validText && !controller.checkBounds(parseLocaleString(newValue),
+              parseLocaleString(yPosition.getText()) - height)) {
         xPosition.setText(oldValue);
       }
     });
     yPosition.textProperty().addListener((observable, oldValue, newValue) -> {
       boolean validText = !("").equals(newValue) && !("").equals(xPosition.getText());
-      if (validText && !controller.checkBounds(Double.parseDouble(xPosition.getText()),
-              Double.parseDouble(newValue) - height)) {
+      if (validText && !controller.checkBounds(parseLocaleString(xPosition.getText()),
+              parseLocaleString(newValue) - height)) {
         yPosition.setText(oldValue);
       }
     });
@@ -95,13 +102,13 @@ public class EditWaypointController {
       @Override
       public Double fromString(String value) {
         double height = ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue();
-        return Double.parseDouble(value) - height;
+        return parseLocaleString(value) - height;
       }
 
       @Override
       public String toString(Number object){
         double height = ProjectPreferences.getInstance().getField().getRealLength().getValue().doubleValue();
-        return String.format("%.3f", height + object.doubleValue());
+        return df.format(height + object.doubleValue());
       }
     };
     field.textProperty().bindBidirectional(doubleProperty, converter);
@@ -167,13 +174,13 @@ public class EditWaypointController {
 
     lockedTangent.selectedProperty()
             .addListener((listener, oldValue, newValue) -> {
-              if (wp.getValue().isLockTangent() != newValue) {
+              if (wp.getValue() != null && wp.getValue().isLockTangent() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
     reverseSpline.selectedProperty()
             .addListener((listener, oldValue, newValue) -> {
-              if (wp.getValue().isReversed() != newValue) {
+              if (wp.getValue() != null && wp.getValue().isReversed() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
@@ -182,5 +189,15 @@ public class EditWaypointController {
   private void lockTangentOnEdit() {
     tangentY.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
     tangentX.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
+  }
+
+  public Double parseLocaleString(String newValue) {
+    Double parsedValue = Double.parseDouble(newValue);
+    try {
+      parsedValue = df.parse(newValue).doubleValue();
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    return parsedValue;
   }
 }
