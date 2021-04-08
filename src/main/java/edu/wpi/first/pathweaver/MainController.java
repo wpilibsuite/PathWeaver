@@ -246,12 +246,6 @@ public class MainController {
         if (newValue == null) {
           return;
         }
-        if (!SaveManager.getInstance().promptSaveAll()) {
-          autons.getSelectionModel().selectedItemProperty().removeListener(this);
-          autons.getSelectionModel().select(oldValue);
-          autons.getSelectionModel().selectedItemProperty().addListener(this);
-          return;
-        }
         selected = newValue;
         fieldDisplayController.removeAllPath();
         if (newValue != autonRoot) {
