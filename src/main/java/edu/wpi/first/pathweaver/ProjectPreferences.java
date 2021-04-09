@@ -74,6 +74,7 @@ public class ProjectPreferences {
 				values.exportUnit = "Same as Project";
 
 				Alert alert = new Alert(Alert.AlertType.WARNING);
+				FxUtils.applyDarkMode(alert);
 				alert.setTitle("Export Units Warning");
 				alert.setContentText(
 						"Your project was imported from an older version of PathWeaver, where the exported units were always in the specified units. " +
@@ -86,6 +87,7 @@ public class ProjectPreferences {
 			}
 		} catch (JsonParseException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			FxUtils.applyDarkMode(alert);
 			alert.setTitle("Preferences import error");
 			alert.setContentText(
 					"Preferences have been reset due to file corruption. You may have to reconfigure your project.");

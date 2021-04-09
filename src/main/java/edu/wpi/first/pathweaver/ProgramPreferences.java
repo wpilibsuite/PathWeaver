@@ -34,6 +34,7 @@ public class ProgramPreferences {
 			updatePrefs();
 		} catch (JsonParseException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			FxUtils.applyDarkMode(alert);
 			alert.setTitle("Preferences import error");
 			alert.setContentText(
 					"Preferences have been reset due to file corruption. You may reimport your projects with the 'Import Project' button");
