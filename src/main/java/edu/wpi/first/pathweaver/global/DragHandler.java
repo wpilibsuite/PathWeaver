@@ -73,8 +73,10 @@ public class DragHandler {
     if (controller.checkBounds(0, -event.getY())) {
       point.setY(-event.getY());
     }
-    path.recalculateTangents(point);
-    path.update();
+    if (controller.checkBounds(event.getX(), 0) || controller.checkBounds(0, -event.getY())) {
+      path.recalculateTangents(point);
+      path.update();
+    }
     CurrentSelections.getCurPath().selectWaypoint(point);
   }
 
