@@ -10,6 +10,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.TransferMode;
 
 import javax.measure.UnitConverter;
@@ -67,15 +68,17 @@ public class WpilibPath extends Path {
         waypoint.getIcon().setOnDragDetected(event -> {
             CurrentSelections.setCurWaypoint(waypoint);
             CurrentSelections.setCurPath(this);
-            waypoint.getIcon().startDragAndDrop(TransferMode.MOVE)
-                    .setContent(Map.of(DataFormats.WAYPOINT, "point"));
+            var db = waypoint.getIcon().startDragAndDrop(TransferMode.MOVE);
+            db.setContent(Map.of(DataFormats.WAYPOINT, "point"));
+            db.setDragView(new WritableImage(1, 1));
         });
 
         waypoint.getTangentLine().setOnDragDetected(event -> {
             CurrentSelections.setCurWaypoint(waypoint);
             CurrentSelections.setCurPath(this);
-            waypoint.getTangentLine().startDragAndDrop(TransferMode.MOVE)
-                    .setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
+            var db = waypoint.getTangentLine().startDragAndDrop(TransferMode.MOVE);
+            db.setContent(Map.of(DataFormats.CONTROL_VECTOR, "vector"));
+            db.setDragView(new WritableImage(1, 1));
         });
     }
 

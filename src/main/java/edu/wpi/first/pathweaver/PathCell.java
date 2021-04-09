@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
@@ -152,6 +153,7 @@ public class PathCell extends TextFieldTreeCell<String> {
           return;
         }
         Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+        db.setDragView(new WritableImage(1, 1));
         ClipboardContent content = new ClipboardContent();
         content.putString(item.getValue());
         db.setContent(content);
