@@ -106,6 +106,7 @@ public class PathCell extends TextFieldTreeCell<String> {
     } else {
       editing = false;
       Alert a = new Alert(Alert.AlertType.INFORMATION);
+      FxUtils.applyDarkMode(a);
       a.setTitle("");
       a.setHeaderText("The item could not be renamed.");
       String content = String.format("The name \"%s\" is already used in this location. \n"
