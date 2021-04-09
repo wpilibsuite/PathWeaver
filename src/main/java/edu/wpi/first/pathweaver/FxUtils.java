@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
@@ -157,6 +158,7 @@ public final class FxUtils {
    */
   public static boolean promptDelete(String value) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    applyDarkMode(alert);
     alert.setTitle("Delete " + value + "?");
     alert.setHeaderText("Delete " + value + "?");
     alert.setContentText("Are you sure you want to delete: " + value + "?");
@@ -166,4 +168,12 @@ public final class FxUtils {
     }
     return false;
   }
+
+  public static void applyDarkMode(Alert alert){
+    final boolean darkIsOn = PathWeaver.mainScene.getStylesheets().contains(FxUtils.class.getResource("dark.css").toExternalForm());
+    if(darkIsOn) {
+        DialogPane dp = alert.getDialogPane();
+        dp.getStylesheets().add(FxUtils.class.getResource("dark.css").toExternalForm());
+    }
+  } 
 }

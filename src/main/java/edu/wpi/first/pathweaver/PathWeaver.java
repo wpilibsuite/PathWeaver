@@ -2,11 +2,9 @@ package edu.wpi.first.pathweaver;
 
 import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.pathweaver.extensions.ExtensionManager;
-
 import edu.wpi.first.wpiutil.CombinedRuntimeLoader;
 import edu.wpi.first.wpiutil.WPIUtilJNI;
 import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -15,21 +13,26 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class PathWeaver extends Application {
+  public static Scene mainScene;
+
   @Override
   public void start(Stage primaryStage) throws IOException {
     WPIUtilJNI.Helper.setExtractOnStaticLoad(false);
     WPIMathJNI.Helper.setExtractOnStaticLoad(false);
-    CombinedRuntimeLoader.loadLibraries(PathWeaver.class,  "wpiutiljni", "wpimathjni");
+    CombinedRuntimeLoader.loadLibraries(PathWeaver.class, "wpiutiljni",
+                                        "wpimathjni");
 
     ExtensionManager.getInstance().refresh();
     Pane root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
-    Scene scene = new Scene(root);
+    this.mainScene = new Scene(root);
     primaryStage.setTitle("PathWeaver - " + getVersion());
     // Work around dialog bug
-    // See https://stackoverflow.com/questions/55190380/javafx-creates-alert-dialog-which-is-too-small
+    // See
+    // https://stackoverflow.com/questions/55190380/javafx-creates-alert-dialog-which-is-too-small
     primaryStage.setResizable(true);
-    primaryStage.onShownProperty().addListener(e -> Platform.runLater(() -> primaryStage.setResizable(false)));
-    primaryStage.setScene(scene);
+    primaryStage.onShownProperty().addListener(
+        e -> Platform.runLater(() -> primaryStage.setResizable(false)));
+    primaryStage.setScene(this.mainScene);
     primaryStage.show();
     Loggers.setupLoggers();
   }
