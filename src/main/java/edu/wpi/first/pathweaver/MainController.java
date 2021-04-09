@@ -230,6 +230,7 @@ public class MainController {
             if (newValue != pathRoot && newValue != null) {
               fieldDisplayController.removeAllPath();
               fieldDisplayController.addPath(pathDirectory, newValue);
+              CurrentSelections.getCurPath().selectWaypoint(CurrentSelections.getCurPath().getStart());
             }
           }
         };
@@ -345,6 +346,7 @@ public class MainController {
 
       if(!path.getSpline().writePathToFile(path)) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        FxUtils.applyDarkMode(alert);
         alert.setTitle("Path export failure!");
         alert.setContentText("Could not export to: " + output.toAbsolutePath());
       }
@@ -357,6 +359,7 @@ public class MainController {
     }
 
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    FxUtils.applyDarkMode(alert);
     alert.setTitle("Paths exported!");
     alert.setContentText("Paths exported to: " + output.toAbsolutePath());
 

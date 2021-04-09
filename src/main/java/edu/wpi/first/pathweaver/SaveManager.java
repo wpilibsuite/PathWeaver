@@ -52,6 +52,7 @@ public final class SaveManager {
   public boolean promptSaveAll(boolean allowCancel) {
     for (Path path : paths) {
       Alert alert = new Alert(Alert.AlertType.NONE);
+      FxUtils.applyDarkMode(alert);
       alert.setTitle(path.getPathName() + " has been modified");
       alert.setContentText("Save " + path.getPathName() + "?");
       alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
