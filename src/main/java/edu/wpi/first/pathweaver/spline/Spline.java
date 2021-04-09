@@ -1,4 +1,5 @@
 package edu.wpi.first.pathweaver.spline;
+
 import edu.wpi.first.pathweaver.path.Path;
 
 import edu.wpi.first.pathweaver.global.CurrentSelections;
