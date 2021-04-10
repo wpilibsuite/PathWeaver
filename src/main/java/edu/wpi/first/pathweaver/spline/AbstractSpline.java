@@ -4,6 +4,7 @@ import edu.wpi.first.pathweaver.DataFormats;
 import edu.wpi.first.pathweaver.Waypoint;
 import edu.wpi.first.pathweaver.global.CurrentSelections;
 import javafx.scene.Group;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 
@@ -30,6 +31,7 @@ public abstract class AbstractSpline implements Spline {
         group.setOnDragDetected(event -> {
             Dragboard board = group.startDragAndDrop(TransferMode.ANY);
             board.setContent(Map.of(DataFormats.SPLINE, "Spline"));
+            board.setDragView(new WritableImage(1, 1));
 
             event.consume();
         });
