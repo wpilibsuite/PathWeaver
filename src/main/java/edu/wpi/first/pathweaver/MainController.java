@@ -159,13 +159,7 @@ public class MainController {
       return;
     }
     if (autonRoot == root) {
-      if (selected.getParent() == autonRoot) {
-        if (FxUtils.promptDelete(selected.getValue())) {
-          MainIOUtil.deleteItem(autonDirectory, selected);
-        }
-      } else {
-        removePath(selected);
-      }
+      return;
     } else if (pathRoot == root && FxUtils.promptDelete(selected.getValue())) {
       fieldDisplayController.removeAllPath();
       SaveManager.getInstance().removeChange(CurrentSelections.curPathProperty().get());
@@ -175,6 +169,30 @@ public class MainController {
       }
       saveAllAutons();
       loadAllAutons();
+    }
+  }
+
+  @FXML
+  private void deleteAuton() {
+    if (selected == null) {
+      // have nothing selected
+      return;
+    }
+    TreeItem<String> root = getRoot(selected);
+    if (selected == root) {
+      // clicked impossible thing to delete
+      return;
+    }
+    if (autonRoot == root) {
+      if (selected.getParent() == autonRoot) {
+        if (FxUtils.promptDelete(selected.getValue())) {
+          MainIOUtil.deleteItem(autonDirectory, selected);
+        }
+      } else {
+        removePath(selected);
+      }
+    } else {
+      return;
     }
   }
 

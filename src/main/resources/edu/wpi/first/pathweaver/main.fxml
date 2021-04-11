@@ -28,7 +28,7 @@
          <ToolBar prefHeight="40.0">
             <items>
                <Button mnemonicParsing="false" onAction="#createAuton" text="+"/>
-               <Button mnemonicParsing="false" onAction="#delete" text="-"/>
+               <Button mnemonicParsing="false" onAction="#deleteAuton" text="-"/>
             </items>
          </ToolBar>
          <TitledPane animated="false" collapsible="false" text="Paths" VBox.vgrow="ALWAYS">
