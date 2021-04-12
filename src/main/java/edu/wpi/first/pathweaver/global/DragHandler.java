@@ -67,10 +67,13 @@ public class DragHandler {
   }
 
   private void handleWaypointDrag(DragEvent event, Path path, Waypoint point) {
-    if (controller.checkBounds(event.getX(), -event.getY())) {
+    if (controller.checkBounds(event.getX(), 0)) {
       point.setX(event.getX());
-      //Y should increase as one drags the point up on the screen
+    }
+    if (controller.checkBounds(0, -event.getY())) {
       point.setY(-event.getY());
+    }
+    if (controller.checkBounds(event.getX(), 0) || controller.checkBounds(0, -event.getY())) {
       path.recalculateTangents(point);
       path.update();
     }
@@ -101,13 +104,13 @@ public class DragHandler {
 
   private void handlePathMoveDrag(DragEvent event, Path path, Waypoint point) {
     double offsetX = event.getX() - point.getX();
-    double offsetY = event.getY() - point.getY();
+    double offsetY = event.getY() + point.getY();
 
     // Make sure all waypoints will be within the bounds
     for (Waypoint checkPoint : path.getWaypoints()) {
       double wpNewX = checkPoint.getX() + offsetX;
-      double wpNewY = checkPoint.getY() + offsetY;
-      if (!controller.checkBounds(wpNewX, wpNewY)) {
+      double wpNewY = -checkPoint.getY() + offsetY;
+      if (!controller.checkBounds(wpNewX, -wpNewY)) {
         return;
       }
     }
@@ -115,7 +118,7 @@ public class DragHandler {
     // Apply new positions
     for (Waypoint changedPoint : path.getWaypoints()) {
       double wpNewX = changedPoint.getX() + offsetX;
-      double wpNewY = changedPoint.getY() + offsetY;
+      double wpNewY = changedPoint.getY() - offsetY;
       changedPoint.setX(wpNewX);
       changedPoint.setY(wpNewY);
     }
