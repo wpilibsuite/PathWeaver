@@ -65,8 +65,14 @@ public class WpilibSpline extends AbstractSpline {
         for (int i = 1; i < waypoints.size(); i++) {
             Waypoint segStart = waypoints.get(i - 1).copy();
             Waypoint segEnd = waypoints.get(i).copy();
+            QuinticHermiteSpline quintic;
 
-            QuinticHermiteSpline quintic = getQuinticSplinesFromWaypoints(new Waypoint[]{segStart, segEnd})[0];
+            if (segStart.isReversed()) {
+                quintic = getQuinticSplinesFromWaypoints(new Waypoint[]{segEnd, segStart})[0];
+            }
+            else {
+                quintic = getQuinticSplinesFromWaypoints(new Waypoint[]{segStart, segEnd})[0];
+            }
             SplineSegment seg = new SplineSegment(waypoints.get(i-1), waypoints.get(i), path);
 
             for (int sample = 0; sample <= 40; sample++) {
