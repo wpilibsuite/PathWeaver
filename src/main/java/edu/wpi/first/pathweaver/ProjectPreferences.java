@@ -3,6 +3,7 @@ package edu.wpi.first.pathweaver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
@@ -236,6 +237,7 @@ public class ProjectPreferences {
 		private String exportUnit;
 		private final double maxVelocity;
 		private final double maxAcceleration;
+		@SerializedName(value = "trackWidth", alternate = "wheelBase")
 		private final double trackWidth;
 		private String gameName;
 		private final String outputDir;
