@@ -2,6 +2,8 @@ package edu.wpi.first.pathweaver;
 
 import javafx.application.Application;
 
+import java.util.Locale;
+
 /**
  * The true main class.  This bypasses module boot layer introspection by the Java launcher that attempts to
  * reflectively access the JavaFX application launcher classes - this will fail because there is no module path;
@@ -13,6 +15,7 @@ public final class Main {
   public static void main(String[] args) {
     // JavaFX 11+ uses GTK3 by default, and has problems on some display servers
     // This flag forces JavaFX to use GTK2
+    Locale.setDefault(new Locale("en", "US"));
     System.setProperty("jdk.gtk.version", "2");
     Application.launch(PathWeaver.class, args);
   }

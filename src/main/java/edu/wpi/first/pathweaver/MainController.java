@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 //Anything to do with the directory should be part of a Project object
 
 @SuppressWarnings({"PMD.UnusedPrivateMethod","PMD.AvoidFieldNameMatchingMethodName",
-  "PMD.GodClass"})
+  "PMD.GodClass", "PMD.TooManyFields"})
 public class MainController {
   private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
@@ -47,7 +47,8 @@ public class MainController {
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
-  private final String autonDirectory = directory + "/Groups/";
+  private final String autonDirectory = directory + "/Autos/";
+  private final String groupDirectory = directory + "/Groups/"; // Legacy dir for backwards compatibility
   private final TreeItem<String> autonRoot = new TreeItem<>("Autons");
   private final TreeItem<String> pathRoot = new TreeItem<>("Paths");
 
@@ -63,6 +64,13 @@ public class MainController {
 
     setupTreeView(autons, autonRoot, FxUtils.menuItem("New Autonomous...", event -> createAuton()));
     setupTreeView(paths, pathRoot, FxUtils.menuItem("New Path...", event -> createPath()));
+
+    // Copying files from the old directory name to the new one to maintain backwards compatibility
+    try {
+      MainIOUtil.copyGroupFiles(autonDirectory, groupDirectory);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     MainIOUtil.setupItemsInDirectory(pathDirectory, pathRoot);
     MainIOUtil.setupItemsInDirectory(autonDirectory, autonRoot);
@@ -159,13 +167,7 @@ public class MainController {
       return;
     }
     if (autonRoot == root) {
-      if (selected.getParent() == autonRoot) {
-        if (FxUtils.promptDelete(selected.getValue())) {
-          MainIOUtil.deleteItem(autonDirectory, selected);
-        }
-      } else {
-        removePath(selected);
-      }
+      return;
     } else if (pathRoot == root && FxUtils.promptDelete(selected.getValue())) {
       fieldDisplayController.removeAllPath();
       SaveManager.getInstance().removeChange(CurrentSelections.curPathProperty().get());
@@ -175,6 +177,30 @@ public class MainController {
       }
       saveAllAutons();
       loadAllAutons();
+    }
+  }
+
+  @FXML
+  private void deleteAuton() {
+    if (selected == null) {
+      // have nothing selected
+      return;
+    }
+    TreeItem<String> root = getRoot(selected);
+    if (selected == root) {
+      // clicked impossible thing to delete
+      return;
+    }
+    if (autonRoot == root) {
+      if (selected.getParent() == autonRoot) {
+        if (FxUtils.promptDelete(selected.getValue())) {
+          MainIOUtil.deleteItem(autonDirectory, selected);
+        }
+      } else {
+        removePath(selected);
+      }
+    } else {
+      return;
     }
   }
 
@@ -244,12 +270,6 @@ public class MainController {
       public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue,
                           TreeItem<String> newValue) {
         if (newValue == null) {
-          return;
-        }
-        if (!SaveManager.getInstance().promptSaveAll()) {
-          autons.getSelectionModel().selectedItemProperty().removeListener(this);
-          autons.getSelectionModel().select(oldValue);
-          autons.getSelectionModel().selectedItemProperty().addListener(this);
           return;
         }
         selected = newValue;
