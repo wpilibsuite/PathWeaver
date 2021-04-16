@@ -52,7 +52,7 @@ public class CreateProjectController {
 	@FXML
 	private TextField maxAcceleration;
 	@FXML
-	private TextField wheelBase;
+	private TextField trackWidth;
 	@FXML
 	private ChoiceBox<Game> game;
 	@FXML
@@ -68,13 +68,13 @@ public class CreateProjectController {
 	@FXML
 	private Label accelerationLabel;
 	@FXML
-	private Label wheelBaseLabel;
+	private Label trackWidthLabel;
 	@FXML
 	private Label velocityUnits;
 	@FXML
 	private Label accelerationUnits;
 	@FXML
-	private Label wheelBaseUnits;
+	private Label trackWidthUnits;
 
 	private boolean editing = false;
 
@@ -82,7 +82,7 @@ public class CreateProjectController {
 
 	private void initialize() {
 		ObservableList<TextField> numericFields = FXCollections.observableArrayList(maxVelocity,
-				maxAcceleration, wheelBase);
+				maxAcceleration, trackWidth);
 		ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
 		allFields.add(directory);
 
@@ -90,7 +90,7 @@ public class CreateProjectController {
 		var outputControls = List.of(outputLabel, outputDirectory, browseOutput);
 		var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
 		var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
-		var wheelBaseControls = List.of(wheelBaseLabel, wheelBase, wheelBaseUnits);
+		var trackWidthControls = List.of(trackWidthLabel, trackWidth, trackWidthUnits);
 
 		BooleanBinding bind = new SimpleBooleanProperty(true).not();
 		for (TextField field : allFields) {
@@ -164,14 +164,15 @@ public class CreateProjectController {
 				.forEach(control -> control.setTooltip(new Tooltip("The maximum capable acceleration of your robot.")));
 		accelerationUnits.textProperty().bind(
 				lengthUnit.map(PathUnits.getInstance()::accelerationUnit).map(SimpleUnitFormat.getInstance()::format));
-		wheelBaseControls.forEach(
-				control -> control.setTooltip(new Tooltip("Distance between the left and right of the wheel base.")));
-		wheelBaseUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
+		trackWidthControls.forEach(
+				control -> control.setTooltip(new Tooltip("The width between the center of each tire of the " +
+						"drivebase.  Even better would be a calculated track width from robot characterization.")));
+		trackWidthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
 		// Show longer text for an extended period of time
 		Stream.of(directoryControls, outputControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDuration(Duration.seconds(10)));
 		Stream.of(directoryControls, outputControls, velocityControls, accelerationControls,
-				wheelBaseControls).flatMap(List::stream)
+				trackWidthControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
 		// We are editing a project
@@ -195,7 +196,7 @@ public class CreateProjectController {
 		export.getSelectionModel().selectFirst();
 		maxVelocity.setText("");
 		maxAcceleration.setText("");
-		wheelBase.setText("");
+		trackWidth.setText("");
 		editing = false;
 	}
 
@@ -220,9 +221,9 @@ public class CreateProjectController {
 		String exportUnit = export.getValue().getName();
 		double velocityMax = Double.parseDouble(maxVelocity.getText());
 		double accelerationMax = Double.parseDouble(maxAcceleration.getText());
-		double wheelBaseDistance = Double.parseDouble(wheelBase.getText());
+		double trackWidthDistance = Double.parseDouble(trackWidth.getText());
 		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, exportUnit, velocityMax,
-				accelerationMax, wheelBaseDistance, game.getValue().getName(), outputPath);
+				accelerationMax, trackWidthDistance, game.getValue().getName(), outputPath);
 		ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
 		prefs.setValues(values);
 		editing = false;
@@ -268,7 +269,7 @@ public class CreateProjectController {
 		export.setValue(values.getExportUnit());
 		maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
 		maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
-		wheelBase.setText(String.valueOf(values.getWheelBase()));
+		trackWidth.setText(String.valueOf(values.getTrackWidth()));
 		editing = true;
 	}
 }

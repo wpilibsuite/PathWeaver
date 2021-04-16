@@ -3,6 +3,7 @@ package edu.wpi.first.pathweaver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -239,7 +240,8 @@ public class ProjectPreferences {
 		private String exportUnit;
 		private final double maxVelocity;
 		private final double maxAcceleration;
-		private final double wheelBase;
+		@SerializedName(value = "trackWidth", alternate = "wheelBase")
+		private final double trackWidth;
 		private String gameName;
 		private final String outputDir;
 
@@ -252,20 +254,21 @@ public class ProjectPreferences {
 		 *            The maximum velocity the body is capable of travelling at
 		 * @param maxAcceleration
 		 *            The maximum acceleration to use
-		 * @param wheelBase
-		 *            The width between the individual sides of the drivebase
+		 * @param trackWidth
+		 *            The width between the center of each tire of the drivebase.  Even better would be a calculated
+		 *            track width from robot characterization.
 		 * @param gameName
 		 *            The year/FRC game
 		 * @param outputDir
 		 *            The directory for the output files
 		 */
 		public Values(String lengthUnit, String exportUnit, double maxVelocity, double maxAcceleration,
-				double wheelBase, String gameName, String outputDir) {
+				double trackWidth, String gameName, String outputDir) {
 			this.lengthUnit = lengthUnit;
 			this.exportUnit = exportUnit;
 			this.maxVelocity = maxVelocity;
 			this.maxAcceleration = maxAcceleration;
-			this.wheelBase = wheelBase;
+			this.trackWidth = trackWidth;
 			this.gameName = gameName;
 			this.outputDir = outputDir;
 		}
@@ -286,8 +289,8 @@ public class ProjectPreferences {
 			return maxAcceleration;
 		}
 
-		public double getWheelBase() {
-			return wheelBase;
+		public double getTrackWidth() {
+			return trackWidth;
 		}
 
 		public String getGameName() {
