@@ -111,22 +111,25 @@ public class WpilibSpline extends AbstractSpline {
         });
         try {
             var values = ProjectPreferences.getInstance().getValues();
-
-            TrajectoryConfig config = new TrajectoryConfig(values.getMaxVelocity(), values.getMaxAcceleration())
-                .setKinematics(new DifferentialDriveKinematics(values.getTrackWidth())).setReversed(waypoints.get(0).isReversed());
-            Trajectory traj = trajectoryFromWaypoints(waypoints, config);
-
             var prefs = ProjectPreferences.getInstance();
             var lengthUnit = prefs.getField().getUnit();
-
-            // This value has units of the length type.
             double height = prefs.getField().getRealLength().getValue().doubleValue();
+            var maxVelocity = values.getMaxVelocity();
+            var maxAcceleration = values.getMaxAcceleration();
+            var trackWidth = values.getTrackWidth();
 
             // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.
             if (prefs.getValues().getExportUnit() == ProjectPreferences.ExportUnit.METER) {
                 UnitConverter converter = lengthUnit.getConverterTo(PathUnits.METER);
                 height = converter.convert(height);
+                maxVelocity = converter.convert(maxVelocity);
+                maxAcceleration = converter.convert(maxAcceleration);
+                trackWidth = converter.convert(trackWidth);
             }
+
+            TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration)
+                .setKinematics(new DifferentialDriveKinematics(trackWidth)).setReversed(waypoints.get(0).isReversed());
+            Trajectory traj = trajectoryFromWaypoints(waypoints, config);
 
             for (int i = 0; i < traj.getStates().size(); ++i) {
                 var st = traj.getStates().get(i);
