@@ -45,6 +45,12 @@ public class MainController {
   @FXML private GridPane editWaypoint;
   @FXML private EditWaypointController editWaypointController;
 
+  @FXML private GridPane editPath;
+  @FXML private EditPathController editPathController;
+
+  @FXML private GridPane editAuto;
+  @FXML private EditAutoController editAutoController;
+
   private String directory = ProjectPreferences.getInstance().getDirectory();
   private final String pathDirectory = directory + "/Paths/";
   private final String autonDirectory = directory + "/Autos/";

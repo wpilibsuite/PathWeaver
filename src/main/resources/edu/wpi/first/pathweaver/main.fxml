@@ -14,15 +14,23 @@
             <fx:include fx:id="fieldDisplay" source="fieldDisplay.fxml" />
          </center>
          <bottom>
-            <TitledPane text="Waypoint Properties" BorderPane.alignment="CENTER">
-               <fx:include fx:id="editWaypoint" source="editWaypoint.fxml"/>
-            </TitledPane>
+            <VBox>
+               <TitledPane text="Waypoint Properties" BorderPane.alignment="CENTER" expanded="false">
+                  <fx:include fx:id="editWaypoint" source="editWaypoint.fxml"/>
+               </TitledPane>
+               <TitledPane text="Path Properties" BorderPane.alignment="CENTER" expanded="false">
+                  <fx:include fx:id="editPath" source="editPath.fxml"/>
+               </TitledPane>
+               <TitledPane text="Auto Properties" BorderPane.alignment="CENTER" expanded="false">
+                  <fx:include fx:id="editAuto" source="editAuto.fxml"/>
+               </TitledPane>
+            </VBox>
          </bottom>
       </BorderPane>
    </center>
    <right>
-      <VBox BorderPane.alignment="CENTER">
-         <TitledPane animated="false" collapsible="false" text="Autonomous Routines">
+      <VBox BorderPane.alignment="CENTER" >
+         <TitledPane animated="false" collapsible="false" text="Autonomous Routines" VBox.vgrow="ALWAYS">
             <TreeView fx:id="autons"/>
          </TitledPane>
          <ToolBar prefHeight="40.0">
