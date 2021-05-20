@@ -7,9 +7,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
 import javafx.util.converter.NumberStringConverter;
 
@@ -26,16 +26,23 @@ public class EditWaypointController {
   @FXML
   private CheckBox lockedTangent;
   @FXML
-  private CheckBox reverseSpline;
-  @FXML
   private TextField pointName;
+  @FXML
+  private ListView waypointView;
+  @FXML
+  private Button javaExport;
+  @FXML
+  private Button cExport;
 
   private List<Control> controls;
   private ChangeListener<String> nameListener;
 
+  final Clipboard clipboard = Clipboard.getSystemClipboard();
+  final ClipboardContent content = new ClipboardContent();
+
   @FXML
   private void initialize() {
-    controls = List.of(xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName, reverseSpline);
+    controls = List.of(waypointView, xPosition, yPosition, tangentX, tangentY, lockedTangent, pointName, javaExport, cExport);
     controls.forEach(control -> control.setDisable(true));
     List<TextField> textFields = List.of(xPosition, yPosition, tangentX, tangentY);
     textFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyDoubleText()));
@@ -119,9 +126,7 @@ public class EditWaypointController {
     disableDoubleBinding(tangentX, oldValue.tangentXProperty());
     disableDoubleBinding(tangentY, oldValue.tangentYProperty());
     lockedTangent.selectedProperty().unbindBidirectional(oldValue.lockTangentProperty());
-    reverseSpline.selectedProperty().unbindBidirectional(oldValue.reversedProperty());
     lockedTangent.setSelected(false);
-    reverseSpline.setSelected(false);
     pointName.textProperty().removeListener(nameListener);
     pointName.setText("");
   }
@@ -135,7 +140,6 @@ public class EditWaypointController {
     } else {
       lockedTangent.selectedProperty().bindBidirectional(newValue.lockTangentProperty());
     }
-    reverseSpline.selectedProperty().bindBidirectional(newValue.reversedProperty());
     enableDoubleBinding(xPosition, newValue.xProperty());
     yDoubleBinding(yPosition, newValue.yProperty());
     enableDoubleBinding(tangentX, newValue.tangentXProperty());
@@ -171,16 +175,28 @@ public class EditWaypointController {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
-    reverseSpline.selectedProperty()
-            .addListener((listener, oldValue, newValue) -> {
-              if (wp.getValue().isReversed() != newValue) {
-                SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
-              }
-            });
   }
 
   private void lockTangentOnEdit() {
     tangentY.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
     tangentX.setOnKeyTyped((KeyEvent event) -> lockedTangent.setSelected(true));
+  }
+
+  @FXML
+  private void handleJavaExport() {
+    String baseString = "var %s = new ControlVector(new double[] {%f, %f}, new double[] {%f, %f});";
+    var wp = CurrentSelections.getCurWaypoint();
+    String clipStr = String.format(baseString, wp.getName(), wp.getX(), wp.getTangentX(), wp.getY(), wp.getTangentY());
+    content.putString(clipStr);
+    clipboard.setContent(content);
+  }
+
+  @FXML
+  private void handleCExport() {
+    String baseString = "ControlVector %s{{%f, %f}, {%f, %f}};";
+    var wp = CurrentSelections.getCurWaypoint();
+    String clipStr = String.format(baseString, wp.getName(), wp.getX(), wp.getTangentX(), wp.getY(), wp.getTangentY());
+    content.putString(clipStr);
+    clipboard.setContent(content);
   }
 }

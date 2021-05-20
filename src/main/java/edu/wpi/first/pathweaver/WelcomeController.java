@@ -115,4 +115,14 @@ public class WelcomeController {
     }
     dark = !darkIsOn;
   }
+
+  @FXML
+  private void robotOutlineToggle() {
+
+  }
+
+  @FXML
+  private void wheelPathToggle() {
+
+  }
 }

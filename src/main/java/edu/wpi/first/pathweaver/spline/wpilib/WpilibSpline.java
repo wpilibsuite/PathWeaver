@@ -4,6 +4,7 @@ import edu.wpi.first.pathweaver.FxUtils;
 import edu.wpi.first.pathweaver.PathUnits;
 import edu.wpi.first.pathweaver.ProjectPreferences;
 import edu.wpi.first.pathweaver.Waypoint;
+import edu.wpi.first.pathweaver.global.CurrentSelections;
 import edu.wpi.first.pathweaver.path.Path;
 import edu.wpi.first.pathweaver.spline.AbstractSpline;
 import edu.wpi.first.pathweaver.spline.SplineSegment;
@@ -115,8 +116,9 @@ public class WpilibSpline extends AbstractSpline {
             var prefs = ProjectPreferences.getInstance();
             var lengthUnit = prefs.getField().getUnit();
             double height = prefs.getField().getRealLength().getValue().doubleValue();
-            var maxVelocity = values.getMaxVelocity();
-            var maxAcceleration = values.getMaxAcceleration();
+
+            var maxVelocity = CurrentSelections.getCurPath().getMaxVelocity();
+            var maxAcceleration = CurrentSelections.getCurPath().getMaxAcceleration();
             var trackWidth = values.getTrackWidth();
 
             // If the export type is different (i.e. meters), then we have to convert it. Otherwise we are good.

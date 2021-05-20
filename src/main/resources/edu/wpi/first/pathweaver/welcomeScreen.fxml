@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.WelcomeController">
+<?import javafx.scene.control.CheckBox?>
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wpi.first.pathweaver.WelcomeController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
@@ -41,6 +42,8 @@
             </HBox>
             <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
             <Button fx:id="darkToggle" mnemonicParsing="false" onAction="#darkToggle" text="Toggle Dark Mode" />
+            <CheckBox fx:id="robotOutlineToggle" mnemonicParsing="false" text="Show Robot Outline" />
+            <CheckBox fx:id="wheelPathToggle" mnemonicParsing="false" text="Show Wheel Path" />
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />

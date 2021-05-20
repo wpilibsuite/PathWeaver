@@ -15,15 +15,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -42,13 +36,15 @@ public class MainController {
   @FXML private Pane fieldDisplay;
   @FXML private FieldDisplayController fieldDisplayController;
 
-  @FXML private GridPane editWaypoint;
+  @FXML private Accordion accordion;
+
+  @FXML private TitledPane editWaypointTitle;
   @FXML private EditWaypointController editWaypointController;
 
-  @FXML private GridPane editPath;
+  @FXML private TitledPane editPathTitle;
   @FXML private EditPathController editPathController;
 
-  @FXML private GridPane editAuto;
+  @FXML private TitledPane editAutoTitle;
   @FXML private EditAutoController editAutoController;
 
   private String directory = ProjectPreferences.getInstance().getDirectory();
@@ -353,7 +349,6 @@ public class MainController {
   }
 
   @FXML
-
   private void buildPaths() {
     if (!SaveManager.getInstance().promptSaveAll()) {
       return;
@@ -401,6 +396,21 @@ public class MainController {
 
   public void setDirectory(String directory) {
     this.directory = directory;
+  }
+
+  @FXML
+  private void expandWaypoint() {
+    accordion.setExpandedPane(editWaypointTitle);
+  }
+
+  @FXML
+  private void expandPath() {
+    accordion.setExpandedPane(editPathTitle);
+  }
+
+  @FXML
+  private void expandAuto() {
+    accordion.setExpandedPane(editAutoTitle);
   }
 }
 

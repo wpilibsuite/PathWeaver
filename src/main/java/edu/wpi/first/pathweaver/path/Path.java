@@ -57,6 +57,11 @@ public abstract class Path {
     protected final String pathName;
     protected int subchildIdx = 0;
 
+    protected double startVelocity;
+    protected double startAcceleration;
+    protected double maxVelocity;
+    protected double maxAcceleration;
+
     /**
      * Creates a Path from a {@link SplineFactory} and the name of the path.
      * @param splineFactory the SplineFactory
@@ -118,6 +123,14 @@ public abstract class Path {
     public final String getPathName() {
         return pathName;
     }
+
+    public final double getStartVelocity() { return startVelocity; }
+
+    public final double getStartAcceleration() { return startAcceleration; }
+
+    public final double getMaxVelocity() { return maxVelocity; }
+
+    public final double getMaxAcceleration() { return maxAcceleration; }
 
     /**
      * Removes extension and version number from filename.

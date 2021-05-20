@@ -238,8 +238,8 @@ public class ProjectPreferences {
 		private String lengthUnit;
 		@SuppressWarnings("PMD.ImmutableField")
 		private String exportUnit;
-		private final double maxVelocity;
-		private final double maxAcceleration;
+		private final double robotWidth;
+		private final double robotLength;
 		@SerializedName(value = "trackWidth", alternate = "wheelBase")
 		private final double trackWidth;
 		private String gameName;
@@ -250,10 +250,10 @@ public class ProjectPreferences {
 		 *
 		 * @param lengthUnit
 		 *            The unit to use for distances
-		 * @param maxVelocity
-		 *            The maximum velocity the body is capable of travelling at
-		 * @param maxAcceleration
-		 *            The maximum acceleration to use
+		 * @param robotWidth
+		 *            The size of your robot in the direction perpendicular to travel.
+		 * @param robotLength
+		 *            The size of your robot in the direction of travel.
 		 * @param trackWidth
 		 *            The width between the center of each tire of the drivebase.  Even better would be a calculated
 		 *            track width from robot characterization.
@@ -262,12 +262,12 @@ public class ProjectPreferences {
 		 * @param outputDir
 		 *            The directory for the output files
 		 */
-		public Values(String lengthUnit, String exportUnit, double maxVelocity, double maxAcceleration,
+		public Values(String lengthUnit, String exportUnit, double robotWidth, double robotLength,
 				double trackWidth, String gameName, String outputDir) {
 			this.lengthUnit = lengthUnit;
 			this.exportUnit = exportUnit;
-			this.maxVelocity = maxVelocity;
-			this.maxAcceleration = maxAcceleration;
+			this.robotWidth = robotWidth;
+			this.robotLength = robotLength;
 			this.trackWidth = trackWidth;
 			this.gameName = gameName;
 			this.outputDir = outputDir;
@@ -281,12 +281,12 @@ public class ProjectPreferences {
 			return ExportUnit.fromString(exportUnit);
 		}
 
-		public double getMaxVelocity() {
-			return maxVelocity;
+		public double getRobotWidth() {
+			return robotWidth;
 		}
 
-		public double getMaxAcceleration() {
-			return maxAcceleration;
+		public double getRobotLength() {
+			return robotLength;
 		}
 
 		public double getTrackWidth() {

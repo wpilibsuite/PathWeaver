@@ -48,10 +48,6 @@ public class CreateProjectController {
 	@FXML
 	private TextField outputDirectory;
 	@FXML
-	private TextField maxVelocity;
-	@FXML
-	private TextField maxAcceleration;
-	@FXML
 	private TextField trackWidth;
 	@FXML
 	private ChoiceBox<Game> game;
@@ -64,32 +60,36 @@ public class CreateProjectController {
 	@FXML
 	private Label outputLabel;
 	@FXML
-	private Label velocityLabel;
-	@FXML
-	private Label accelerationLabel;
-	@FXML
 	private Label trackWidthLabel;
 	@FXML
-	private Label velocityUnits;
-	@FXML
-	private Label accelerationUnits;
-	@FXML
 	private Label trackWidthUnits;
+	@FXML
+	private Label widthLabel;
+	@FXML
+	private Label lengthLabel;
+	@FXML
+	private TextField robotWidth;
+	@FXML
+	private TextField robotLength;
+	@FXML
+	private Label widthUnits;
+	@FXML
+	private Label lengthUnits;
 
 	private boolean editing = false;
 
 	@FXML
 
 	private void initialize() {
-		ObservableList<TextField> numericFields = FXCollections.observableArrayList(maxVelocity,
-				maxAcceleration, trackWidth);
+		ObservableList<TextField> numericFields = FXCollections.observableArrayList(robotWidth,
+				robotLength, trackWidth);
 		ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
 		allFields.add(directory);
 
 		var directoryControls = List.of(browseLabel, directory, browse);
 		var outputControls = List.of(outputLabel, outputDirectory, browseOutput);
-		var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
-		var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
+		var widthControls = List.of(widthLabel, robotWidth, widthUnits);
+		var lengthControls = List.of(lengthLabel, robotLength, lengthUnits);
 		var trackWidthControls = List.of(trackWidthLabel, trackWidth, trackWidthUnits);
 
 		BooleanBinding bind = new SimpleBooleanProperty(true).not();
@@ -156,14 +156,12 @@ public class CreateProjectController {
 						+ "If it is the root folder of your FRC robot project,\nthe paths will automatically be copied to the "
 						+ "robot at deploy time.\nDefault: will search relative to your project directory,\n"
 						+ "attempting to find deploy folder.")));
-		velocityControls
-				.forEach(control -> control.setTooltip(new Tooltip("The maximum velocity your robot can travel.")));
-		velocityUnits.textProperty()
-				.bind(lengthUnit.map(PathUnits.getInstance()::speedUnit).map(SimpleUnitFormat.getInstance()::format));
-		accelerationControls
-				.forEach(control -> control.setTooltip(new Tooltip("The maximum capable acceleration of your robot.")));
-		accelerationUnits.textProperty().bind(
-				lengthUnit.map(PathUnits.getInstance()::accelerationUnit).map(SimpleUnitFormat.getInstance()::format));
+		widthControls
+				.forEach(control -> control.setTooltip(new Tooltip("The size of your robot in the direction perpendicular to travel.")));
+		widthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
+		lengthControls
+				.forEach(control -> control.setTooltip(new Tooltip("The size of your robot in the direction of travel.")));
+		lengthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
 		trackWidthControls.forEach(
 				control -> control.setTooltip(new Tooltip("The width between the center of each tire of the " +
 						"drivebase.  Even better would be a calculated track width from robot characterization.")));
@@ -171,7 +169,7 @@ public class CreateProjectController {
 		// Show longer text for an extended period of time
 		Stream.of(directoryControls, outputControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDuration(Duration.seconds(10)));
-		Stream.of(directoryControls, outputControls, velocityControls, accelerationControls,
+		Stream.of(directoryControls, outputControls, widthControls, lengthControls,
 				trackWidthControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
@@ -194,8 +192,8 @@ public class CreateProjectController {
 		game.getSelectionModel().selectFirst();
 		length.getSelectionModel().select(3); // Default is Meter
 		export.getSelectionModel().selectFirst();
-		maxVelocity.setText("");
-		maxAcceleration.setText("");
+		robotWidth.setText("");
+		robotLength.setText("");
 		trackWidth.setText("");
 		editing = false;
 	}
@@ -219,11 +217,11 @@ public class CreateProjectController {
 		ProgramPreferences.getInstance().addProject(directory.getAbsolutePath());
 		String lengthUnit = length.getValue().getName();
 		String exportUnit = export.getValue().getName();
-		double velocityMax = Double.parseDouble(maxVelocity.getText());
-		double accelerationMax = Double.parseDouble(maxAcceleration.getText());
+		double rbtWidth = Double.parseDouble(robotWidth.getText());
+		double rbtLength = Double.parseDouble(robotLength.getText());
 		double trackWidthDistance = Double.parseDouble(trackWidth.getText());
-		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, exportUnit, velocityMax,
-				accelerationMax, trackWidthDistance, game.getValue().getName(), outputPath);
+		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, exportUnit, rbtWidth,
+				rbtLength, trackWidthDistance, game.getValue().getName(), outputPath);
 		ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
 		prefs.setValues(values);
 		editing = false;
@@ -267,8 +265,8 @@ public class CreateProjectController {
 		game.setValue(Game.fromPrettyName(values.getGameName()));
 		length.setValue(values.getLengthUnit());
 		export.setValue(values.getExportUnit());
-		maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
-		maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
+		robotWidth.setText(String.valueOf(values.getRobotWidth()));
+		robotLength.setText(String.valueOf(values.getRobotLength()));
 		trackWidth.setText(String.valueOf(values.getTrackWidth()));
 		editing = true;
 	}
