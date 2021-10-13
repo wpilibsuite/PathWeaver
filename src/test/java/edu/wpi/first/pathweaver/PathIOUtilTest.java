@@ -29,6 +29,7 @@ public class PathIOUtilTest {
     @Test
     public void loadLegacyFileMeters() throws IOException {
         String legacyFileName = "MetersLegacyPath.csv";
+        String expectedFileName = "MetersExpectedPath.json";
         String pathweaverFile = "MetersPathweaverConfig.json";
         setupConfigFiles(legacyFileName, pathweaverFile);
         ProjectPreferences.getInstance(projectDirectory);
@@ -39,6 +40,9 @@ public class PathIOUtilTest {
         Path path = PathIOUtil.importPath(pathDirectory, legacyFileName);
         assertNotNull(path);
         assertEquals(6, path.getWaypoints().size());
+
+        // After loading, the legacy version should be deleted
+        assertFalse(Files.exists(Paths.get(pathDirectory, legacyFileName)));
 
 
         // Check that the points match
@@ -89,12 +93,20 @@ public class PathIOUtilTest {
             assertEquals(-1.8, waypoint.getTangentX(), EPSILON);
             assertEquals(0.0,waypoint.getTangentY(), EPSILON);
         }
+
+        // Make sure the path matches the one loaded from the expected file
+        extractResource("/edu/wpi/first/pathweaver/" + expectedFileName, Paths.get(pathDirectory, expectedFileName));
+
+        Path expectedPath = PathIOUtil.importPath(pathDirectory, expectedFileName);
+        assertEquals(expectedPath.getWaypoints(), path.getWaypoints(), "Path loaded from disk doesn't match original");
+
     }
 
 
     @Test
     public void loadLegacyFileInches() throws IOException {
         String legacyFileName = "InchesLegacyPath.csv";
+        String expectedFileName = "InchesExpectedPath.json";
         String pathweaverFile = "InchesPathweaverConfig.json";
         setupConfigFiles(legacyFileName, pathweaverFile);
         ProjectPreferences.getInstance(projectDirectory);
@@ -105,6 +117,9 @@ public class PathIOUtilTest {
         Path path = PathIOUtil.importPath(pathDirectory, legacyFileName);
         assertNotNull(path);
         assertEquals(7, path.getWaypoints().size());
+
+        // After loading, the legacy version should be deleted
+        assertFalse(Files.exists(Paths.get(pathDirectory, legacyFileName)));
 
 
         // Check that the points match
@@ -163,6 +178,13 @@ public class PathIOUtilTest {
             assertEquals(43.62, waypoint.getTangentX(), EPSILON);
             assertEquals(-3.42,waypoint.getTangentY(), EPSILON);
         }
+
+        // Make sure the path matches the one loaded from the expected file
+        extractResource("/edu/wpi/first/pathweaver/" + expectedFileName, Paths.get(pathDirectory, expectedFileName));
+
+        Path expectedPath = PathIOUtil.importPath(pathDirectory, expectedFileName);
+        assertEquals(expectedPath.getWaypoints(), path.getWaypoints(), "Path loaded from disk doesn't match original");
+
     }
 
 

@@ -1,0 +1,69 @@
+{
+  "version": "v1",
+  "lengthUnit": "Inch",
+  "points": [
+    {
+      "x": 4.7,
+      "y": 2.0,
+      "tangentX": 13.02,
+      "tangentY": -1.14,
+      "fixedTheta": true,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 180.5,
+      "y": 95.5,
+      "tangentX": 115.7,
+      "tangentY": 1.32,
+      "fixedTheta": false,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 351.5,
+      "y": 16.5,
+      "tangentX": 7.27,
+      "tangentY": 65.02,
+      "fixedTheta": false,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 317.0,
+      "y": 139.0,
+      "tangentX": -64.72,
+      "tangentY": 103.15,
+      "fixedTheta": false,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 49.0,
+      "y": 173.0,
+      "tangentX": -36.09,
+      "tangentY": -15.08,
+      "fixedTheta": true,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 22.5,
+      "y": 134.5,
+      "tangentX": -4.13,
+      "tangentY": -30.43,
+      "fixedTheta": false,
+      "reversed": false,
+      "name": ""
+    },
+    {
+      "x": 57.5,
+      "y": 82.5,
+      "tangentX": 43.62,
+      "tangentY": -3.42,
+      "fixedTheta": true,
+      "reversed": false,
+      "name": ""
+    }
+  ]
+}
