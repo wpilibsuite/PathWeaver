@@ -28,7 +28,7 @@ public class PathIOUtilTest {
 
     @Test
     public void loadLegacyFileMeters() throws IOException {
-        String legacyFileName = "MetersLegacyPath.csv";
+        String legacyFileName = "MetersLegacyPath.path";
         String expectedFileName = "MetersExpectedPath.json";
         String pathweaverFile = "MetersPathweaverConfig.json";
         setupConfigFiles(legacyFileName, pathweaverFile);
@@ -105,7 +105,7 @@ public class PathIOUtilTest {
 
     @Test
     public void loadLegacyFileInches() throws IOException {
-        String legacyFileName = "InchesLegacyPath.csv";
+        String legacyFileName = "InchesLegacyPath.path";
         String expectedFileName = "InchesExpectedPath.json";
         String pathweaverFile = "InchesPathweaverConfig.json";
         setupConfigFiles(legacyFileName, pathweaverFile);
