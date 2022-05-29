@@ -1,0 +1,8 @@
+<FindBugsFilter>
+    <!-- Reason: https://github.com/spotbugs/spotbugs/issues/2040 -->
+    <Match>
+        <Class name="edu.wpi.first.pathweaver.extensions.GameLoaderTest"/>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+    </Match>
+
+</FindBugsFilter>
