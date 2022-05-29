@@ -9,9 +9,6 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact-name: Win32
-            architecture: x86
-          - os: windows-latest
             artifact-name: Win64
             architecture: x64
           - os: macos-latest
