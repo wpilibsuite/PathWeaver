@@ -1,4 +1,4 @@
-wpilibTools.deps.wpilibVersion = "2022.+"
+wpilibTools.deps.wpilibVersion = "2023.+"
 
 def nativeConfigName = 'wpilibNatives'
 def nativeConfig = configurations.create(nativeConfigName)
@@ -14,6 +14,7 @@ nativeConfig.dependencies.add wpilibTools.deps.wpilib("wpiutil")
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
     implementation wpilibTools.deps.wpilibJava("wpimath")
+    implementation wpilibTools.deps.wpilibJava("wpinet")
 
     implementation wpilibTools.deps.javafx("base")
     implementation wpilibTools.deps.javafx("controls")
