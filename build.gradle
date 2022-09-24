@@ -20,7 +20,7 @@ plugins {
     id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '4.1.0'
     id 'edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin' version '2020.2'
     id 'checkstyle'
-    id 'edu.wpi.first.WpilibTools' version '0.8.1'
+    id 'edu.wpi.first.WpilibTools' version '0.9.1'
 }
 
 wpilibVersioning.buildServerMode = project.hasProperty('buildServer')
@@ -175,8 +175,8 @@ jacoco {
 
 tasks.withType(JacocoReport).configureEach {
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 
@@ -204,5 +204,5 @@ tasks.withType(Jar).configureEach {
 }
 
 wrapper {
-    gradleVersion = '7.3.3'
+    gradleVersion = '7.5'
 }
