@@ -9,10 +9,10 @@ import static org.gradle.api.artifacts.type.ArtifactTypeDefinition.ZIP_TYPE
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
-    id "com.jfrog.artifactory" version "4.16.0"
-    id "com.diffplug.spotless" version "6.0.5"
-    id "com.github.spotbugs" version "5.0.7"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id "com.jfrog.artifactory" version "4.26.2"
+    id "com.diffplug.spotless" version "6.4.2"
+    id "com.github.spotbugs" version "5.0.8"
     id 'maven-publish'
     id 'idea'
     id 'jacoco'
@@ -170,7 +170,7 @@ spotbugs {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.8"
 }
 
 tasks.withType(JacocoReport).configureEach {
@@ -204,5 +204,5 @@ tasks.withType(Jar).configureEach {
 }
 
 wrapper {
-    gradleVersion = '7.5-rc-3'
+    gradleVersion = '7.5'
 }
