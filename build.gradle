@@ -202,7 +202,3 @@ tasks.withType(Jar).configureEach {
         attributes["Built-Date"] = Instant.now().toString()
     }
 }
-
-wrapper {
-    gradleVersion = '7.5'
-}
