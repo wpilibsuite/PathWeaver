@@ -77,22 +77,20 @@ public class WpilibSpline extends AbstractSpline {
 
             for (int sample = 0; sample <= 40; sample++) {
                 PoseWithCurvature pose = quintic.getPoint(sample / 40.0);
-                seg.getLine().getPoints().add(pose.poseMeters.getTranslation().getX());
-                //Convert from WPILib to JavaFX coords
-                seg.getLine().getPoints().add(-pose.poseMeters.getTranslation().getY());
+                seg.addPoints(pose, ProjectPreferences.getInstance().getValues().getRobotWidth());
             }
 
             if (segStart.isReversed()) {
-                seg.getLine().getStrokeDashArray().addAll(0.1, 0.2);
+                seg.getLines().forEach(line -> line.getStrokeDashArray().addAll(0.1, 0.2));
             }
 
-            seg.getLine().strokeWidthProperty().bind(strokeWidth);
-            seg.getLine().getStyleClass().addAll("path");
+            seg.getLines().forEach(line -> line.strokeWidthProperty().bind(strokeWidth));
+            seg.getLines().forEach(line -> line.getStyleClass().addAll("path"));
 
-            FxUtils.enableSubchildSelector(seg.getLine(), subchildIdx);
-            seg.getLine().applyCss();
+            seg.getLines().forEach(line -> FxUtils.enableSubchildSelector(line, subchildIdx));
+            seg.getLines().forEach(line -> line.applyCss());
 
-            group.getChildren().add(seg.getLine());
+            seg.getLines().forEach(line -> group.getChildren().add(line));
         }
     }
 

@@ -167,13 +167,13 @@ public class EditWaypointController {
 
     lockedTangent.selectedProperty()
             .addListener((listener, oldValue, newValue) -> {
-              if (wp.getValue().isLockTangent() != newValue) {
+              if (wp.getValue() != null && wp.getValue().isLockTangent() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });
     reverseSpline.selectedProperty()
             .addListener((listener, oldValue, newValue) -> {
-              if (wp.getValue().isReversed() != newValue) {
+              if (wp.getValue() != null && wp.getValue().isReversed() != newValue) {
                 SaveManager.getInstance().addChange(CurrentSelections.getCurPath());
               }
             });

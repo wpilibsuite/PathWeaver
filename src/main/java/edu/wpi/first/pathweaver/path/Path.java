@@ -47,13 +47,16 @@ public abstract class Path {
     protected static final PseudoClass SELECTED_CLASS = PseudoClass.getPseudoClass("selected");
     protected static final double DEFAULT_SPLINE_SCALE = 6;
     protected static final double DEFAULT_CIRCLE_SCALE = .75;
+    protected static final double DEFAULT_ROBOT_SCALE = 1;
     protected static final double DEFAULT_LINE_SCALE = 4;
 
     protected final Field field = ProjectPreferences.getInstance().getField();
     protected final ObservableList<Waypoint> waypoints = new ObservableListWrapper<>(new ArrayList<>());
     protected Group mainGroup = new Group();
 
-    protected final Spline spline;
+    protected final Spline centerSpline;
+    protected final Spline leftSpline;
+    protected final Spline rightSpline;
     protected final String pathName;
     protected int subchildIdx = 0;
 
@@ -63,7 +66,9 @@ public abstract class Path {
      * @param pathName the name of the path
      */
     protected Path(SplineFactory splineFactory, String pathName) {
-        this.spline = splineFactory.makeSpline(waypoints, this);
+        this.centerSpline = splineFactory.makeSpline(waypoints, this);
+        this.leftSpline = splineFactory.makeSpline(waypoints, this);
+        this.rightSpline = splineFactory.makeSpline(waypoints, this);
         this.pathName = Objects.requireNonNull(pathName);
     }
 
@@ -96,7 +101,7 @@ public abstract class Path {
      * Updates this path to reflect new waypoint data.
      */
     public void update() {
-        spline.update();
+        centerSpline.update();
     }
 
     public final Waypoint getStart() {
@@ -107,8 +112,8 @@ public abstract class Path {
         return waypoints.get(waypoints.size() - 1);
     }
 
-    public final Spline getSpline() {
-        return spline;
+    public final Spline getCenterSpline() {
+        return centerSpline;
     }
 
     public final Group getMainGroup() {
@@ -180,7 +185,7 @@ public abstract class Path {
         for (Waypoint wp : waypoints) {
             wp.enableSubchildSelector(subchildIdx);
         }
-        spline.enableSubchildSelector(subchildIdx);
+        centerSpline.enableSubchildSelector(subchildIdx);
     }
 
     /**
@@ -209,6 +214,9 @@ public abstract class Path {
         waypoint.getIcon().pseudoClassStateChanged(SELECTED_CLASS, true);
         waypoint.getIcon().requestFocus();
         waypoint.getIcon().toFront();
+        waypoint.getRobotOutline().pseudoClassStateChanged(SELECTED_CLASS, true);
+        waypoint.getRobotOutline().requestFocus();
+        waypoint.getRobotOutline().toFront();
         CurrentSelections.setCurWaypoint(waypoint);
         CurrentSelections.setCurPath(this);
     }
@@ -222,6 +230,7 @@ public abstract class Path {
         Waypoint curWaypoint = CurrentSelections.getCurWaypoint();
         if (CurrentSelections.getCurWaypoint() == waypoint) {
             curWaypoint.getIcon().pseudoClassStateChanged(SELECTED_CLASS, false);
+            curWaypoint.getRobotOutline().pseudoClassStateChanged(SELECTED_CLASS, false);
             mainGroup.requestFocus();
             CurrentSelections.setCurWaypoint(null);
         }

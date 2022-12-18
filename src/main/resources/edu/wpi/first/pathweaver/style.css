@@ -4,6 +4,7 @@
 
 * {
     my-color: CHART_COLOR_2;
+    my-robot-color: CHART_COLOR_2_TRANS_20;
 }
 
 :subchild0 {
@@ -51,6 +52,17 @@
 }
 
 .waypoint:selected {
+    -fx-stroke: rgb(255, 241, 173);
+}
+
+.robot {
+    -fx-stroke: #101824;
+    -fx-stroke-width: 4px;
+    -fx-cursor: hand;
+    -fx-fill: my-robot-color;
+}
+
+.robot:selected {
     -fx-stroke: rgb(255, 241, 173);
 }
 

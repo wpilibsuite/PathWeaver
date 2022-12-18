@@ -60,6 +60,7 @@ public class FieldDisplayController {
         this.drawPane.setOnMouseClicked(e -> {
             if (CurrentSelections.getCurWaypoint() != null) {
                 CurrentSelections.getCurWaypoint().getIcon().pseudoClassStateChanged(SELECTED_CLASS, false);
+                CurrentSelections.getCurWaypoint().getRobotOutline().pseudoClassStateChanged(SELECTED_CLASS, false);
                 CurrentSelections.setCurWaypoint(null);
             }
 
