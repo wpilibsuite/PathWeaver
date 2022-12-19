@@ -36,8 +36,8 @@ public class SplineSegment {
     /**
      * Add points to the center line given the pose.  Also add points
      * to the left and right lines using the pose and the path width
-     * @param pose
-     * @param pathWidth
+     * @param pose the pose at the current path point
+     * @param pathWidth the path width
      */
     public void addPoints(PoseWithCurvature pose, double pathWidth) {
         //Convert from WPILib to JavaFX coords
