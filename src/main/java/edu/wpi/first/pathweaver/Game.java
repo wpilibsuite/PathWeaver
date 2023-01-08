@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 
 public final class Game {
   private static final Set<Game> GAMES = new LinkedHashSet<>();
+  public static final Game CHARGED_UP_2023 = loadGameFromResource("2023-chargedup.json");
   public static final Game RAPID_REACT_2022 = loadGameFromResource("2022-rapidreact.json");
   public static final Game INFINTE_RECHARGE_2021 = loadGameFromResource("2021-infiniterecharge.json");
   public static final Game INFINTE_RECHARGE_2020 = loadGameFromResource("2020-infiniterecharge.json");
