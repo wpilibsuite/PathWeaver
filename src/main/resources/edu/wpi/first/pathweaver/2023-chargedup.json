@@ -1,0 +1,10 @@
+{
+    "game": "Charged Up",
+    "field-image": "2023-charged-up.png",
+    "field-corners": {
+      "top-left": [22, 8],
+      "bottom-right": [670, 325]
+    },
+    "field-size": [54, 26],
+    "field-unit": "foot"
+  }
