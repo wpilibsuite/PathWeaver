@@ -65,7 +65,7 @@ public class ProjectPreferences {
 			values = gson.fromJson(reader, Values.class);
 
 			if (values.gameName == null) {
-				values.gameName = Game.INFINTE_RECHARGE_2020.getName();
+				values.gameName = Game.DEFAULT_GAME.getName();
 			}
 			if (values.lengthUnit == null) {
 				values.lengthUnit = "METER";
@@ -103,7 +103,7 @@ public class ProjectPreferences {
 	}
 
 	private void setDefaults() {
-		values = new Values("FOOT", "Always Meters", 10.0, 60.0, 2.0, Game.INFINTE_RECHARGE_2020.getName(), null);
+		values = new Values("FOOT", "Always Meters", 10.0, 60.0, 2.0, Game.DEFAULT_GAME.getName(), null);
 		updateValues();
 	}
 
@@ -178,7 +178,7 @@ public class ProjectPreferences {
 	 */
 	public Field getField() {
 		if (values.getGameName() == null) {
-			values.gameName = Game.DEEP_SPACE_2019.getName();
+			values.gameName = Game.DEFAULT_GAME.getName();
 		}
 		Game game = Game.fromPrettyName(values.gameName);
 		if (game == null) {
