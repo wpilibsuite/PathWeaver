@@ -1,4 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
+import java.nio.file.Paths
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermission
 
 configurations {
     processstarter
@@ -18,17 +21,30 @@ tasks.register("extractProcessStarterBinary", Sync) {
         eachFile {
             def oldName = name
             name = name.replace('processstarter', 'PathWeaver')
-            if (oldName != name) {
-                mode = 775
-            }
         }
     }
     into "$buildDir/procstarter"
+
+    if (!OperatingSystem.current().isWindows()) {
+        doLast {
+            new File("$buildDir/procstarter").eachFileRecurse { def file ->
+                def path = Paths.get(file.absolutePath)
+                def perms = Files.getPosixFilePermissions(path)
+                perms << PosixFilePermission.OWNER_EXECUTE << PosixFilePermission.GROUP_EXECUTE << PosixFilePermission.OTHERS_EXECUTE
+                Files.setPosixFilePermissions(path, perms)
+            }
+        }
+    }
 }
 
 tasks.register("createProcessStarterBundle", Sync) {
     if (OperatingSystem.current().isMacOsX()) {
-
+        from(extractProcessStarterBinary) {
+            into "/${rootProject.name}.app/Contents/MacOS"
+        }
+        from(project.file("Info.plist")) {
+            into "/${rootProject.name}.app/Contents"
+        }
     } else {
         from extractProcessStarterBinary
     }
