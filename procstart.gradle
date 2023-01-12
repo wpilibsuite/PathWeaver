@@ -1,0 +1,52 @@
+import org.gradle.internal.os.OperatingSystem
+
+configurations {
+    processstarter
+}
+
+def wpilibClassifier = wpilibTools.deps.platformMapper.wpilibClassifier
+def wpilibVersion = wpilibTools.deps.wpilibVersion
+
+dependencies {
+    processstarter "edu.wpi.first.tools:processstarter:$wpilibVersion:$wpilibClassifier@zip"
+}
+
+tasks.register("extractProcessStarterBinary", Sync) {
+    from(project.zipTree(configurations.processstarter.resolvedConfiguration.resolvedArtifacts.first().file)) {
+        exclude "LICENSE.md"
+        exclude "ThirdPartyNotices.txt"
+        eachFile {
+            def oldName = name
+            name = name.replace('processstarter', 'PathWeaver')
+            if (oldName != name) {
+                mode = 775
+            }
+        }
+    }
+    into "$buildDir/procstarter"
+}
+
+tasks.register("createProcessStarterBundle", Sync) {
+    if (OperatingSystem.current().isMacOsX()) {
+
+    } else {
+        from extractProcessStarterBinary
+    }
+
+    into ("$buildDir/bundle")
+}
+
+tasks.register('createProcessStarterZip', Zip) {
+    from createProcessStarterBundle
+
+    classifier = wpilibTools.deps.platformMapper.currentPlatform.platformName
+    archiveBaseName = "${rootProject.name}Launcher"
+    archiveVersion = ""
+
+    destinationDirectory = project.file("$buildDir/bundleZip")
+}
+
+copyAllOutputs.configure {
+    dependsOn createProcessStarterZip
+    from createProcessStarterZip
+}
