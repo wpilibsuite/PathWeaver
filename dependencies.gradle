@@ -16,6 +16,7 @@ dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
     implementation wpilibTools.deps.wpilibJava("wpimath")
     implementation wpilibTools.deps.wpilibJava("wpinet")
+    implementation wpilibTools.deps.wpilibJava("fieldImages")
 
     implementation wpilibTools.deps.javafx("base")
     implementation wpilibTools.deps.javafx("controls")

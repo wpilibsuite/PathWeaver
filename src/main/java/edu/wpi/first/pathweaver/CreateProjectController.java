@@ -103,7 +103,7 @@ public class CreateProjectController {
 		numericFields.forEach(textField -> textField.setTextFormatter(FxUtils.onlyPositiveDoubleText()));
 
 		game.getItems().addAll(Game.getGames());
-		game.getSelectionModel().selectFirst();
+		game.getSelectionModel().select(Game.DEFAULT_GAME);
 		game.converterProperty().setValue(new StringConverter<>() {
 			@Override
 			public String toString(Game object) {
@@ -191,7 +191,7 @@ public class CreateProjectController {
 		title.setText("Create Project...");
 		cancel.setText("Cancel");
 		browse.setVisible(true);
-		game.getSelectionModel().selectFirst();
+		game.getSelectionModel().select(Game.DEFAULT_GAME);
 		length.getSelectionModel().select(3); // Default is Meter
 		export.getSelectionModel().selectFirst();
 		maxVelocity.setText("");
