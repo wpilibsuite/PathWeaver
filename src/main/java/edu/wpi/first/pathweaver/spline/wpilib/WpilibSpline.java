@@ -105,7 +105,7 @@ public class WpilibSpline extends AbstractSpline {
     public boolean writeToFile(java.nio.file.Path path) {
         final AtomicBoolean okay = new AtomicBoolean(true);
         TrajectoryGenerator.setErrorHandler((error, stacktrace) -> {
-            LOGGER.log(Level.WARNING, "Could not write Spline to file: " + error, stacktrace);
+            LOGGER.log(Level.WARNING, "Could not write Spline to file: " + path.getFileName() + ". " + error, stacktrace);
             okay.set(false);
         });
         try {
@@ -144,7 +144,7 @@ public class WpilibSpline extends AbstractSpline {
 
             return okay.get();
         } catch (IOException except) {
-            LOGGER.log(Level.WARNING, "Could not write Spline to file", except);
+            LOGGER.log(Level.WARNING, "Could not write Spline to file: " + path.getFileName(), except);
             return false;
         }
     }

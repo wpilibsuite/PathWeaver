@@ -1,34 +1,25 @@
 package edu.wpi.first.pathweaver.extensions;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-
+import edu.wpi.fields.FieldConfig;
+import edu.wpi.fields.Fields;
 import edu.wpi.first.pathweaver.DuplicateGameException;
 import edu.wpi.first.pathweaver.Field;
 import edu.wpi.first.pathweaver.Game;
 import edu.wpi.first.pathweaver.PathUnits;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
 
 /**
  * Loads game extensions. Extensions are defined by a JSON file and an image file for the field.
@@ -82,12 +73,22 @@ public final class ExtensionLoader {
    * @return tne game represented by the JSON
    * @throws IOException if the file could not be read
    */
-  public Game loadFromJsonFile(Path jsonFile) throws IOException {
+  public Game loadFromJsonFile(Path jsonFile, Supplier<Image> imageSupplier) throws IOException {
     if (!jsonFile.getFileName().toString().endsWith(".json")) {
       throw new IllegalArgumentException("Not a JSON file: " + jsonFile);
     }
-    String json = Files.readString(jsonFile, StandardCharsets.UTF_8);
-    return loadFromJsonString(fileName -> loadImage(jsonFile.getParent(), fileName), json);
+    FieldConfig config = FieldConfig.loadFromFile(jsonFile);
+    return extractConfig(config, imageSupplier);
+  }
+
+  public Game loadFromJsonFile(Path jsonFile) throws IOException {
+    FieldConfig config = FieldConfig.loadFromFile(jsonFile);
+    return loadFromJsonFile(jsonFile, () -> loadImage(jsonFile.getParent(), config.m_fieldImage));
+  }
+
+  public Game loadPredefinedField(Fields fieldType) throws IOException {
+    FieldConfig config = FieldConfig.loadField(fieldType);
+    return extractConfig(config, () -> new Image(config.getImageAsStream()));
   }
 
   private static Image loadImage(Path dir, String fileName) {
@@ -184,73 +185,21 @@ public final class ExtensionLoader {
     Files.delete(dir);
   }
 
-  /**
-   * Loads a game from a JSON string.
-   *
-   * @param imageProvider supplies an {@code Image} object given the name of an image file
-   * @param json          the JSON string to parse
-   *
-   * @return the game object defined by the JSON text
-   */
-  public Game loadFromJsonString(Function<String, Image> imageProvider, String json) {
-    return new GsonBuilder()
-        .registerTypeAdapter(Game.class, new ExtensionJsonDeserializer(imageProvider))
-        .create()
-        .fromJson(json, Game.class);
-  }
+  private Game extractConfig(FieldConfig fieldConfig, Supplier<Image> imageSupplier) {
 
-  private static Point2D jsonArrayToPoint(JsonArray array) {
-    if (array.size() != 2) {
-      throw new JsonParseException("Expected two elements [x, y]; got " + array);
-    }
-    return new Point2D(
-        array.get(0).getAsDouble(),
-        array.get(1).getAsDouble()
+    String gameName = fieldConfig.m_game;
+
+    Field field = new Field(
+            imageSupplier.get(),
+            PathUnits.getInstance().length(fieldConfig.m_fieldUnit),
+            fieldConfig.m_fieldSize[0],
+            fieldConfig.m_fieldSize[1],
+            fieldConfig.m_fieldCorners.m_topLeft[0],
+            fieldConfig.m_fieldCorners.m_topLeft[1],
+            fieldConfig.m_fieldCorners.m_bottomRight[0] - fieldConfig.m_fieldCorners.m_topLeft[0],
+            fieldConfig.m_fieldCorners.m_bottomRight[1] - fieldConfig.m_fieldCorners.m_topLeft[1]
     );
-  }
 
-  private static final class ExtensionJsonDeserializer implements JsonDeserializer<Game> {
-    private final Function<String, Image> imageProvider;
-
-    private ExtensionJsonDeserializer(Function<String, Image> imageProvider) {
-      this.imageProvider = imageProvider;
-    }
-
-    @Override
-    public Game deserialize(JsonElement element, Type t, JsonDeserializationContext c) {
-      var jsonObject = element.getAsJsonObject();
-
-      String imagePath = jsonObject
-          .get(FIELD_IMAGE_KEY)
-          .getAsString();
-
-      Image image = imageProvider.apply(imagePath);
-      if (image != null && image.isError()) {
-        throw new JsonParseException("Invalid or nonexistent image: " + imagePath, image.getException());
-      }
-
-      String gameName = jsonObject
-          .get(GAME_NAME_KEY)
-          .getAsString();
-
-      var corners = jsonObject.get(FIELD_CORNERS_KEY).getAsJsonObject();
-      Point2D topLeftPoint = jsonArrayToPoint(corners.get(TOP_LEFT_KEY).getAsJsonArray());
-      Point2D bottomRightPoint = jsonArrayToPoint(corners.get(BOTTOM_RIGHT_KEY).getAsJsonArray());
-
-      Point2D fieldSize = jsonArrayToPoint(jsonObject.get(FIELD_SIZE_KEY).getAsJsonArray());
-      String fieldUnit = jsonObject.get(FIELD_UNITS_KEY).getAsString();
-      Field field = new Field(
-          image,
-          PathUnits.getInstance().length(fieldUnit),
-          fieldSize.getX(),
-          fieldSize.getY(),
-          topLeftPoint.getX(),
-          topLeftPoint.getY(),
-          bottomRightPoint.getX() - topLeftPoint.getX(),
-          bottomRightPoint.getY() - topLeftPoint.getY()
-      );
-
-      return Game.create(gameName, field);
-    }
+    return Game.create(gameName, field);
   }
 }
