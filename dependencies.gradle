@@ -1,4 +1,4 @@
-wpilibTools.deps.wpilibVersion = "2023.+"
+wpilibTools.deps.wpilibVersion = "2024.+"
 
 def nativeConfigName = 'wpilibNatives'
 def nativeConfig = configurations.create(nativeConfigName)
@@ -23,9 +23,9 @@ dependencies {
     implementation wpilibTools.deps.javafx("fxml")
     implementation wpilibTools.deps.javafx("graphics")
 
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.10.0"
-    implementation "com.fasterxml.jackson.core:jackson-core:2.10.0"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.10.0"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.12.4"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.4"
 
     implementation group: "org.fxmisc.easybind", name: "easybind", version: "1.0.3"
 
