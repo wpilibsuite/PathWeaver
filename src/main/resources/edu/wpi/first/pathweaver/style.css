@@ -4,31 +4,40 @@
 
 * {
     my-color: CHART_COLOR_2;
+    my-robot-color: CHART_COLOR_2_TRANS_20;
 }
 
 :subchild0 {
     my-color: CHART_COLOR_2;
+    my-robot-color: CHART_COLOR_2_TRANS_20;
 }
 :subchild1 {
     my-color: CHART_COLOR_1;
+    my-robot-color: CHART_COLOR_1_TRANS_20;
 }
 :subchild2 {
     my-color: CHART_COLOR_3;
+    my-robot-color: CHART_COLOR_3_TRANS_20;
 }
 :subchild3 {
     my-color: CHART_COLOR_4;
+    my-robot-color: CHART_COLOR_4_TRANS_20;
 }
 :subchild4 {
     my-color: CHART_COLOR_5;
+    my-robot-color: CHART_COLOR_5_TRANS_20;
 }
 :subchild5 {
     my-color: CHART_COLOR_6;
+    my-robot-color: CHART_COLOR_6_TRANS_20;
 }
 :subchild6 {
     my-color: CHART_COLOR_7;
+    my-robot-color: CHART_COLOR_7_TRANS_20;
 }
 :subchild7 {
     my-color: CHART_COLOR_8;
+    my-robot-color: CHART_COLOR_8_TRANS_20;
 }
 
 
@@ -51,6 +60,17 @@
 }
 
 .waypoint:selected {
+    -fx-stroke: rgb(255, 241, 173);
+}
+
+.robot {
+    -fx-stroke: #101824;
+    -fx-stroke-width: 4px;
+    -fx-cursor: hand;
+    -fx-fill: my-robot-color;
+}
+
+.robot:selected {
     -fx-stroke: rgb(255, 241, 173);
 }
 

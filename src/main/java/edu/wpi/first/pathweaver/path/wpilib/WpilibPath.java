@@ -39,6 +39,7 @@ public class WpilibPath extends Path {
                 for (Waypoint wp : c.getAddedSubList()) {
                     setupWaypoint(wp);
                     iconGroup.getChildren().add(wp.getIcon());
+                    iconGroup.getChildren().add(wp.getRobotOutline());
                     tangentGroup.getChildren().add(wp.getTangentLine());
                     if (wp != first) {
                         wp.reversedProperty().bindBidirectional(first.reversedProperty());
@@ -50,12 +51,13 @@ public class WpilibPath extends Path {
 
                 for (Waypoint wp : c.getRemoved()) {
                     iconGroup.getChildren().remove(wp.getIcon());
+                    iconGroup.getChildren().remove(wp.getRobotOutline());
                     tangentGroup.getChildren().remove(wp.getTangentLine());
                 }
             }
             update();
         });
-        this.spline.addToGroup(this.mainGroup, DEFAULT_SPLINE_SCALE / field.getScale());
+        this.centerSpline.addToGroup(this.mainGroup, DEFAULT_SPLINE_SCALE / field.getScale());
         this.mainGroup.getChildren().addAll(this.iconGroup, this.tangentGroup);
         this.waypoints.addAll(points);
 
@@ -72,6 +74,14 @@ public class WpilibPath extends Path {
             db.setDragView(new WritableImage(1, 1));
         });
 
+        waypoint.getRobotOutline().setOnDragDetected(event -> {
+            CurrentSelections.setCurWaypoint(waypoint);
+            CurrentSelections.setCurPath(this);
+            var db = waypoint.getRobotOutline().startDragAndDrop(TransferMode.MOVE);
+            db.setContent(Map.of(DataFormats.WAYPOINT, "point"));
+            db.setDragView(new WritableImage(1, 1));
+        });
+
         waypoint.getTangentLine().setOnDragDetected(event -> {
             CurrentSelections.setCurWaypoint(waypoint);
             CurrentSelections.setCurPath(this);
@@ -83,6 +93,15 @@ public class WpilibPath extends Path {
 
     private void setupClick(Waypoint waypoint) {
         waypoint.getIcon().setOnMouseClicked(e -> {
+            if (e.getClickCount() == 1) {
+                toggleWaypoint(waypoint);
+            } else if (e.getClickCount() == 2) {
+                waypoint.setLockTangent(false);
+            }
+            e.consume();
+        });
+
+        waypoint.getRobotOutline().setOnMouseClicked(e -> {
             if (e.getClickCount() == 1) {
                 toggleWaypoint(waypoint);
             } else if (e.getClickCount() == 2) {
@@ -143,8 +162,27 @@ public class WpilibPath extends Path {
             menu.show(mainGroup.getScene().getWindow(), e.getScreenX(), e.getScreenY());
         });
 
+        waypoint.getRobotOutline().setOnContextMenuRequested(e -> {
+            ContextMenu menu = new ContextMenu();
+            if (getWaypoints().size() > 2) {
+                menu.getItems().add(FxUtils.menuItem("Delete", event -> removeWaypoint(waypoint)));
+            }
+            if (waypoint.getTangentLine().isVisible()) {
+                menu.getItems().add(FxUtils.menuItem("Hide control vector",
+                        event -> waypoint.getTangentLine().setVisible(false)));
+            } else {
+                menu.getItems().add(FxUtils.menuItem("Show control vector",
+                        event -> waypoint.getTangentLine().setVisible(true)));
+            }
+            menu.getItems().add(FxUtils.menuItem("Reverse Vector",
+                    event -> waypoint.setReversed(!waypoint.isReversed())));
+            menu.show(mainGroup.getScene().getWindow(), e.getScreenX(), e.getScreenY());
+        });
+
         waypoint.getIcon().setScaleX(DEFAULT_CIRCLE_SCALE / field.getScale());
         waypoint.getIcon().setScaleY(DEFAULT_CIRCLE_SCALE / field.getScale());
+        waypoint.getRobotOutline().setScaleX(DEFAULT_ROBOT_SCALE / field.getScale());
+        waypoint.getRobotOutline().setScaleY(DEFAULT_ROBOT_SCALE / field.getScale());
         waypoint.getTangentLine().setStrokeWidth(DEFAULT_LINE_SCALE / field.getScale());
     }
 

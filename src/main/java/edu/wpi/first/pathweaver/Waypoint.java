@@ -36,6 +36,7 @@ public class Waypoint {
 
 	private final Line tangentLine;
 	private final Polygon icon;
+	private final Polygon robotOutline;
 
 	/**
 	 * Creates Waypoint object containing javafx circle.
@@ -52,6 +53,15 @@ public class Waypoint {
 		lockTangent.set(fixedAngle);
 		reversed.set(reverse);
 		setCoords(position);
+
+		double scale = ProjectPreferences.getInstance().getField().getScale();
+		double robotWidth = ProjectPreferences.getInstance().getValues().getRobotWidth() * scale;
+		double robotLength = ProjectPreferences.getInstance().getValues().getRobotLength() * scale;
+		robotOutline = new Polygon(-robotLength / 2, -robotWidth / 2,
+			robotLength / 2, -robotWidth / 2,
+			robotLength / 2, robotWidth / 2,
+			-robotLength / 2, robotWidth / 2);
+		setupRobotOutline();
 
 		icon = new Polygon(0.0, SIZE / 3, SIZE, 0.0, 0.0, -SIZE / 3);
 		setupIcon();
@@ -71,6 +81,8 @@ public class Waypoint {
 	public void enableSubchildSelector(int i) {
 		FxUtils.enableSubchildSelector(this.icon, i);
 		getIcon().applyCss();
+		FxUtils.enableSubchildSelector(this.robotOutline, i);
+		getRobotOutline().applyCss();
 	}
 
 	private void setupIcon() {
@@ -86,6 +98,21 @@ public class Waypoint {
 						() -> getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(-getTangentY(), getTangentX())),
 						tangentX, tangentY));
 		icon.getStyleClass().add("waypoint");
+	}
+
+	private void setupRobotOutline() {
+		robotOutline.setLayoutX(-(robotOutline.getLayoutBounds().getMaxX() + robotOutline.getLayoutBounds().getMinX()) / 2);
+		robotOutline.setLayoutY(-(robotOutline.getLayoutBounds().getMaxY() + robotOutline.getLayoutBounds().getMinY()) / 2);
+
+		robotOutline.translateXProperty().bind(x);
+		//Convert from WPILib to JavaFX coords
+		robotOutline.translateYProperty().bind(y.negate());
+		FxUtils.applySubchildClasses(this.robotOutline);
+		this.robotOutline.rotateProperty()
+				.bind(Bindings.createObjectBinding(
+						() -> getTangent() == null ? 0.0 : Math.toDegrees(Math.atan2(-getTangentY(), getTangentX())),
+						tangentX, tangentY));
+		robotOutline.getStyleClass().add("robot");
 	}
 
 	/**
@@ -156,6 +183,10 @@ public class Waypoint {
 
 	public Polygon getIcon() {
 		return icon;
+	}
+
+	public Polygon getRobotOutline() {
+		return robotOutline;
 	}
 
 	public double getX() {
