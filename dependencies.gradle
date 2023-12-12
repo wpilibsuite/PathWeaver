@@ -13,6 +13,7 @@ nativeConfig.dependencies.add wpilibTools.deps.wpilib("wpinet")
 nativeConfig.dependencies.add wpilibTools.deps.wpilib("wpiutil")
 
 dependencies {
+    implementation wpilibTools.deps.wpilibJava("wpiunits")
     implementation wpilibTools.deps.wpilibJava("wpiutil")
     implementation wpilibTools.deps.wpilibJava("wpimath")
     implementation wpilibTools.deps.wpilibJava("wpinet")
