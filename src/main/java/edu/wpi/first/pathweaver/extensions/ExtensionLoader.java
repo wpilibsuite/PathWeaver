@@ -1,7 +1,7 @@
 package edu.wpi.first.pathweaver.extensions;
 
-import edu.wpi.fields.FieldConfig;
-import edu.wpi.fields.Fields;
+import edu.wpi.first.fields.FieldConfig;
+import edu.wpi.first.fields.Fields;
 import edu.wpi.first.pathweaver.DuplicateGameException;
 import edu.wpi.first.pathweaver.Field;
 import edu.wpi.first.pathweaver.Game;

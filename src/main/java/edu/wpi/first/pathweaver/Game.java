@@ -1,6 +1,6 @@
 package edu.wpi.first.pathweaver;
 
-import edu.wpi.fields.Fields;
+import edu.wpi.first.fields.Fields;
 import edu.wpi.first.pathweaver.extensions.ExtensionLoader;
 
 import java.io.IOException;
