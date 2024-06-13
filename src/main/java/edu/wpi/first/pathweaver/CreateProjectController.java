@@ -54,6 +54,10 @@ public class CreateProjectController {
 	@FXML
 	private TextField trackWidth;
 	@FXML
+	private TextField robotWidth;
+	@FXML
+	private TextField robotLength;
+	@FXML
 	private ChoiceBox<Game> game;
 	@FXML
 	private ChoiceBox<Unit<Length>> length;
@@ -70,11 +74,19 @@ public class CreateProjectController {
 	@FXML
 	private Label trackWidthLabel;
 	@FXML
+	private Label robotWidthLabel;
+	@FXML
+	private Label robotLengthLabel;
+	@FXML
 	private Label velocityUnits;
 	@FXML
 	private Label accelerationUnits;
 	@FXML
 	private Label trackWidthUnits;
+	@FXML
+	private Label robotWidthUnits;
+	@FXML
+	private Label robotLengthUnits;
 
 	private boolean editing = false;
 
@@ -82,7 +94,7 @@ public class CreateProjectController {
 
 	private void initialize() {
 		ObservableList<TextField> numericFields = FXCollections.observableArrayList(maxVelocity,
-				maxAcceleration, trackWidth);
+				maxAcceleration, trackWidth, robotWidth, robotLength);
 		ObservableList<TextField> allFields = FXCollections.observableArrayList(numericFields);
 		allFields.add(directory);
 
@@ -91,6 +103,8 @@ public class CreateProjectController {
 		var velocityControls = List.of(velocityLabel, maxVelocity, velocityUnits);
 		var accelerationControls = List.of(accelerationLabel, maxAcceleration, accelerationUnits);
 		var trackWidthControls = List.of(trackWidthLabel, trackWidth, trackWidthUnits);
+		var robotWidthControls = List.of(robotWidthLabel, robotWidth, robotWidthUnits);
+		var robotLengthControls = List.of(robotLengthLabel, robotLength, robotLengthUnits);
 
 		BooleanBinding bind = new SimpleBooleanProperty(true).not();
 		for (TextField field : allFields) {
@@ -167,12 +181,18 @@ public class CreateProjectController {
 		trackWidthControls.forEach(
 				control -> control.setTooltip(new Tooltip("The width between the center of each tire of the " +
 						"drivebase.  Even better would be a calculated track width from robot characterization.")));
+		robotWidthControls.forEach(
+			control -> control.setTooltip(new Tooltip("The width of the robot - including bumpers.")));
+		robotLengthControls.forEach(
+			control -> control.setTooltip(new Tooltip("The length of the robot - including bumpers.")));
 		trackWidthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
-		// Show longer text for an extended period of time
+		robotWidthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
+		robotLengthUnits.textProperty().bind(lengthUnit.map(SimpleUnitFormat.getInstance()::format));
+			// Show longer text for an extended period of time
 		Stream.of(directoryControls, outputControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDuration(Duration.seconds(10)));
 		Stream.of(directoryControls, outputControls, velocityControls, accelerationControls,
-				trackWidthControls).flatMap(List::stream)
+				trackWidthControls, robotWidthControls, robotLengthControls).flatMap(List::stream)
 				.forEach(control -> control.getTooltip().setShowDelay(Duration.millis(150)));
 
 		// We are editing a project
@@ -197,6 +217,8 @@ public class CreateProjectController {
 		maxVelocity.setText("");
 		maxAcceleration.setText("");
 		trackWidth.setText("");
+		robotWidth.setText("");
+		robotLength.setText("");
 		editing = false;
 	}
 
@@ -222,8 +244,11 @@ public class CreateProjectController {
 		double velocityMax = Double.parseDouble(maxVelocity.getText());
 		double accelerationMax = Double.parseDouble(maxAcceleration.getText());
 		double trackWidthDistance = Double.parseDouble(trackWidth.getText());
+		double robotWidthDistance = Double.parseDouble(robotWidth.getText());
+		double robotLengthDistance = Double.parseDouble(robotLength.getText());
 		ProjectPreferences.Values values = new ProjectPreferences.Values(lengthUnit, exportUnit, velocityMax,
-				accelerationMax, trackWidthDistance, game.getValue().getName(), outputPath);
+				accelerationMax, trackWidthDistance, game.getValue().getName(), outputPath, robotWidthDistance,
+				robotLengthDistance);
 		ProjectPreferences prefs = ProjectPreferences.getInstance(directory.getAbsolutePath());
 		prefs.setValues(values);
 		editing = false;
@@ -270,6 +295,8 @@ public class CreateProjectController {
 		maxVelocity.setText(String.valueOf(values.getMaxVelocity()));
 		maxAcceleration.setText(String.valueOf(values.getMaxAcceleration()));
 		trackWidth.setText(String.valueOf(values.getTrackWidth()));
+		robotWidth.setText(String.valueOf(values.getRobotWidth()));
+		robotLength.setText(String.valueOf(values.getRobotLength()));
 		editing = true;
 	}
 }

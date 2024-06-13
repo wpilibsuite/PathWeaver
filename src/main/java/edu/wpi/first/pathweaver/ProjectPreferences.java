@@ -103,7 +103,7 @@ public class ProjectPreferences {
 	}
 
 	private void setDefaults() {
-		values = new Values("FOOT", "Always Meters", 10.0, 60.0, 2.0, Game.DEFAULT_GAME.getName(), null);
+		values = new Values("FOOT", "Always Meters", 10.0, 60.0, 2.0, Game.DEFAULT_GAME.getName(), null, 3.0, 3.0);
 		updateValues();
 	}
 
@@ -244,6 +244,8 @@ public class ProjectPreferences {
 		private final double trackWidth;
 		private String gameName;
 		private final String outputDir;
+		private final double robotWidth;
+		private final double robotLength;
 
 		/**
 		 * Constructor for Values of ProjectPreferences.
@@ -261,9 +263,13 @@ public class ProjectPreferences {
 		 *            The year/FRC game
 		 * @param outputDir
 		 *            The directory for the output files
+		 * @param robotWidth
+		 * 	          The width of the robot - including bumpers
+		 * @param robotLength
+		 * 	          The length of the robot - including bumpers
 		 */
 		public Values(String lengthUnit, String exportUnit, double maxVelocity, double maxAcceleration,
-				double trackWidth, String gameName, String outputDir) {
+				double trackWidth, String gameName, String outputDir, double robotWidth, double robotLength) {
 			this.lengthUnit = lengthUnit;
 			this.exportUnit = exportUnit;
 			this.maxVelocity = maxVelocity;
@@ -271,6 +277,8 @@ public class ProjectPreferences {
 			this.trackWidth = trackWidth;
 			this.gameName = gameName;
 			this.outputDir = outputDir;
+			this.robotWidth = robotWidth;
+			this.robotLength = robotLength;
 		}
 
 		public Unit<Length> getLengthUnit() {
@@ -299,6 +307,14 @@ public class ProjectPreferences {
 
 		public String getOutputDir() {
 			return outputDir;
+		}
+
+		public double getRobotWidth() {
+			return robotWidth;
+		}
+
+		public double getRobotLength() {
+			return robotLength;
 		}
 	}
 }

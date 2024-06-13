@@ -364,7 +364,7 @@ public class MainController {
 
       java.nio.file.Path pathNameFile = output.resolve(path.getPathNameNoExtension());
 
-      if(!path.getSpline().writeToFile(pathNameFile)) {
+      if(!path.getCenterSpline().writeToFile(pathNameFile)) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         FxUtils.applyDarkMode(alert);
         alert.setTitle("Path export failure!");
