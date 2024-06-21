@@ -48,7 +48,7 @@ jobs:
 
       - uses: gradle/actions/wrapper-validation@v3
 
-      - uses: wpilibsuite/import-signing-certificate@v1
+      - uses: wpilibsuite/import-signing-certificate@v2
         with:
           certificate-data: ${{ secrets.APPLE_CERTIFICATE_DATA }}
           certificate-passphrase: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
