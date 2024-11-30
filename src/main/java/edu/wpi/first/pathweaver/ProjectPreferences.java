@@ -195,7 +195,7 @@ public class ProjectPreferences {
 	 * @return File object of Folder to output generated paths to.
 	 */
 	public File getOutputDir() {
-		if (values.getOutputDir() == null) {
+		if (values.getOutputDir() == null || values.getOutputDir().isBlank()) {
 			File parentDirectory = new File(directory).getParentFile();
 			return getOutputDir(parentDirectory);
 		} else {
