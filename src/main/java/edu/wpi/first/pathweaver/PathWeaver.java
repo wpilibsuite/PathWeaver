@@ -4,7 +4,7 @@ import edu.wpi.first.math.jni.TrajectoryUtilJNI;
 import edu.wpi.first.pathweaver.extensions.ExtensionManager;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
-import java.awt.Deskop;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
