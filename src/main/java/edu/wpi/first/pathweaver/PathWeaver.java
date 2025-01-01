@@ -55,6 +55,7 @@ public class PathWeaver extends Application {
         Desktop.getDesktop().browse(new URI(
             "https://docs.wpilib.org/en/stable/docs/software/pathplanning/pathweaver/introduction.html#deprecation-notice"));
       } catch (IOException | URISyntaxException e) {
+        // Assume that *some* browse will open
       }
     }
   }
