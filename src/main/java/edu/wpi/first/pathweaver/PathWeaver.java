@@ -53,7 +53,7 @@ public class PathWeaver extends Application {
     if (result.get().getText().equals("Learn more")) {
       try {
         Desktop.getDesktop().browse(new URI(
-            "https://docs.wpilib.org/en/latest/docs/software/pathplanning/pathweaver/introduction.html#deprecation-notice"));
+            "https://docs.wpilib.org/en/stable/docs/software/pathplanning/pathweaver/introduction.html#deprecation-notice"));
       } catch (IOException | URISyntaxException e) {
       }
     }
