@@ -1,4 +1,4 @@
-wpilibTools.deps.wpilibVersion = "2025.+"
+wpilibTools.deps.wpilibVersion = "2026.+"
 
 def nativeConfigName = 'wpilibNatives'
 def nativeConfig = configurations.create(nativeConfigName)
