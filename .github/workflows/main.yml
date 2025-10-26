@@ -46,7 +46,7 @@ jobs:
           distribution: 'temurin'
           architecture: ${{ matrix.architecture }}
 
-      - uses: gradle/actions/wrapper-validation@v3
+      - uses: gradle/actions/wrapper-validation@v5
 
       - uses: wpilibsuite/import-signing-certificate@v2
         with:
