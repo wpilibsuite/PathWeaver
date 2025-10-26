@@ -203,6 +203,8 @@ tasks.withType(Jar).configureEach {
     }
 }
 
+apply from: 'procstart.gradle'
+
 wrapper {
     gradleVersion = '8.11'
 }
